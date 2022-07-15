@@ -55,7 +55,7 @@ interface ViewModel {
 
     infiniteScroll() : void;
     addFavorite(signet: Signet, event: Event) : Promise<void>;
-    removeFavorite(signet: Signet, event: Event) : Promise<void>;
+    removeFavorite(signet: Signet, event?: Event) : Promise<void>;
 }
 
 interface EventResponses {
@@ -313,10 +313,12 @@ export const signetController = ng.controller('SignetController', ['$scope', 'Fa
                 for (let signet of vm.signets.selected) {
                     if(signet.published) {
                         await signetService.deleteSignetPublished(signet.id);
+
                         vm.signets.all = vm.signets.all.filter(signetToRemove => signet.id !== signetToRemove.id);
                     } else {
                         if ($scope.isStatusXXX(await signetService.unshare(signet.id), 200)) {
                             await signetService.delete(signet.id);
+                            await vm.removeFavorite(signet);
                             vm.signets.all = vm.signets.all.filter(signetToRemove => signet.id !== signetToRemove.id);
                         }
                     }
@@ -391,8 +393,10 @@ export const signetController = ng.controller('SignetController', ['$scope', 'Fa
             $scope.safeApply();
         };
 
-        vm.removeFavorite = async (signet, event) : Promise<void> => {
-            event.stopPropagation();
+        vm.removeFavorite = async (signet: Signet, event?: Event) : Promise<void> => {
+            if(event) {
+                event.stopPropagation();
+            }
             let signet_fav = <Resource> signet.toJson();
             signet_fav.favorite = signet.favorite;
             let response = await FavoriteService.delete(signet_fav.id, signet_fav.source);

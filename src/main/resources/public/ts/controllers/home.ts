@@ -11,11 +11,11 @@ interface ViewModel {
     resourceLimit: number;
     loaders: any;
     resources: Resource[];
+    displayedResources: Resource[];
     textbooks: Resource[];
     publicSignets: Resource[];
     sharedSignets: Resource[];
     orientationSignets: Resource[];
-    displayedResources: Resource[];
 
     refreshTextBooks(): void;
     seeMyExternalResource(): void;
@@ -24,9 +24,9 @@ interface ViewModel {
 }
 
 interface EventResponses {
-    favorites_Result(frame: Frame): void;
     textbooks_Result(frame: Frame): void;
     search_Result(frame: Frame): void;
+    favorites_Result(frame: Frame): void;
     signets_Result(frame: Frame): void;
 }
 
@@ -73,21 +73,6 @@ export const homeController = ng.controller('HomeController', ['$scope', 'route'
                 vm.textbooks = frame.data.textbooks;
                 $scope.safeApply();
             },
-            favorites_Result: function (frame) {
-                if (Object.keys(frame.data).length === 0) {
-                    $scope.mc.favorites = []
-                } else {
-                    $scope.mc.favorites = frame.data;
-                    $scope.mc.favorites.map((favorite) => {
-                        favorite.favorite = true;
-                    });
-                }
-                $scope.safeApply();
-            },
-            search_Result: function (frame) {
-                vm.displayedResources = frame.data.resources;
-                $scope.safeApply();
-            },
             signets_Result: async function (frame) {
                 vm.signets.all = vm.publicSignets = vm.orientationSignets = vm.sharedSignets = [];
                 await vm.signets.sync();
@@ -98,7 +83,64 @@ export const homeController = ng.controller('HomeController', ['$scope', 'route'
                 vm.orientationSignets = frame.data.signets.resources.filter(el => el.document_types[0] === "Orientation");
                 vm.orientationSignets = vm.orientationSignets.concat(vm.sharedSignets.filter(el => el.document_types[0] === "Orientation"));
                 $scope.safeApply();
-            }
+            },
+            search_Result: function (frame) {
+                vm.displayedResources = frame.data.resources;
+                $scope.safeApply();
+            },
+            favorites_Result: function (frame) {
+                if (Object.keys(frame.data).length === 0) {
+                    $scope.mc.favorites = []
+                } else {
+                    $scope.mc.favorites = frame.data;
+                    $scope.mc.favorites.map((favorite) => {
+                        favorite.favorite = true;
+                    });
+
+                    let result : Resource[] = [];
+                    for(let i = 0; i < $scope.mc.favorites.length ; i++) {
+                        if($scope.mc.favorites[i].document_types[0] == 'livre numérique') {
+                            for(let h = 0; h < vm.displayedResources.length; h++) {
+                                if($scope.mc.favorites[i].hash == vm.displayedResources[h].hash) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                            for(let j = 0; j < vm.textbooks.length; j++) {
+                                if(vm.textbooks[j].favorite) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                        }
+                        if($scope.mc.favorites[i].document_types[0] === "Orientation") {
+                            for(let k = 0; k < vm.orientationSignets.length; k++) {
+                                if($scope.mc.favorites[i].hash == vm.orientationSignets[k].hash && vm.orientationSignets[k].favorite) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                        }
+                        if($scope.mc.favorites[i].document_types[0] === "Signet") {
+                            for(let k = 0; k < vm.signets.length; k++) {
+                                if($scope.mc.favorites[i].hash == vm.signets[k].hash && vm.signets[k].favorite) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                            for(let k = 0; k < vm.publicSignets.length; k++) {
+                                if($scope.mc.favorites[i].hash == vm.publicSignets[k].hash && vm.publicSignets[k].favorite) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                            for(let k = 0; k < vm.sharedSignets.length; k++) {
+                                if($scope.mc.favorites[i].hash == vm.sharedSignets[k].hash && vm.sharedSignets[k].favorite) {
+                                    result.push($scope.mc.favorites[i]);
+                                }
+                            }
+                        }
+                    }
+                    $scope.mc.favorites = [];
+                    $scope.mc.favorites = result;
+                }
+                $scope.safeApply();
+            },
         };
 
         vm.refreshTextBooks = (): void => {
@@ -122,11 +164,18 @@ export const homeController = ng.controller('HomeController', ['$scope', 'route'
 
         function initHomePage() {
             $scope.ws.send(new Frame('textbooks', 'get', [], {}));
-            $scope.ws.send(new Frame('favorites', 'get', [], {}));
-            $scope.ws.send(new Frame('search', 'PLAIN_TEXT', ['fr.openent.mediacentre.source.GAR'], {"query": ".*"}));
-            $scope.ws.send(new Frame('signets', 'get', ['fr.openent.mediacentre.source.Signet'], {}));
+            setTimeout(() => {
+                $scope.ws.send(new Frame('search', 'PLAIN_TEXT', ['fr.openent.mediacentre.source.GAR'], {"query": ".*"}));
+            }, 250);
+            setTimeout(() => {
+                $scope.ws.send(new Frame('signets', 'get', ['fr.openent.mediacentre.source.Signet'], {}));
+            }, 500);
+            setTimeout(() => {
+                $scope.ws.send(new Frame('favorites', 'get', [], {}));
+            }, 750);
             $scope.safeApply();
         }
+
 
         if ($scope.ws.connected) {
             initHomePage();
