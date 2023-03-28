@@ -1,7 +1,9 @@
-import {ng} from 'entcore';
+import {ng, toasts, idiom as lang} from 'entcore';
 import {Scope} from './main'
 import {Filter, Frame, Resource} from '../model';
 import {addFilters} from '../utils';
+import {FavoriteService} from "../services";
+import {IPromise} from "angular";
 
 interface ViewModel {
     loaders: any;
@@ -14,6 +16,8 @@ interface ViewModel {
         filtered: {  source: Filter[], document_types: Filter[], levels: Filter[] }
     };
     filteredFields: string[];
+    // favoriteService: FavoriteService;
+
 
     showFilter() : void;
 }
@@ -23,8 +27,10 @@ interface EventResponses {
 }
 
 
-export const favoriteController = ng.controller('FavoriteController', ['$scope', 'route', function ($scope: Scope) {
+export const favoriteController = ng.controller('FavoriteController', ['$scope', 'route', 'FavoriteService',
+    function ($scope: Scope, route, FavoriteService: FavoriteService) {
     const vm: ViewModel = this;
+    // vm.favoriteService = favoriteService;
 
     vm.favorites = [];
     vm.filteredFields = [ 'document_types', 'levels'];
@@ -33,6 +39,11 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     $scope.$on('deleteFavorite', function(event, id) {
         vm.displayedResources = vm.favorites.filter(el => el.id !== id);
     });
+
+    this.$onInit = () => {
+        initFavorite();
+        initFavoritePage();
+    };
 
     const initFavorite = function () {
         vm.displayedResources = [];
@@ -44,7 +55,7 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         };
     };
 
-    initFavorite();
+    // initFavorite();
 
     const filter = function () {
         vm.displayedResources = [];
@@ -89,15 +100,33 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         }
     };
 
-    function initFavoritePage() {
-        $scope.ws.send(new Frame('favorites', 'get', [], {}));
+    async function initFavoritePage() {
+        FavoriteService.get()
+            .then((favorites: Array<Resource>) => {
+                vm.favorites = favorites;
+                $scope.safeApply();
+                return;
+            })
+            .catch((e) => {
+                let errorMessage : string = lang.translate("calendar.external.sync.error") + " " +  this.$scope.vm.calendar.title + ".";
+                toasts.warning(errorMessage);
+                return;
+            });
+        console.log(vm.favorites);
+        $scope.safeApply();
+        // $scope.ws.send(new Frame('favorites', 'get', [], {}));
     }
 
-    if ($scope.ws.connected) {
+    $scope.$interval(() : IPromise<void> => {
         initFavoritePage();
-    } else {
-        $scope.ws.onopen = initFavoritePage;
-    }
+        return;
+    }, 15000, 0, false);
+
+    // if ($scope.ws.connected) {
+    //     initFavoritePage();
+    // } else {
+    //     $scope.ws.onopen = initFavoritePage;
+    // }
 
     vm.showFilter = function () {
         vm.displayFilter = !vm.displayFilter;
