@@ -16,7 +16,6 @@ interface ViewModel {
         filtered: {  source: Filter[], document_types: Filter[], levels: Filter[] }
     };
     filteredFields: string[];
-    // favoriteService: FavoriteService;
 
 
     showFilter() : void;
@@ -30,7 +29,6 @@ interface EventResponses {
 export const favoriteController = ng.controller('FavoriteController', ['$scope', 'route', 'FavoriteService',
     function ($scope: Scope, route, FavoriteService: FavoriteService) {
     const vm: ViewModel = this;
-    // vm.favoriteService = favoriteService;
 
     vm.favorites = [];
     vm.filteredFields = [ 'document_types', 'levels'];
@@ -40,10 +38,14 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         vm.displayedResources = vm.favorites.filter(el => el.id !== id);
     });
 
-    this.$onInit = () => {
+    this.$onInit = async () => {
         initFavorite();
-        initFavoritePage();
-        vm.resources = vm.favorites;
+        await initFavoritePage();
+        vm.resources = [...vm.resources, ...vm.favorites];
+        vm.favorites.map((favorite) => {
+            favorite.favorite = true;
+        });
+        vm.favorites.forEach((resource)=> addFilters(vm.filteredFields, vm.filters.initial, resource));
         filter();
     };
 
@@ -56,8 +58,6 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
             filtered: {source: [], document_types: [], levels: []}
         };
     };
-
-    // initFavorite();
 
     const filter = function () {
         vm.displayedResources = [];
@@ -90,7 +90,7 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     };
 
     const eventResponses: EventResponses = {
-        favorites_Result: function (frame) {
+        favorites_Result: function (frame: Frame) {
             vm.resources = [...vm.resources, ...frame.data];
             vm.favorites = frame.data;
             vm.favorites.map((favorite) => {
@@ -103,7 +103,7 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     };
 
     async function initFavoritePage() {
-        FavoriteService.get()
+        await FavoriteService.get()
             .then((favorites: Array<Resource>) => {
                 vm.favorites = favorites;
                 console.log(vm.favorites);
@@ -117,7 +117,7 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
             });
 
         $scope.safeApply();
-        $scope.ws.send(new Frame('favorites', 'get', [], {}));
+        // $scope.ws.send(new Frame('favorites', 'get', [], {}));
     }
 
     // $scope.$interval(() : IPromise<void> => {
