@@ -43,6 +43,8 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     this.$onInit = () => {
         initFavorite();
         initFavoritePage();
+        vm.resources = vm.favorites;
+        filter();
     };
 
     const initFavorite = function () {
@@ -104,23 +106,24 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         FavoriteService.get()
             .then((favorites: Array<Resource>) => {
                 vm.favorites = favorites;
+                console.log(vm.favorites);
                 $scope.safeApply();
                 return;
             })
             .catch((e) => {
-                let errorMessage : string = lang.translate("calendar.external.sync.error") + " " +  this.$scope.vm.calendar.title + ".";
+                let errorMessage : string = lang.translate("calendar.external.sync.error") + " " + ".";
                 toasts.warning(errorMessage);
                 return;
             });
-        console.log(vm.favorites);
+
         $scope.safeApply();
-        // $scope.ws.send(new Frame('favorites', 'get', [], {}));
+        $scope.ws.send(new Frame('favorites', 'get', [], {}));
     }
 
-    $scope.$interval(() : IPromise<void> => {
-        initFavoritePage();
-        return;
-    }, 15000, 0, false);
+    // $scope.$interval(() : IPromise<void> => {
+    //     initFavoritePage();
+    //     return;
+    // }, 15000, 0, false);
 
     // if ($scope.ws.connected) {
     //     initFavoritePage();

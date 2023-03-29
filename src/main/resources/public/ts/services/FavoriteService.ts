@@ -1,6 +1,6 @@
 import {ng, toasts} from 'entcore'
 import http, {AxiosError, AxiosResponse} from 'axios';
-import {Resource, ResourceModel} from "../model";
+import {Resource} from "../model";
 
 export interface FavoriteService {
     create(bodyResource: Resource, id:number): Promise<AxiosResponse>;
