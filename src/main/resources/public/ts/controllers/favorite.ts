@@ -81,13 +81,13 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     $scope.$watch(() => vm.filters.filtered.document_types.length, filter);
     $scope.$watch(() => vm.filters.filtered.levels.length, filter);
 
-    $scope.ws.onmessage = (message) => {
-        const {event, state, data, status} = JSON.parse(message.data);
-        if ("ok" !== status) {
-            throw data.error;
-        }
-        if (event in eventResponses) eventResponses[event](new Frame(event, state, [], data));
-    };
+    // $scope.ws.onmessage = (message) => {
+    //     const {event, state, data, status} = JSON.parse(message.data);
+    //     if ("ok" !== status) {
+    //         throw data.error;
+    //     }
+    //     if (event in eventResponses) eventResponses[event](new Frame(event, state, [], data));
+    // };
 
     const eventResponses: EventResponses = {
         favorites_Result: function (frame: Frame) {
