@@ -1,6 +1,6 @@
 import {ng, toasts} from 'entcore'
 import http, {AxiosError, AxiosResponse} from 'axios';
-import {Resource} from "../model";
+import {Resource, ResourceModel} from "../model";
 
 export interface FavoriteService {
     create(bodyResource: Resource, id:number): Promise<AxiosResponse>;
@@ -19,8 +19,8 @@ export const FavoriteService = ng.service('FavoriteService', (): FavoriteService
 
     get: async (): Promise<Array<Resource>> => {
         return await http.get(`/mediacentre/favorites`)
-            // .then((response: AxiosResponse) => response.data.data.map((resource: Resource) => new ResourceModel().build(resource)))
-            .then((response: AxiosResponse) => response.data.data)
+            .then((response: AxiosResponse) => response.data.data.map((resource: Resource) => new ResourceModel(resource)))
+            // .then((response: AxiosResponse) => response.data.data)
             .catch((error: AxiosError) => {
                 console.error(error);
                 toasts.warning(error);
