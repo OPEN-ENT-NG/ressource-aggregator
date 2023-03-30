@@ -20,7 +20,6 @@ export const FavoriteService = ng.service('FavoriteService', (): FavoriteService
     get: async (): Promise<Array<Resource>> => {
         return await http.get(`/mediacentre/favorites`)
             .then((response: AxiosResponse) => response.data.data.map((resource: Resource) => new ResourceModel(resource)))
-            // .then((response: AxiosResponse) => response.data.data)
             .catch((error: AxiosError) => {
                 console.error(error);
                 toasts.warning(error);
