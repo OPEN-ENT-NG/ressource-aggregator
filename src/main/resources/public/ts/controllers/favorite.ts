@@ -32,8 +32,6 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     vm.displayFilter = screen.width >= $scope.mc.screenWidthLimit;
     vm.updateFrequency = mediacentreUpdateFrequency;
 
-    console.log(vm.updateFrequency);
-
     $scope.$on('deleteFavorite', function(event, id) {
         vm.displayedResources = vm.favorites.filter(el => el.id !== id);
     });
@@ -41,7 +39,7 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     function updateFavoriteResources() {
         //only keep resources that are also in favorite
         vm.resources = vm.resources.reduce((resources: Resource[], resource: Resource) => {
-            if (vm.favorites.find((r: Resource) => (r.id == resource._id))) {
+            if (vm.favorites.find((r: Resource) => (r.id == resource.id))) {
                 resources.push(resource);
             }
             return resources;
@@ -50,20 +48,10 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         vm.favorites.map((resource: Resource) => {
             resource.favorite = true;
             addFilters(vm.filteredFields, vm.filters.initial, resource)
-            if (!(vm.resources.find((r: Resource) => (r.id == resource._id)))) {
+            if (!(vm.resources.find((r: Resource) => (r.id == resource.id)))) {
                 vm.resources.push(resource);
             }
         })
-        // vm.resources = [...vm.resources, ...vm.favorites.reduce((resources: Resource[], resource: Resource) => {
-        //     if (!(vm.favorites.find((r: Resource) => (r.id == resource._id)))) {
-        //         resources.push(resource);
-        //     }
-        //     return resources;
-        // }, [])];
-        // vm.favorites.map((favorite) => {
-        //     favorite.favorite = true;
-        // });
-        // vm.favorites.forEach((resource) => addFilters(vm.filteredFields, vm.filters.initial, resource));
     }
 
     async function updateFavorites() {
@@ -122,7 +110,6 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
 
     $interval(async (): Promise<void> => {
         await updateFavorites();
-        console.log("interval", vm.updateFrequency);
         return;
     }, vm.updateFrequency, 0, false);
 
