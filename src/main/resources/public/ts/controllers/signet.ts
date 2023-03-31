@@ -417,32 +417,6 @@ export const signetController = ng.controller('SignetController', ['$scope', 'Fa
             $scope.mc.favorites.push(resource);
         });
 
-        $scope.ws.onmessage = (message) => {
-            const {event, state, data, status} = JSON.parse(message.data);
-            if ("ok" !== status) {
-                throw data.error;
-            }
-            if (event in eventResponses) eventResponses[event](new Frame(event, state, [], data));
-        };
-
-        const eventResponses: EventResponses = {
-            favorites_Result: function (frame) {
-                if (Object.keys(frame.data).length === 0) {
-                    $scope.mc.favorites = []
-                } else {
-                    $scope.mc.favorites = frame.data;
-                    $scope.mc.favorites.map((favorite) => {
-                        favorite.favorite = true;
-                    });
-                }
-                $scope.safeApply();
-            }
-        };
-
-        if ($scope.ws.connected) {
-            $scope.ws.send(new Frame('favorites', 'get', [], {}));
-        }
-
         // Utils
 
         vm.infiniteScroll = () : void => {

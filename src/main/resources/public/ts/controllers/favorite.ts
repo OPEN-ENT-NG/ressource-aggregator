@@ -33,31 +33,31 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
         vm.displayedResources = vm.favorites.filter(el => el.id !== id);
     });
 
-        function updateFavoriteResources() {
-            //only keep resources that are also in favorite
-            vm.resources = vm.resources.reduce((resources: Resource[], resource: Resource) => {
-                if (vm.favorites.find((r: Resource) => (r.id == resource._id))) {
-                    resources.push(resource);
-                }
-                return resources;
-            }, []);
-            //add new resources from favorite
-            vm.resources = [...vm.resources, ...vm.favorites.reduce((resources: Resource[], resource: Resource) => {
-                if (!(vm.favorites.find((r: Resource) => (r.id == resource._id)))) {
-                    resources.push(resource);
-                }
-                return resources;
-            }, [])];
-            vm.favorites.map((favorite) => {
-                favorite.favorite = true;
-            });
-            vm.favorites.forEach((resource) => addFilters(vm.filteredFields, vm.filters.initial, resource));
-        }
+    function updateFavoriteResources() {
+        //only keep resources that are also in favorite
+        vm.resources = vm.resources.reduce((resources: Resource[], resource: Resource) => {
+            if (vm.favorites.find((r: Resource) => (r.id == resource._id))) {
+                resources.push(resource);
+            }
+            return resources;
+        }, []);
+        //add new resources from favorite
+        vm.resources = [...vm.resources, ...vm.favorites.reduce((resources: Resource[], resource: Resource) => {
+            if (!(vm.favorites.find((r: Resource) => (r.id == resource._id)))) {
+                resources.push(resource);
+            }
+            return resources;
+        }, [])];
+        vm.favorites.map((favorite) => {
+            favorite.favorite = true;
+        });
+        vm.favorites.forEach((resource) => addFilters(vm.filteredFields, vm.filters.initial, resource));
+    }
 
-        async function updateFavorites() {
-        await initFavoritePage();
-            updateFavoriteResources();
-            filter();
+    async function updateFavorites() {
+    await initFavoritePage();
+        updateFavoriteResources();
+        filter();
     }
 
     this.$onInit = async () => {
