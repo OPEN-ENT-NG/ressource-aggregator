@@ -5,6 +5,7 @@ import {addFilters} from '../utils';
 import {FavoriteService} from "../services";
 import {IIntervalService, IPromise, ITimeoutService} from "angular";
 
+declare var mediacentreUpdateFrequency: number;
 interface ViewModel {
     loaders: any;
     resources: Resource[];
@@ -16,18 +17,22 @@ interface ViewModel {
         filtered: {  source: Filter[], document_types: Filter[], levels: Filter[] }
     };
     filteredFields: string[];
+    updateFrequency: number;
 
 
     showFilter() : void;
 }
 
 export const favoriteController = ng.controller('FavoriteController', ['$scope', 'route', 'FavoriteService', '$interval',
-    function ($scope: Scope, route, FavoriteService: FavoriteService, $interval: IIntervalService) {
+    function ($scope: Scope, route, favoriteService: FavoriteService, $interval: IIntervalService) {
     const vm: ViewModel = this;
 
     vm.favorites = [];
     vm.filteredFields = [ 'document_types', 'levels'];
     vm.displayFilter = screen.width >= $scope.mc.screenWidthLimit;
+    vm.updateFrequency = mediacentreUpdateFrequency;
+
+    console.log(vm.updateFrequency);
 
     $scope.$on('deleteFavorite', function(event, id) {
         vm.displayedResources = vm.favorites.filter(el => el.id !== id);
@@ -42,20 +47,27 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
             return resources;
         }, []);
         //add new resources from favorite
-        vm.resources = [...vm.resources, ...vm.favorites.reduce((resources: Resource[], resource: Resource) => {
-            if (!(vm.favorites.find((r: Resource) => (r.id == resource._id)))) {
-                resources.push(resource);
+        vm.favorites.map((resource: Resource) => {
+            resource.favorite = true;
+            addFilters(vm.filteredFields, vm.filters.initial, resource)
+            if (!(vm.resources.find((r: Resource) => (r.id == resource._id)))) {
+                vm.resources.push(resource);
             }
-            return resources;
-        }, [])];
-        vm.favorites.map((favorite) => {
-            favorite.favorite = true;
-        });
-        vm.favorites.forEach((resource) => addFilters(vm.filteredFields, vm.filters.initial, resource));
+        })
+        // vm.resources = [...vm.resources, ...vm.favorites.reduce((resources: Resource[], resource: Resource) => {
+        //     if (!(vm.favorites.find((r: Resource) => (r.id == resource._id)))) {
+        //         resources.push(resource);
+        //     }
+        //     return resources;
+        // }, [])];
+        // vm.favorites.map((favorite) => {
+        //     favorite.favorite = true;
+        // });
+        // vm.favorites.forEach((resource) => addFilters(vm.filteredFields, vm.filters.initial, resource));
     }
 
     async function updateFavorites() {
-    await initFavoritePage();
+        await initFavoritePage();
         updateFavoriteResources();
         filter();
     }
@@ -98,25 +110,21 @@ export const favoriteController = ng.controller('FavoriteController', ['$scope',
     $scope.$watch(() => vm.filters.filtered.levels.length, filter);
 
     async function initFavoritePage() {
-        await FavoriteService.get()
-            .then((favorites: Array<Resource>) => {
-                vm.favorites = favorites;
-                $scope.safeApply();
-                return;
-            })
-            .catch((e) => {
-                let errorMessage : string = lang.translate("calendar.external.sync.error") + " " + ".";
-                toasts.warning(errorMessage);
-                return;
-            });
-
+        try {
+            vm.favorites = await favoriteService.get();
+        } catch (e) {
+            console.error("An error has occurred during fetching favorite ", e);
+            toasts.warning(lang.translate("mediacentre.error.favorite.retrieval"));
+            vm.favorites = [];
+        }
         $scope.safeApply();
     }
 
     $interval(async (): Promise<void> => {
         await updateFavorites();
+        console.log("interval", vm.updateFrequency);
         return;
-    }, 15000, 0, false);
+    }, vm.updateFrequency, 0, false);
 
 
     vm.showFilter = function () {
