@@ -385,6 +385,7 @@ export const signetController = ng.controller('SignetController', ['$scope', 'Fa
             signet_fav.plain_text = plaintextArray
             signet_fav.favorite = signet.favorite;
             signet_fav.document_types = signet.orientation ? ["Orientation"] : ["Signet"];
+            signet_fav.date = new Date(signet.date_creation).valueOf();
             delete signet.favorite;
             let response = await FavoriteService.create(signet_fav, signet.id);
             if (response.status === 200) {

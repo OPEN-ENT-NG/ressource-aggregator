@@ -22,6 +22,8 @@
                                          combo-model="vm.filters.initial[filter]"
                                          search-on="name"
                                          order-by="name"
+                                         selection-event="vm.filterResources(vm.filters.filtered)"
+                                         deselection-event="vm.filterResources(vm.filters.filtered)"
                                          filtered-model="vm.filters.filtered[filter]">
                             </multi-combo>
                         </div>
