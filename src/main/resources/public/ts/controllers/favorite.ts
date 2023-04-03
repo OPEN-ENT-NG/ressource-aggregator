@@ -65,23 +65,13 @@ class Controller implements IViewModel {
             that.displayedResources = that.favorites.filter(el => el.id !== id);
         });
 
-        // this.$scope.$watch(() => this.filters.filtered.document_types.length, this.filter);
-        // this.$scope.$watch(() => this.filters.filtered.levels.length, this.filter);
-
         this.$interval(async (): Promise<void> => {
             await this.updateFavorites();
-            return;
         }, this.updateFrequency, 0, false);
     }
 
     filterResources(filteredResources: Resource[]) {
-        console.log("coucou");
-        this.test();
         this.filter();
-    }
-
-    private test() {
-        console.log("test encore");
     }
 
     updateFavoriteResources(): void {
@@ -140,12 +130,12 @@ class Controller implements IViewModel {
     async getFavorites() {
         try {
             this.favorites = await this.favoriteService.get();
+            Utils.safeApply(this.$scope);
         } catch (e) {
             console.error("An error has occurred during fetching favorite ", e);
             toasts.warning(lang.translate("mediacentre.error.favorite.retrieval"));
             this.favorites = [];
         }
-       Utils.safeApply(this.$scope);
     }
 
     showFilter(): void {
