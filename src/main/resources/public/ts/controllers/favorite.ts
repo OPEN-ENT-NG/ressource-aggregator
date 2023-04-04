@@ -2,7 +2,7 @@ import {ng, toasts, idiom as lang} from 'entcore';
 import {Filter, Resource} from '../model';
 import {addFilters} from '../utils';
 import {FavoriteService} from "../services";
-import {IIntervalService, IScope} from "angular";
+import {IIntervalService} from "angular";
 import {Utils} from "../utils/Utils";
 
 declare var mediacentreUpdateFrequency: number;
@@ -11,7 +11,6 @@ interface IViewModel extends ng.IController {
     loaders: any;
     resources: Resource[];
     favorites: Resource[];
-    displayedResources: Resource[];
     displayFilter: boolean;
     filters: {
         initial: {  source: Filter[], document_types: Filter[], levels: Filter[] }
@@ -20,13 +19,8 @@ interface IViewModel extends ng.IController {
     filteredFields: string[];
     updateFrequency: number;
 
-    updateFavoriteResources(): void;
-    updateFavorites(): void;
-    initFavoriteResources(): void;
-    filter(): void;
-    getFavorites(): void;
     showFilter() : void;
-    filterResources(filteredResources: Resource[]): void;
+    fetchFavorites(filteredResources?: Resource[]): void;
 }
 
 interface IFavoriteScope extends ng.IScope {
@@ -36,7 +30,6 @@ interface IFavoriteScope extends ng.IScope {
 class Controller implements IViewModel {
 
     displayFilter: boolean;
-    displayedResources: Resource[];
     favorites: Resource[];
     filteredFields: string[];
     filters: { initial: { source: Filter[]; document_types: Filter[]; levels: Filter[] }; filtered: { source: Filter[]; document_types: Filter[]; levels: Filter[] } };
@@ -49,68 +42,55 @@ class Controller implements IViewModel {
                 private favoriteService: FavoriteService,
                 private $interval: IIntervalService) {
         this.$scope.vm = this;
-    }
-
-    async $onInit() {
         this.favorites = [];
         this.filteredFields = ['document_types', 'levels'];
-        this.displayFilter = screen.width >= this.$scope['mc'].screenWidthLimit;
-        this.updateFrequency = mediacentreUpdateFrequency;
-
-        this.initFavoriteResources();
-        await this.updateFavorites();
-
-        let that = this;
-        this.$scope.$on('deleteFavorite', function (event, id) {
-            that.displayedResources = that.favorites.filter(el => el.id !== id);
-        });
-
-        this.$interval(async (): Promise<void> => {
-            await this.updateFavorites();
-        }, this.updateFrequency, 0, false);
-    }
-
-    filterResources(filteredResources: Resource[]) {
-        this.filter();
-    }
-
-    updateFavoriteResources(): void {
-        //only keep resources that are also in favorite
-        this.resources = this.resources.reduce((resources: Resource[], resource: Resource) => {
-            if (this.favorites.find((r: Resource) => (r.id == resource.id))) {
-                resources.push(resource);
-            }
-            return resources;
-        }, []);
-        //add new resources from favorite
-        this.favorites.map((resource: Resource) => {
-            resource.favorite = true;
-            addFilters(this.filteredFields, this.filters.initial, resource)
-            if (!(this.resources.find((r: Resource) => (r.id == resource.id)))) {
-                this.resources.push(resource);
-            }
-        })
-    }
-
-    async updateFavorites() {
-        await this.getFavorites();
-        this.updateFavoriteResources();
-        this.filter();
-    }
-
-    initFavoriteResources() {
-        this.displayedResources = [];
-        this.resources = [];
-        this.favorites = [];
         this.filters = {
             initial: { source: [], document_types: [], levels: []},
             filtered: {source: [], document_types: [], levels: []}
         };
-    };
+    }
 
-    filter() {
-        this.displayedResources = [];
-        this.resources.forEach((resource: Resource) => {
+    async $onInit() {
+        this.displayFilter = screen.width >= this.$scope['mc'].screenWidthLimit;
+        this.updateFrequency = mediacentreUpdateFrequency;
+
+        await this.fetchFavorites();
+
+        let viewModel: IViewModel = this;
+        this.$scope.$on('deleteFavorite', function (event, id) {
+            viewModel.favorites = viewModel.favorites.filter(el => el.id !== id);
+        });
+
+        this.$interval(async (): Promise<void> => {
+            await this.fetchFavorites();
+        }, this.updateFrequency, 0, false);
+    }
+
+    showFilter(): void {
+        this.displayFilter = !this.displayFilter;
+    }
+
+    async fetchFavorites(filteredResources?: Resource[]) {
+        try {
+            let favoriteResources: Array<Resource> = await this.favoriteService.get();
+            this.addFavoriteFilter(favoriteResources);
+            this.filter(favoriteResources);
+        } catch (e) {
+            console.error("An error has occurred during fetching favorite ", e);
+            toasts.warning(lang.translate("mediacentre.error.favorite.retrieval"));
+        }
+    }
+
+    private addFavoriteFilter(favoriteResources: Array<Resource>): void {
+        favoriteResources.forEach((resource: Resource) => {
+            resource.favorite = true;
+            addFilters(this.filteredFields, this.filters.initial, resource);
+        });
+    }
+
+    private filter(favoriteResources: Array<Resource>) {
+        this.favorites = [];
+        favoriteResources.forEach((resource: Resource) => {
             let match = true;
             this.filteredFields.forEach((field: string) => {
                 let internalMatch = this.filters.filtered[field].length == 0;
@@ -120,31 +100,14 @@ class Controller implements IViewModel {
                 match = match && internalMatch;
             });
             if (match) {
-                this.displayedResources.push(resource);
+                this.favorites.push(resource);
             }
         });
-
         Utils.safeApply(this.$scope);
     };
 
-    async getFavorites() {
-        try {
-            this.favorites = await this.favoriteService.get();
-            Utils.safeApply(this.$scope);
-        } catch (e) {
-            console.error("An error has occurred during fetching favorite ", e);
-            toasts.warning(lang.translate("mediacentre.error.favorite.retrieval"));
-            this.favorites = [];
-        }
-    }
-
-    showFilter(): void {
-        this.displayFilter = !this.displayFilter;
-    }
-
     $onDestroy(): void {
     }
-
 
 }
 
