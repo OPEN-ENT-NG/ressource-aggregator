@@ -81,7 +81,7 @@ public class SignetController extends ControllerHelper {
                 if (user.getGroupsIds() != null) {
                     groupsAndUserIds.addAll(user.getGroupsIds());
                 }
-                signetService.list(groupsAndUserIds, user, arrayResponseHandler(request));
+                signetService.list(groupsAndUserIds, user, info -> new JsonArray());
             } else {
                 log.error("User not found in session.");
                 Renders.unauthorized(request);
