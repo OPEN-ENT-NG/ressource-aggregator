@@ -41,17 +41,17 @@ public class TextBookHelper {
             JsonArray textBooks = getTextBookFuture.result();
             favoriteHelper.matchFavorite(getFavoritesResourcesFuture, textBooks);
 
-
-            if (textBooks.isEmpty()) {
-                initUserTextBooks(state, user, sources, answer);
-            } else {
-                answer.answerSuccess(HelperUtils.frameLoad(
-                        Field.TEXTBOOKS_RESULT,
-                        state,
-                        Field.OK,
-                        new JsonObject().put(Field.TEXTBOOKS, textBooks)
-                ).encode());
-            }
+            initUserTextBooks(state, user, sources, answer);
+//            if (textBooks.isEmpty()) {
+//                initUserTextBooks(state, user, sources, answer);
+//            } else {
+//                answer.answerSuccess(HelperUtils.frameLoad(
+//                        Field.TEXTBOOKS_RESULT,
+//                        state,
+//                        Field.OK,
+//                        new JsonObject().put(Field.TEXTBOOKS, textBooks)
+//                ).encode());
+//            }
         });
     }
 
@@ -93,7 +93,7 @@ public class TextBookHelper {
                 answer.answerSuccess(HelperUtils.frameLoad(Field.TEXTBOOKS_RESULT,
                         state,
                         Field.OK,
-                        new JsonObject().put(Field.TEXTBOOKS, textbooks)).encode());
+                        new JsonObject()).encode());
                 return;
             }
             textBookService.insert(user.getUserId(), textbooks, either -> {
@@ -112,7 +112,7 @@ public class TextBookHelper {
                 answer.answerSuccess(HelperUtils.frameLoad(Field.TEXTBOOKS_RESULT,
                         state,
                         Field.OK,
-                        new JsonObject().put(Field.TEXTBOOKS, textbooks)).encode()
+                        new JsonObject()).encode()
                 );
             });
         });
