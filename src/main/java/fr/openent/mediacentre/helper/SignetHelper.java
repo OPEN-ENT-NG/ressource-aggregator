@@ -2,6 +2,7 @@ package fr.openent.mediacentre.helper;
 
 import fr.openent.mediacentre.service.SignetService;
 import fr.openent.mediacentre.service.impl.DefaultSignetService;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -32,7 +33,7 @@ public class SignetHelper {
                                 HelperUtils.frameLoad("signets_Result",
                                         state,
                                         "ok",
-                                        new JsonObject().put("signets", event.right().getValue())).encode()
+                                        new JsonObject().put("signets", new JsonArray())).encode()
                         );
                     }
                 }
