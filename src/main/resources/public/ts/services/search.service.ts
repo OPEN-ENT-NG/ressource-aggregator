@@ -12,7 +12,7 @@ export const searchService: ISearchService = {
         let urlParam: string = `?jsondata=` + encodeURI(JSON.stringify(query));
         return http.get(`/mediacentre/search${urlParam}`)
             .then((response: AxiosResponse) => {
-                return response.data.flatMap((sourceResource: SearchResponse) => (sourceResource.data.resources && sourceResource.data.resources.length > 0) ?
+                return response.data.flatMap((sourceResource: SearchResponse) => (sourceResource.data && sourceResource.data.resources && sourceResource.data.resources.length > 0) ?
                     sourceResource.data.resources.map((resource: IResourceResponse) => new Resource().build(resource)) : []);
             });
     }
