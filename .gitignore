@@ -16,3 +16,6 @@ rev-manifest.json
 cacerts
 /src/main/resources/public/font/
 coverage/
+/package-lock.json
+/src/main/resources/public/css/
+/yarn.lock

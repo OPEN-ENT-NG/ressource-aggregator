@@ -19,7 +19,7 @@ resource-card {
     padding : 0 5px 0 0;
   }
 
-  
+
   .flex {
     position: relative;
     height: 100%;
@@ -183,15 +183,15 @@ resource-card {
         white-space: nowrap;      /*keep text on one line */
         overflow: hidden;         /*prevent text from being shown outside the border */
         text-overflow: ellipsis;  /*cut off text with an ellipsis*/
-/*        @supports (-webkit-line-clamp: 2) {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: initial;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          // n'est pas prix en compte : à fix
-          -webkit-box-orient: vertical;
-        }*/
+        /*        @supports (-webkit-line-clamp: 2) {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: initial;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  // n'est pas prix en compte : à fix
+                  -webkit-box-orient: vertical;
+                }*/
       }
 
       .resource-footer {
@@ -686,29 +686,29 @@ resource-card {
         }
       }
     }
-    }
   }
+}
 
-  .mini-loader {
-    background-color: #fff;
-    border-top-right-radius: inherit;
-    border-bottom-right-radius: inherit;
+.mini-loader {
+  background-color: #fff;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+  height: inherit;
+
+  &-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: calc((100vw - 40px) / 7 - 90px);
+    font-size: small;
     height: inherit;
 
-    &-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      width: calc((100vw - 40px) / 7 - 90px);
-      font-size: small;
-      height: inherit;
-
-      @media (max-width: $small-tablette) {
-        width: calc((100vw - 40px) / 2 - 90px);
-      }
+    @media (max-width: $small-tablette) {
+      width: calc((100vw - 40px) / 2 - 90px);
     }
+  }
 }
 
 

@@ -22,7 +22,7 @@ $mediacentre-white: #FFF;
 
 
 body.mediacentre-v2 {
-  @import 'components/index';
+  @import './components/index';
 
   i.refresh {
     @include fonticon();
