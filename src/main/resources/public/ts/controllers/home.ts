@@ -159,7 +159,7 @@ class Controller implements IHomeViewModel {
 
     async syncTextbooks(isRefreshButton?: boolean): Promise<void> {
         try {
-            this.mainScope.mc.textbooks = await this.textbookService.get();
+            this.mainScope.mc.textbooks = await this.textbookService.refresh();
             this.setFavoriteResources();
             if (isRefreshButton) toasts.info("mediacentre.success.textbook.retrieval");
             Utils.safeApply(this.$scope);
