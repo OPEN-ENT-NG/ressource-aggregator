@@ -29,6 +29,7 @@ public class Field {
     public static final String FAVORITEID = "favoriteId";
     public static final String RESOURCES = "resources";
     public static final String MESSAGE = "message";
+    public static final String GLOBAL_COLLECTION = "global";
 
 
 
