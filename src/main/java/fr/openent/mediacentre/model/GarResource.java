@@ -23,16 +23,18 @@ public class GarResource extends Resource implements IModel<GarResource> {
         return structureUai;
     }
 
-    public void setStructureUai(String structureUai) {
+    public GarResource setStructureUai(String structureUai) {
         this.structureUai = structureUai;
+        return this;
     }
 
     public String getStructureName() {
         return structureName;
     }
 
-    public void setStructureName(String structureName) {
+    public GarResource setStructureName(String structureName) {
         this.structureName = structureName;
+        return this;
     }
 
     @Override

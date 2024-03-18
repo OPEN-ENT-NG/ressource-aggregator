@@ -44,5 +44,9 @@ public class Field {
     public static final String DOCUMENT_TYPES_GLOBAL = "Global";
     public static final String PROFILES = "profiles";
     public static final String PROFILE = "profile";
+    public static final String GLOBAL_RESULT = "global_Result";
+    public static final String GET = "get";
+    public static final String GLOBAL = "global";
+    public static final String MONGO_SET = "$set";
 }
 

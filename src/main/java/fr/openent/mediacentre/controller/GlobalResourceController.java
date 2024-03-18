@@ -1,6 +1,7 @@
 package fr.openent.mediacentre.controller;
 
 import fr.openent.mediacentre.core.constants.Field;
+import fr.openent.mediacentre.enums.Profile;
 import fr.openent.mediacentre.helper.HelperUtils;
 import fr.openent.mediacentre.security.ViewRight;
 import fr.openent.mediacentre.service.GlobalResourceService;
@@ -35,12 +36,13 @@ public class GlobalResourceController extends ControllerHelper {
     @ResourceFilter(ViewRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void getResources(HttpServerRequest request) {
-        globalResourceService.list()
+        // get only resources for relative profile
+        globalResourceService.list(Profile.RELATIVE)
             .onSuccess(resources -> renderJson(request, new JsonObject(HelperUtils.frameLoad(
-                    "global_Result",
-                    "get",
-                    "ok",
-                    new JsonObject().put("global", resources)).encode()))
+                    Field.GLOBAL_RESULT,
+                    Field.GET,
+                    Field.OK,
+                    new JsonObject().put(Field.GLOBAL, resources)).encode()))
             )
             .onFailure(error -> {
                 String message = String.format("[GlobalResourceController@%s::getResources] Failed to get resources : %s",
@@ -83,7 +85,7 @@ public class GlobalResourceController extends ControllerHelper {
     @ResourceFilter(SuperAdminFilter.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void deleteResource(HttpServerRequest request) {
-        globalResourceService.deleteGlobalChannel(request.getParam("id"))
+        globalResourceService.deleteGlobalChannel(request.getParam(Field.ID))
             .onSuccess(result -> ok(request))
             .onFailure(error -> {
                 String message = String.format("[GlobalResourceController@%s::deleteResource] Failed to delete resource : %s",

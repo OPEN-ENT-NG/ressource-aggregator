@@ -1,5 +1,6 @@
 package fr.openent.mediacentre.service;
 
+import fr.openent.mediacentre.enums.Profile;
 import fr.openent.mediacentre.model.GlobalResource;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
@@ -19,8 +20,9 @@ public interface GlobalResourceService {
     /**
      * list all globals channels
      * @return Future of all globals ressources
+     * @param profile   list all global ressources who match with this profile
      */
-    public Future<List<GlobalResource>> list();
+    public Future<List<GlobalResource>> list(Profile profile);
 
     /**
      * delete a global ressource

@@ -2,6 +2,7 @@ package fr.openent.mediacentre.model;
 
 import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.helper.IModelHelper;
+import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
@@ -52,8 +53,8 @@ public abstract class Resource {
         this.link = resource.getString(Field.LINK, null);
         this.source = resource.getString(Field.SOURCE, null);
         this.id = resource.getString(Field.ID, null);
-        this.favorite = false;
-        this.date = resource.getJsonObject(Field.DATE, null);
+        this.favorite = resource.getBoolean(Field.FAVORITE, false);
+        this.date = resource.getJsonObject(Field.DATE, MongoDb.now());
     }
 
     public String get_id() {

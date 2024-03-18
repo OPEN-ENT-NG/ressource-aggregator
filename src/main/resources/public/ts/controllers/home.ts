@@ -1,4 +1,4 @@
-import {model, ng, toasts} from 'entcore';
+import {model, ng, idiom as i18n, toasts} from 'entcore';
 import {Frame, Resource} from '../model';
 import {IIntervalService, ILocationService, ITimeoutService} from "angular";
 import {Signets} from "../model/Signet";
@@ -131,7 +131,7 @@ class Controller implements IHomeViewModel {
     }
 
     async syncExternalResources(): Promise<void> {
-        if (model.me.profiles.length === 1 && model.me.profiles[0] === "Relative") {
+        if (model.me.profiles.length === 1 && model.me.profiles[0] === i18n.translate("mediacentre.profile.relative")) {
             this.externalResources = await this.globalService.get();
         } else {
             this.externalResources = await this.searchService.get(this.generateExternalResourceRequestBody());

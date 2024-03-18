@@ -40,7 +40,7 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
         Promise<JsonObject> promise = Promise.promise();
         JsonObject now = MongoDb.now();
         resource.put(Field.DATE, now);
-        resource.put(Field.EDITORS, Collections.singletonList(user.getUsername()));
+        resource.put(Field.AUTHORS, Collections.singletonList(user.getUsername()));
         GlobalResource globalResource = new GlobalResource(resource);
         if (globalResource.getProfiles().isEmpty()) {
             log.error("[Mediacentre@GlobalResourceServiceMongoImpl::createGlobalResource] profiles can not empty");
@@ -52,10 +52,9 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
     }
 
     @Override
-    public Future<List<GlobalResource>> list() {
+    public Future<List<GlobalResource>> list(Profile profile) {
         Promise<List<GlobalResource>> promise = Promise.promise();
-        // get only resources for relative profile
-        QueryBuilder query = QueryBuilder.start(Field.PROFILES).is(Profile.RELATIVE.getName());
+        QueryBuilder query = QueryBuilder.start(Field.PROFILES).is(profile.getName());
         mongo.find(collection, MongoQueryBuilder.build(query), MongoDbResult.validResultsHandler(result -> {
             if (result.isLeft()) {
                 log.error("[Mediacentre@GlobalResourceServiceMongoImpl::list] Can't find global resources : ", result.left().getValue());
@@ -71,15 +70,15 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
     @Override
     public Future<JsonObject> deleteGlobalChannel(String idChannel) {
         Promise<JsonObject> promise = Promise.promise();
-        mongo.delete(collection, new JsonObject().put("_id", idChannel), MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise)));
+        mongo.delete(collection, new JsonObject().put(Field._ID, idChannel), MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise)));
         return promise.future();
     }
 
     @Override
     public Future<GlobalResource> updateGlobalChannel(String id, JsonObject resource) {
         Promise<GlobalResource> promise = Promise.promise();
-        JsonObject query = new JsonObject().put("_id", id);
-        JsonObject update = new JsonObject().put("$set", resource);
+        JsonObject query = new JsonObject().put(Field._ID, id);
+        JsonObject update = new JsonObject().put(Field.MONGO_SET, resource);
         mongo.update(collection, query, update, MongoDbResult.validResultHandler(IModelHelper.uniqueResultToIModel(promise, GlobalResource.class)));
         return promise.future();
     }
