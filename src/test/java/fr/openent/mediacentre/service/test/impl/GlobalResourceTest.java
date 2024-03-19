@@ -75,7 +75,7 @@ public class GlobalResourceTest {
                 .put("discipline", new JsonArray().add("agronomie"))
                 .put("levels", new JsonArray().add("terminale"))
                 .put("image", "image")
-                .put("profiles", new JsonArray().add(Profile.RELATIVE.getName()));
+                .put("profiles", new JsonArray().add("RELATIVE"));
 
         String expectedCollection = "mediacentre.global";
         JsonObject expectedResource = new JsonObject()
@@ -84,7 +84,7 @@ public class GlobalResourceTest {
                 .put("discipline", new JsonArray().add("agronomie"))
                 .put("levels", new JsonArray().add("terminale"))
                 .put("image", "image")
-                .put("profiles", new JsonArray().add(Profile.RELATIVE.getName()))
+                .put("profiles", new JsonArray().add("RELATIVE"))
                 .put("date", new JsonObject().put("$date", 0))
                 .put("authors", new JsonArray().add("LACHISE Sarah"));
 
@@ -149,7 +149,7 @@ public class GlobalResourceTest {
 
     private JsonObject expectedTestList() {
         return new JsonObject()
-                .put("find", GLOBAL_COLLECTION)
-                .put("filter", new JsonObject().put(PROFILES, Profile.RELATIVE.getName()));
+                .put("find", "mediacentre.global")
+                .put("filter", new JsonObject().put("profiles", "RELATIVE"));
     }
 }
