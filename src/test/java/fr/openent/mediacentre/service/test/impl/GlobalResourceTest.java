@@ -102,8 +102,8 @@ public class GlobalResourceTest {
 
     @Test
     public void testDeleteGlobalResource(TestContext ctx) throws Exception {
-        String idChannel = "e18e8c6e-3e3e-4e3e-8e3e-3e3e3e3e3e3e";
-        JsonObject expectedQuery = new JsonObject().put("_id", idChannel);
+        String id = "e18e8c6e-3e3e-4e3e-8e3e-3e3e3e3e3e3e";
+        JsonObject expectedQuery = new JsonObject().put("_id", id);
 
         String expectedCollection = "mediacentre.global";
 
@@ -115,7 +115,7 @@ public class GlobalResourceTest {
             return null;
         }).when(mongo).delete(Mockito.anyString(), Mockito.any(JsonObject.class), Mockito.any(Handler.class));
 
-        globalResourceService.deleteGlobalChannel(idChannel);
+        globalResourceService.deleteGlobalChannel(id);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class GlobalResourceTest {
                 .put("discipline", new JsonArray().add("agronomie"))
                 .put("levels", new JsonArray().add("terminale"))
                 .put("image", "image")
-                .put("profiles", new JsonArray().add(Profile.RELATIVE.getName()));
+                .put("profiles", new JsonArray().add("RELATIVE"));
 
         JsonObject expectedQuery = new JsonObject().put("_id", id);
         JsonObject expectedUpdate = new JsonObject().put("$set", resource);
