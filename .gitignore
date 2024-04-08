@@ -16,3 +16,6 @@ rev-manifest.json
 cacerts
 /src/main/resources/public/font/
 coverage/
+/angularJS/src/css/
+/angularJS/src/dist/
+/angularJS/src/js/
