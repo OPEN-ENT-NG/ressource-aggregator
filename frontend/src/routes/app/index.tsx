@@ -1,9 +1,10 @@
 import React from "react";
 
 import { ID } from "edifice-ts-client";
-import { Link } from "react-router-dom";
 
-import { Card } from "~/components/card/Card.tsx";
+import {Square} from "~/components/square/Square.tsx";
+import {Sidebar} from "~/components/sidebar/Sidebar.tsx";
+import {Header} from "~/components/header/Header.tsx";
 
 // const ExportModal = lazy(async () => await import("~/features/export-modal"));
 
@@ -23,11 +24,16 @@ export const App = () => {
   console.log("i am in app");
   return (
     <>
-      <div>root index principal</div>
-      <Card title="Sample Card" content="This is a sample card component." />
-      <Link to={`/user`}>click to access user </Link>
-      <Link to={`/info`}>click to access info </Link>
-      <Link to={`/`}>click to access /</Link>
+        <Sidebar />
+        <div className="home-container">
+            <Header />
+            <div className="square-container">
+              <Square width="60%" height="300px" color="#c3c3c3" margin="0 5% 10px 0"/>
+              <Square width="40%" height="300px" color="#d0d0d0" margin="0 0 10px 0"/>
+            </div>
+            <Square width="100%" height="300px" color="#afafaf" margin="0 0 10px 0"/>
+            <Square width="100%" height="300px" color="#414141" margin="0 0 10px 0"/>
+        </div>
     </>
   );
 };

@@ -1,0 +1,13 @@
+.med-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .med-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+  }
+}
