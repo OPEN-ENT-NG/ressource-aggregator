@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@edifice-ui/react";
+import { Column, Grid } from "@edifice-ui/react";
 import "./ListCard.scss";
 
 
@@ -33,15 +33,14 @@ export const ListCard: React.FC<ListCardProps> = ({
         <div className="list-card-header">
             {title}
             {components && components.length > 1 && (
-                    <button className="right-button">Voir plus</button>
+                    <a>Voir plus</a>
                 )}
         </div>
-        <Grid>
+        <Grid>     
             {components && components.map((component) => (       
                 showComponent(component)
             ))}
         </Grid>
-              
         </div>
     );
 };
