@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Column, Grid } from "@edifice-ui/react";
 import "./ListCard.scss";
 
@@ -11,9 +11,6 @@ interface ListCardProps {
     components?: any[];
 }
 
-const showComponent = (component: any) => {
-    return component;
-}
 
 export const ListCard: React.FC<ListCardProps> = ({ 
     title,
@@ -21,8 +18,29 @@ export const ListCard: React.FC<ListCardProps> = ({
     color, 
     margin, 
     components
- }) => {
-   return (
+}) => {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    const showComponent = (component: any, index: number) => {
+        if(windowWidth<768 && index>3){}
+        else if(windowWidth<1280 && index>3){}
+        else if (index>5){}
+        else {return component;}
+    }
+    
+    return (
         <div className="list-card"
         style={{
             width: width,
@@ -37,8 +55,8 @@ export const ListCard: React.FC<ListCardProps> = ({
                 )}
         </div>
         <Grid>     
-            {components && components.map((component) => (       
-                showComponent(component)
+            {components && components.map((component, index) => (       
+                showComponent(component, index)
             ))}
         </Grid>
         </div>

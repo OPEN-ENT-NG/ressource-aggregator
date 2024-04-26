@@ -14,3 +14,20 @@
 .right-button {
     color: #000000;
 }
+
+.grid{
+    --edifice-columns: 2;
+}
+
+@media (min-width: 768px){
+    .grid{
+        --edifice-columns: 4;
+    }
+}
+
+@media (min-width: 1280px){
+    .grid{
+        --edifice-columns: 6;
+    }
+}
+
