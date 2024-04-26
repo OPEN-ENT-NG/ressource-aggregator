@@ -1,5 +1,4 @@
 .list-card-header {
-    color: white;
     margin: 1rem;
     display: flex;
     justify-content: space-between;
@@ -9,10 +8,32 @@
 .list-card {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
+    background: white;
+}
+
+.title {
+    color: #232323;
+    font-family: 'Roboto'; // à modifier
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18.75px;
+    text-align: left;    
 }
 
 .right-button {
-    color: #000000;
+    color: #E13A3A;
+    font-family: 'Roboto'; // à modifier
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16.41px;
+    text-align: left;
+    width: 57px;
+    height: 16px;
+    top: 523px;
+    left: 1448px;
+    gap: 0px;
+    opacity: 0px;    
 }
 
 .grid{

@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from "react";
-import { Column, Grid } from "@edifice-ui/react";
+import { Grid } from "@edifice-ui/react";
 import "./ListCard.scss";
 
 
 interface ListCardProps {
     title: string;
     width: string;
-    color: string;
-    margin: string;
+    height: string;
     components?: any[];
 }
 
@@ -15,8 +14,7 @@ interface ListCardProps {
 export const ListCard: React.FC<ListCardProps> = ({ 
     title,
     width, 
-    color, 
-    margin, 
+    height,
     components
 }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -52,14 +50,13 @@ export const ListCard: React.FC<ListCardProps> = ({
         <div className="list-card"
         style={{
             width: width,
-            backgroundColor: color,
-            margin: margin,
+            height: height,
         }}
         >
         <div className="list-card-header">
-            {title}
+            <span className="title">{title}</span>
             {components && tooMuchComponents(components) && (
-                    <a>Voir plus</a>
+                    <a className="right-button">Voir plus</a>
                 )}
         </div>
         <Grid>     

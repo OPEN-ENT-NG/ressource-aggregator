@@ -25,6 +25,7 @@ export const App = () => {
   const getFileCard = () => {
     return (
       <FileCard
+<<<<<<< HEAD
       doc={{
         _id: '1',
         _isShared: false,
@@ -40,6 +41,24 @@ export const App = () => {
       isClickable
       onClick={function Ga() {}}
       onSelect={function Ga() {}}
+=======
+      className="file-card"
+        doc={{
+          _id: '1',
+          _isShared: false,
+          _shared: [],
+          children: [],
+          created: new Date(),
+          eParent: '',
+          eType: 'file',
+          name: "test",
+          owner: { userId: '1', displayName: "ownerName" },
+          ownerName: "ownerName",
+        }}
+        isClickable
+        onClick={function Ga() {}}
+        onSelect={function Ga() {}}
+>>>>>>> 174b929 (feat(css): #MED-244 modifications of the css)
       />
     );
   };
@@ -70,10 +89,22 @@ export const App = () => {
           />
         </div>
         <ListCard
-          title="List Card"
+          title="Mes manuels"
           width="100%"
-          color="blue"
-          margin="0 0 10px 0"
+          height="253px"
+          components={[
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+          ]}
+        />
+        <ListCard
+          title="Mes liens utiles"
+          width="100%"
+          height="237px"
           components={[
             getFileCard(),
             getFileCard(),
@@ -82,18 +113,7 @@ export const App = () => {
             getFileCard(),
           ]}
         />
-        <Square
-          width="100%"
-          height="300px"
-          color="#afafaf"
-          margin="0 0 10px 0"
-        />
-        <Square
-          width="100%"
-          height="300px"
-          color="#414141"
-          margin="0 0 10px 0"
-        />
+        
       </div>
     </>
   );
