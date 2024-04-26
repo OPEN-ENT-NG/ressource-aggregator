@@ -80,9 +80,6 @@ export const App = () => {
             getFileCard(),
             getFileCard(),
             getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
           ]}
         />
         <Square

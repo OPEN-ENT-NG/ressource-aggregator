@@ -33,11 +33,19 @@ export const ListCard: React.FC<ListCardProps> = ({
         };
     }, []);
 
+    const nbComponentsToShow = () => {
+        // for small and medium screen
+        if (windowWidth<1280) { return 4;} // 4*1 on medium and 2*2 on small
+        // for large screen
+        return 6;
+    }
+
+    const tooMuchComponents = (components: any[]) => {
+        return components.length > nbComponentsToShow()
+    }
+
     const showComponent = (component: any, index: number) => {
-        if(windowWidth<768 && index>3){}
-        else if(windowWidth<1280 && index>3){}
-        else if (index>5){}
-        else {return component;}
+        if(index<nbComponentsToShow()) return component
     }
     
     return (
@@ -50,7 +58,7 @@ export const ListCard: React.FC<ListCardProps> = ({
         >
         <div className="list-card-header">
             {title}
-            {components && components.length > 1 && (
+            {components && tooMuchComponents(components) && (
                     <a>Voir plus</a>
                 )}
         </div>
