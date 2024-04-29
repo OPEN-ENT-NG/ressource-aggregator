@@ -1,5 +1,4 @@
 import React from "react";
-import "./Square.scss";
 
 interface SquareProps {
   width: string;
@@ -8,19 +7,14 @@ interface SquareProps {
   margin: string;
 }
 
-export const Square: React.FC<SquareProps> = ({
-  width,
-  height,
-  color,
-  margin,
-}) => {
+export const Square: React.FC<SquareProps> = (square: SquareProps) => {
   return (
     <div
       style={{
-        width: width,
-        height: height,
-        backgroundColor: color,
-        margin: margin,
+        width: square.width,
+        height: square.height,
+        backgroundColor: square.color,
+        margin: square.margin,
       }}
     ></div>
   );
