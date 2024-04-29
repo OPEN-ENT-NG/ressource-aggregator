@@ -23,10 +23,45 @@ export const App = () => {
       <Sidebar />
       <div className="home-container">
         <Header />
-        <Resource 
-          title="My Card bnefbnue"
-          ownerName="John Doe"
-        />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(6, 1fr)",
+            gridGap: "10px",
+            width: "100%",
+          }}
+        >
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+          <Resource
+            title="My Card bnefbnue"
+            ownerName="John Doe"
+            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
+          />
+        </div>
         <div className="square-container">
           <Square
             width="60%"

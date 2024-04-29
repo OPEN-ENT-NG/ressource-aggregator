@@ -1,7 +1,10 @@
 .med-resource-card {
-  width: 150px;
+  width: 100%;
+  height: 175px;
 
-  .med-resource-card-text {
-    white-space: normal;
+  .med-resource-body-text {
+    .med-resource-card-text {
+      white-space: normal;
+    }
   }
 }
