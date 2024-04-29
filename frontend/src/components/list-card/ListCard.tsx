@@ -1,20 +1,23 @@
 import React, {useState, useEffect} from "react";
 import { Grid } from "@edifice-ui/react";
 import "./ListCard.scss";
-
+import { ListCardType } from "../../core/enum/list-card-type";
+import { NbColumns } from "~/model/NbColumns";
+import { NbComponents } from "~/model/NbComponents";
 
 interface ListCardProps {
+    type: ListCardType;
     title: string;
-    width: string;
-    height: string;
+    nbColumns: NbColumns;
+    nbComponent: NbComponents;
     components?: any[];
 }
 
-
 export const ListCard: React.FC<ListCardProps> = ({ 
+    type,
     title,
-    width, 
-    height,
+    nbColumns,
+    nbComponent,
     components
 }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -31,35 +34,37 @@ export const ListCard: React.FC<ListCardProps> = ({
         };
     }, []);
 
-    const nbComponentsToShow = () => {
-        // for small and medium screen
-        if (windowWidth<1280) { return 4;} // 4*1 on medium and 2*2 on small
-        // for large screen
-        return 6;
+    const NbComponents = (windowWidth: number) => {
+        if (windowWidth < 768) return nbComponent.sm;
+        if (windowWidth < 1280) return nbComponent.md;
+        return nbComponent.lg;
+    }
+
+    const NbColumns = (windowWidth: number) => {
+        if (windowWidth < 768) return nbColumns.sm;
+        if (windowWidth < 1280) return nbColumns.md;
+        return nbColumns.lg;
     }
 
     const tooMuchComponents = (components: any[]) => {
-        return components.length > nbComponentsToShow()
-    }
+        return components.length > NbComponents(windowWidth);
+    };
 
     const showComponent = (component: any, index: number) => {
-        if(index<nbComponentsToShow()) return component
-    }
+        if (index < NbComponents(windowWidth)) {
+            return component;
+        }
+    };
     
     return (
-        <div className="list-card"
-        style={{
-            width: width,
-            height: height,
-        }}
-        >
+        <div className={`list-card ${type}`}>
         <div className="list-card-header">
             <span className="title">{title}</span>
             {components && tooMuchComponents(components) && (
                     <a className="right-button">Voir plus</a>
                 )}
         </div>
-        <Grid>     
+        <Grid className={`grid-${NbColumns(windowWidth)}`}>     
             {components && components.map((component, index) => (       
                 showComponent(component, index)
             ))}

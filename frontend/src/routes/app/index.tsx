@@ -2,12 +2,13 @@ import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { Card } from "~/components/card/Card.tsx";
+
 import { Header } from "~/components/header/Header.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
 import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { FileCard } from "@edifice-ui/react";
-
 // const ExportModal = lazy(async () => await import("~/features/export-modal"));
 import { Header } from "~/components/header/Header.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
@@ -34,21 +35,6 @@ export const App = () => {
   const getFileCard = () => {
     return (
       <FileCard
-      doc={{
-        _id: '1',
-        _isShared: false,
-        _shared: [],
-        children: [],
-        created: new Date(),
-        eParent: '',
-        eType: 'file',
-        name: "test",
-        owner: { userId: '1', displayName: "ownerName" },
-        ownerName: "ownerName",
-      }}
-      isClickable
-      onClick={function Ga() {}}
-      onSelect={function Ga() {}}
       className="file-card"
         doc={{
           _id: '1',
@@ -95,9 +81,10 @@ export const App = () => {
           />
         </div>
         <ListCard
-          title="Mes manuels"
-          width="100%"
-          height="253px"
+          type={ListCardType.manuals}
+          title={TitleListCard[ListCardType.manuals]}
+          nbColumns={NbColumnsListCard[ListCardType.manuals]}
+          nbComponent={NbComponentsListCard[ListCardType.manuals]}
           components={[
             getFileCard(),
             getFileCard(),
@@ -108,9 +95,10 @@ export const App = () => {
           ]}
         />
         <ListCard
-          title="Mes liens utiles"
-          width="100%"
-          height="237px"
+          type={ListCardType.util_links}
+          title={TitleListCard[ListCardType.util_links]}
+          nbColumns={NbColumnsListCard[ListCardType.util_links]}
+          nbComponent={NbComponentsListCard[ListCardType.util_links]}
           components={[
             getFileCard(),
             getFileCard(),
