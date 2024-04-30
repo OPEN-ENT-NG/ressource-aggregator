@@ -18,6 +18,7 @@ main {
 .med-container {
   width: calc(100% - 75px);
   margin-left: 75px;
+  padding: 0 15px;
   background-color: $med-light-gray;
   .list-container {
     display: flex;
@@ -40,6 +41,10 @@ main {
       width: 55%;
     }
   }
+}
+
+.container-fluid {
+  padding: 0;
 }
 
 .file-card {

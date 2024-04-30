@@ -1,7 +1,14 @@
 .sidebar {
   position: fixed;
   left: 0;
+  top: 0;
   width: 75px;
-  height: calc(100% - 67px);
+  height: 100vh;
+  padding-top: 75px;
   background-color: #040404;
+}
+
+.header {
+  position: relative;
+  z-index: 100;
 }

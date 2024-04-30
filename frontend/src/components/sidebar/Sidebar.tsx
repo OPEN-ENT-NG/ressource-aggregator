@@ -1,33 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Sidebar.scss";
+import CameraIcon from "@mui/icons-material/Camera";
+import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
 
 interface SidebarProps {}
 
 export const Sidebar: React.FC<SidebarProps> = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const headerHeight = document.querySelector("header")?.offsetHeight ?? 67;
-  console.log(headerHeight);
-  const handleScroll = () => {
-    const position = window.pageYOffset;
-    setScrollPosition(position);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
-    <div
-      className="sidebar"
-      style={{
-        top: `calc(${headerHeight}px - ${
-          scrollPosition >= headerHeight ? headerHeight : scrollPosition
-        }px`,
-      }}
-    ></div>
+    <div className="sidebar">
+      <div className="icons-container">
+        <SidebarIcon link="/user" icon={<CameraIcon />} name="name" />
+      </div>
+    </div>
   );
 };
