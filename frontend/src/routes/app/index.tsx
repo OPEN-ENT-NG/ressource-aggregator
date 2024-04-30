@@ -1,5 +1,14 @@
 import { ID } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
+import { Header } from "~/components/header/Header.tsx";
+import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
+import { Square } from "~/components/square/Square.tsx";
+import { ListCard } from "~/components/list-card/ListCard.tsx";
+import { FileCard } from "@edifice-ui/react";
+
+// const ExportModal = lazy(async () => await import("~/features/export-modal"));
 import { Header } from "~/components/header/Header.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
@@ -25,7 +34,6 @@ export const App = () => {
   const getFileCard = () => {
     return (
       <FileCard
-<<<<<<< HEAD
       doc={{
         _id: '1',
         _isShared: false,
@@ -41,7 +49,6 @@ export const App = () => {
       isClickable
       onClick={function Ga() {}}
       onSelect={function Ga() {}}
-=======
       className="file-card"
         doc={{
           _id: '1',
@@ -58,11 +65,10 @@ export const App = () => {
         isClickable
         onClick={function Ga() {}}
         onSelect={function Ga() {}}
->>>>>>> 174b929 (feat(css): #MED-244 modifications of the css)
       />
     );
   };
-  return (
+    return (
     <>
       <Sidebar />
       <div className="home-container">
@@ -113,7 +119,7 @@ export const App = () => {
             getFileCard(),
           ]}
         />
-        
+
       </div>
     </>
   );
