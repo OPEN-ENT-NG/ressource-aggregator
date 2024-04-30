@@ -2,8 +2,6 @@ body {
   min-width: inherit;
   width: auto;
 }
-<<<<<<< HEAD
-=======
 
 main {
   &.container-fluid {
@@ -16,8 +14,7 @@ main {
 .home-container {
   width: calc(100% - 75px);
   margin-left: 75px;
-  background: #FAFAFA;
-
+  background: #fafafa;
 
   .square-container {
     display: flex;
@@ -27,8 +24,7 @@ main {
 }
 
 .file-card {
-  width: 200px;
+  width: 100%;
   height: 183px;
-  border: 1px solid #FFCBA0
+  border: 1px solid #ffcba0;
 }
->>>>>>> 174b929 (feat(css): #MED-244 modifications of the css)

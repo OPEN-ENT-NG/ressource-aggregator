@@ -1,20 +1,17 @@
+import { FileCard } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-
-import { Card } from "~/components/card/Card.tsx";
 
 import { Header } from "~/components/header/Header.tsx";
+import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
-import { ListCard } from "~/components/list-card/ListCard.tsx";
-import { FileCard } from "@edifice-ui/react";
-// const ExportModal = lazy(async () => await import("~/features/export-modal"));
-import { Header } from "~/components/header/Header.tsx";
-import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
-import { Square } from "~/components/square/Square.tsx";
-import { ListCard } from "~/components/list-card/ListCard.tsx";
-import { FileCard } from "@edifice-ui/react";
+import { ListCardType } from "~/core/enum/list-card-type";
+import {
+  NbColumnsListCard,
+  NbComponentsListCard,
+  TitleListCard,
+} from "~/core/object/home.ts";
 
 export interface AppProps {
   _id: string;
@@ -35,17 +32,17 @@ export const App = () => {
   const getFileCard = () => {
     return (
       <FileCard
-      className="file-card"
+        className="file-card"
         doc={{
-          _id: '1',
+          _id: "1",
           _isShared: false,
           _shared: [],
           children: [],
           created: new Date(),
-          eParent: '',
-          eType: 'file',
+          eParent: "",
+          eType: "file",
           name: "test",
-          owner: { userId: '1', displayName: "ownerName" },
+          owner: { userId: "1", displayName: "ownerName" },
           ownerName: "ownerName",
         }}
         isClickable
@@ -54,7 +51,7 @@ export const App = () => {
       />
     );
   };
-    return (
+  return (
     <>
       <Sidebar />
       <div className="home-container">
@@ -81,6 +78,7 @@ export const App = () => {
           />
         </div>
         <ListCard
+          scrolable={false}
           type={ListCardType.manuals}
           title={TitleListCard[ListCardType.manuals]}
           nbColumns={NbColumnsListCard[ListCardType.manuals]}
@@ -95,6 +93,7 @@ export const App = () => {
           ]}
         />
         <ListCard
+          scrolable={false}
           type={ListCardType.util_links}
           title={TitleListCard[ListCardType.util_links]}
           nbColumns={NbColumnsListCard[ListCardType.util_links]}
@@ -107,7 +106,6 @@ export const App = () => {
             getFileCard(),
           ]}
         />
-
       </div>
     </>
   );
