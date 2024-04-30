@@ -3,6 +3,8 @@ import { ID } from "edifice-ts-client";
 import { Header } from "~/components/header/Header.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
+import { ListCard } from "~/components/list-card/ListCard.tsx";
+import { FileCard } from "@edifice-ui/react";
 
 export interface AppProps {
   _id: string;
@@ -17,6 +19,30 @@ export interface AppProps {
 }
 
 export const App = () => {
+  console.log("i am in app");
+  const { t } = useTranslation();
+  // function that return a FileCard component
+  const getFileCard = () => {
+    return (
+      <FileCard
+      doc={{
+        _id: '1',
+        _isShared: false,
+        _shared: [],
+        children: [],
+        created: new Date(),
+        eParent: '',
+        eType: 'file',
+        name: "test",
+        owner: { userId: '1', displayName: "ownerName" },
+        ownerName: "ownerName",
+      }}
+      isClickable
+      onClick={function Ga() {}}
+      onSelect={function Ga() {}}
+      />
+    );
+  };
   return (
     <>
       <Sidebar />
@@ -43,6 +69,24 @@ export const App = () => {
             margin="0 0 10px 0"
           />
         </div>
+        <ListCard
+          title="List Card"
+          width="100%"
+          color="blue"
+          margin="0 0 10px 0"
+          components={[
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+            getFileCard(),
+          ]}
+        />
         <Square
           width="100%"
           height="300px"
