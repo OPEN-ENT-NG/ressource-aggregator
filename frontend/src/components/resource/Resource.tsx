@@ -1,39 +1,64 @@
 import React from "react";
+
 import "./Resource.scss";
-import {
-  Card,
-  useDropdown
-} from "@edifice-ui/react";
+import { Card } from "@edifice-ui/react";
+import LinkIcon from "@mui/icons-material/Link";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 interface ResourceProps {
   image: string;
   title: string;
-  ownerName: string;
+  subtitle: string;
+  size?: "small" | "medium";
+  favorite?: boolean;
 }
 
 export const Resource: React.FC<ResourceProps> = ({
   image,
   title,
-  ownerName,
+  subtitle,
+  size = "medium",
+  favorite = false,
 }) => {
-  const { visible, setVisible, triggerProps } = useDropdown("bottom-start");
-  
-  const select = () => {
-    console.log("Selected")
-    console.log("Before : ", visible);
-    setVisible(!visible);
-    console.log("After : ", visible);
-  }
+  const link = () => {
+    console.log("link");
+  };
+  const pin = () => {
+    console.log("pin");
+  };
+  const fav = () => {
+    console.log("fav");
+  };
+  const unfav = () => {
+    console.log("unfav");
+  };
 
   return (
-    <Card className="med-resource-card" {...triggerProps} onSelect={() => select()}>
+    <Card
+      isSelectable={false}
+      isClickable={false}
+      className={`med-resource-card ${size}`}
+    >
       <Card.Body space="8" flexDirection="column">
-        <Card.Image
-          imageSrc={image}
-        />
         <div className="med-resource-body-text">
           <Card.Text className="med-resource-card-text">{title}</Card.Text>
-          <Card.Text className="text-black-50 med-resource-card-text">{ownerName}</Card.Text>
+          <Card.Text className="text-black-50 med-resource-card-text">
+            {subtitle}
+          </Card.Text>
+        </div>
+        {image && (
+          <img src={image} alt="Resource" className="med-resource-image" />
+        )}
+        <div className="med-resource-footer">
+          <LinkIcon className="med-link" onClick={() => link()} />
+          <PushPinIcon className="med-pin" onClick={() => pin()} />
+          {favorite ? (
+            <StarIcon className="med-star" onClick={() => unfav()} />
+          ) : (
+            <StarBorderIcon className="med-star" onClick={() => fav()} />
+          )}
         </div>
       </Card.Body>
     </Card>

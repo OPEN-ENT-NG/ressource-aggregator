@@ -1,6 +1,5 @@
 import { ID } from "edifice-ts-client";
 
-import { Resource } from "~/components/resource/Resource.tsx";
 import { Header } from "~/components/header/Header.tsx";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
@@ -23,45 +22,13 @@ export const App = () => {
       <Sidebar />
       <div className="home-container">
         <Header />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
-            gridGap: "10px",
-            width: "100%",
-          }}
-        >
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-          <Resource
-            title="My Card bnefbnue"
-            ownerName="John Doe"
-            image="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
-          />
-        </div>
+        {/* <Resource
+          image="https://via.placeholder.com/150"
+          title="Resource Title"
+          subtitle="Resource Subtitle"
+          size="medium"
+          favorite={false}
+        /> */}
         <div className="square-container">
           <Square
             width="60%"
