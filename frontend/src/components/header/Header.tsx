@@ -30,6 +30,7 @@ export const Header: React.FC = () => {
       </div>
       <div className="med-header-container">
         <SearchBar
+          isVariant={false}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearchValue(e.target.value)
           }
