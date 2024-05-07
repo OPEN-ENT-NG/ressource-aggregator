@@ -1,24 +1,23 @@
 import React from "react";
 import "./SidebarIcon.scss";
-import { Link } from "react-router-dom";
 
 interface SidebarIconProps {
-  link: string;
   icon: React.ReactNode;
   name: string;
+  action: () => void;
 }
 
 export const SidebarIcon: React.FC<SidebarIconProps> = ({
-  link,
   icon,
   name,
+  action,
 }) => {
   return (
     <>
-      <Link to={link} className="sidebar-icon">
-        {icon}
+      <div className="sidebar-icon" onClick={action}>
+        <div className="sidebar-icon-img">{icon}</div>
         <span>{name}</span>
-      </Link>
+      </div>
     </>
   );
 };

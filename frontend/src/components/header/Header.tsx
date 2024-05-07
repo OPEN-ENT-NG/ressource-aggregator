@@ -2,6 +2,7 @@ import React from "react";
 
 import { Breadcrumb, SearchBar, Button } from "@edifice-ui/react";
 import { redirect } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
 import "./Header.scss";
 
 export const Header: React.FC = () => {
@@ -16,6 +17,7 @@ export const Header: React.FC = () => {
   return (
     <div className="med-header">
       <div className="med-header-container">
+        {/* <MenuIcon /> */}
         <Breadcrumb
           app={{
             address: "/mediacentre",
