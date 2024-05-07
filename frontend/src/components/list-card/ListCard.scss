@@ -1,27 +1,14 @@
-/* LIST CARD */
+@import "../../styles/_colors.scss";
+
 .list-card {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  background: white;
-}
 
-/* LIST CARD FOR MANUALS */
-.list-card.manuals {
-  width: 100%;
-  height: 100%;
-}
-
-/* LIST CARD FOR FAVORITES */
-.list-card.favorites {
-  width: 100%;
-  height: 100%;
-}
-
-/* LIST CARD FOR UTIL LINKS */
-.list-card.util_links {
-  width: 100%;
-  height: 100%;
+  .manuals .favorites .util_links {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 /* LIST CARD HEADER */
@@ -34,8 +21,8 @@
 
 /* LIST CARD TITLE */
 .title {
-  color: #232323;
-  font-family: "Roboto"; // à modifier
+  color: $med-dark-gray;
+  font-family: "Roboto";
   font-size: 16px;
   font-weight: 400;
   line-height: 18.75px;
@@ -44,8 +31,8 @@
 
 /* LIST CARD BUTTON */
 .right-button {
-  color: #e13a3a;
-  font-family: "Roboto"; // à modifier
+  color: $med-red;
+  font-family: "Roboto";
   font-size: 14px;
   font-weight: 400;
   line-height: 16.41px;
@@ -58,31 +45,31 @@
   background: transparent;
 }
 
-.grid-1-scrolable {
+.grid-1-scrollable {
   --edifice-columns: 1;
   width: 90%;
 }
-.grid-2-scrolable {
+.grid-2-scrollable {
   --edifice-columns: 2;
   width: 90%;
 }
-.grid-3-scrolable {
+.grid-3-scrollable {
   --edifice-columns: 3;
   width: 90%;
 }
-.grid-4-scrolable {
+.grid-4-scrollable {
   --edifice-columns: 4;
   width: 90%;
 }
-.grid-5-scrolable {
+.grid-5-scrollable {
   --edifice-columns: 5;
   width: 90%;
 }
-.grid-6-scrolable {
+.grid-6-scrollable {
   --edifice-columns: 6;
   width: 90%;
 }
-.grid-7-scrolable {
+.grid-7-scrollable {
   --edifice-columns: 7;
   width: 90%;
 }

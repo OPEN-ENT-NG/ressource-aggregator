@@ -1,3 +1,5 @@
+@import "./colors.scss";
+
 body {
   min-width: inherit;
   width: auto;
@@ -14,8 +16,7 @@ main {
 .home-container {
   width: calc(100% - 75px);
   margin-left: 75px;
-  background: #fafafa;
-
+  background-color: $med-light-gray;
   .square-container {
     display: flex;
     flex-direction: row;
@@ -26,5 +27,4 @@ main {
 .file-card {
   width: 100%;
   height: 183px;
-  border: 1px solid #ffcba0;
 }

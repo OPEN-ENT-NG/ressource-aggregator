@@ -1,17 +1,16 @@
-import { FileCard } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
-import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/header/Header.tsx";
 import { ListCard } from "~/components/list-card/ListCard.tsx";
+import { Resource } from "~/components/resource/Resource";
 import { Sidebar } from "~/components/sidebar/Sidebar.tsx";
 import { Square } from "~/components/square/Square.tsx";
-import { ListCardType } from "~/core/enum/list-card-type";
 import {
   NbColumnsListCard,
   NbComponentsListCard,
   TitleListCard,
-} from "~/core/object/home.ts";
+} from "~/core/const/home-element-list-sizes.const.ts";
+import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
 
 export interface AppProps {
   _id: string;
@@ -26,28 +25,14 @@ export interface AppProps {
 }
 
 export const App = () => {
-  console.log("i am in app");
-  const { t } = useTranslation();
-  // function that return a FileCard component
-  const getFileCard = () => {
+  const getResourceCard = () => {
     return (
-      <FileCard
-        className="file-card"
-        doc={{
-          _id: "1",
-          _isShared: false,
-          _shared: [],
-          children: [],
-          created: new Date(),
-          eParent: "",
-          eType: "file",
-          name: "test",
-          owner: { userId: "1", displayName: "ownerName" },
-          ownerName: "ownerName",
-        }}
-        isClickable
-        onClick={function Ga() {}}
-        onSelect={function Ga() {}}
+      <Resource
+        image="https://via.placeholder.com/150"
+        title="Resource Title"
+        subtitle="Resource Subtitle"
+        size="medium"
+        favorite={false}
       />
     );
   };
@@ -56,13 +41,6 @@ export const App = () => {
       <Sidebar />
       <div className="home-container">
         <Header />
-        {/* <Resource
-          image="https://via.placeholder.com/150"
-          title="Resource Title"
-          subtitle="Resource Subtitle"
-          size="medium"
-          favorite={false}
-        /> */}
         <div className="square-container">
           <Square
             width="60%"
@@ -78,32 +56,32 @@ export const App = () => {
           />
         </div>
         <ListCard
-          scrolable={false}
-          type={ListCardType.manuals}
-          title={TitleListCard[ListCardType.manuals]}
-          nbColumns={NbColumnsListCard[ListCardType.manuals]}
-          nbComponent={NbComponentsListCard[ListCardType.manuals]}
+          scrollable={false}
+          type={ListCardTypeEnum.manuals}
+          title={TitleListCard[ListCardTypeEnum.manuals]}
+          nbColumns={NbColumnsListCard[ListCardTypeEnum.manuals]}
+          nbComponent={NbComponentsListCard[ListCardTypeEnum.manuals]}
           components={[
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
           ]}
         />
         <ListCard
-          scrolable={false}
-          type={ListCardType.util_links}
-          title={TitleListCard[ListCardType.util_links]}
-          nbColumns={NbColumnsListCard[ListCardType.util_links]}
-          nbComponent={NbComponentsListCard[ListCardType.util_links]}
+          scrollable={false}
+          type={ListCardTypeEnum.util_links}
+          title={TitleListCard[ListCardTypeEnum.util_links]}
+          nbColumns={NbColumnsListCard[ListCardTypeEnum.util_links]}
+          nbComponent={NbComponentsListCard[ListCardTypeEnum.util_links]}
           components={[
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
-            getFileCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
+            getResourceCard(),
           ]}
         />
       </div>

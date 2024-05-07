@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Grid, Column } from "@edifice-ui/react";
+import { Button, Grid } from "@edifice-ui/react";
 
 import "./ListCard.scss";
-import { ListCardType } from "../../core/enum/list-card-type";
-import { NbColumns } from "~/model/NbColumns";
-import { NbComponents } from "~/model/NbComponents";
+import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
+import { ElementSize } from "~/model/elementSize.tsx";
 
 interface ListCardProps {
-  scrolable: boolean;
-  type: ListCardType;
+  scrollable: boolean;
+  type: ListCardTypeEnum;
   title: string;
-  nbColumns: NbColumns;
-  nbComponent: NbComponents;
+  nbColumns: ElementSize;
+  nbComponent: ElementSize;
   components?: any[];
 }
 
 export const ListCard: React.FC<ListCardProps> = ({
-  scrolable,
+  scrollable,
   type,
   title,
   nbColumns,
@@ -56,21 +55,11 @@ export const ListCard: React.FC<ListCardProps> = ({
 
   const showComponent = (component: any, index: number) => {
     if (index < NbComponents(windowWidth)) {
-      return (
-        <Column
-          sm="1"
-          style={{
-            backgroundColor: "#ebebeb",
-            minHeight: "10rem",
-            padding: ".8rem",
-          }}
-        >
-          {component}
-        </Column>
-      );
+      return component;
     }
   };
-  if (!scrolable) {
+
+  if (!scrollable) {
     return (
       <div className={`list-card ${type}`}>
         <div className="list-card-header">
@@ -102,7 +91,7 @@ export const ListCard: React.FC<ListCardProps> = ({
           >
             {"<"}
           </Button>
-          <Grid className={`grid-${NbColumns(windowWidth)}-scrolable`}>
+          <Grid className={`grid-${NbColumns(windowWidth)}-scrollable`}>
             {components &&
               components.map((component, index) =>
                 showComponent(component, index),
