@@ -8,8 +8,11 @@
   cursor: pointer;
   width: 100%;
 
-  &:hover {
+  &:hover,
+  &.selected {
     color: $med-red;
+    border-left: 5px solid $med-red;
+    width: calc(100% - 5px);
     .sidebar-icon-img {
       svg {
         fill: $med-red;

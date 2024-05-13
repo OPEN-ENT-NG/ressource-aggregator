@@ -1,5 +1,10 @@
 import { ID } from "edifice-ts-client";
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import "./index.css";
 
@@ -19,6 +24,12 @@ export interface AppProps {
 
 export const App = () => {
   console.log("i am in app user");
+  const location = useLocation();
+  console.log("location : ", location);
+  const params = useParams();
+  console.log("params : ", params);
+  const [searchParams] = useSearchParams();
+  console.log("query : ", searchParams.get("type"));
   return (
     <>
       <div>coucou je suis user</div>

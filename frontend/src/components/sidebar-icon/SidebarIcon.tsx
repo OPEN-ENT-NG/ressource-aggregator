@@ -5,16 +5,28 @@ interface SidebarIconProps {
   icon: React.ReactNode;
   name: string;
   action: () => void;
+  selected?: boolean;
 }
 
 export const SidebarIcon: React.FC<SidebarIconProps> = ({
   icon,
   name,
   action,
+  selected = false,
 }) => {
   return (
     <>
-      <div className="sidebar-icon" onClick={action}>
+      <div
+        role="button"
+        className={`sidebar-icon ${selected ? "selected" : ""}`}
+        onClick={action}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            action();
+          }
+        }}
+        tabIndex={0}
+      >
         <div className="sidebar-icon-img">{icon}</div>
         <span>{name}</span>
       </div>

@@ -1,11 +1,15 @@
 import React from "react";
 
 import { Breadcrumb, SearchBar, Button } from "@edifice-ui/react";
-import { redirect } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
+import { redirect } from "react-router-dom";
 import "./Header.scss";
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  toggleSidebar: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [searchValue, setSearchValue] = React.useState("");
 
   const search = () => {
@@ -17,7 +21,9 @@ export const Header: React.FC = () => {
   return (
     <div className="med-header">
       <div className="med-header-container">
-        {/* <MenuIcon /> */}
+        <div className="med-burger-icon sidebar-toggle">
+          <MenuIcon onClick={toggleSidebar} />
+        </div>
         <Breadcrumb
           app={{
             address: "/mediacentre",
