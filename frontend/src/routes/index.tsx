@@ -20,20 +20,11 @@ const routes = [
         },
       },
       {
-        path: "info",
+        path: "search",
         async lazy() {
-          const { App } = await import("./info");
+          const { Search } = await import("./search");
           return {
-            Component: App,
-          };
-        },
-      },
-      {
-        path: "user",
-        async lazy() {
-          const { App } = await import("./user");
-          return {
-            Component: App,
+            Component: Search,
           };
         },
       },

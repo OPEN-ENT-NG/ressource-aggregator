@@ -45,10 +45,14 @@ main {
 
 .container-fluid {
   padding: 0;
+
+  &.bg-white {
+    background-color: $med-grey !important;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  .home-container {
+  .med-container {
     width: 100%;
     margin-left: 0;
   }
