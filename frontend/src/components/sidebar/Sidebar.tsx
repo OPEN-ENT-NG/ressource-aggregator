@@ -10,6 +10,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
 import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const { t } = useTranslation();
   const navigate = useNavigate(); // uniquement pour routes react, utiliser des <a> pour rediriger vers angular
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -51,19 +53,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <SidebarIcon
           action={() => navigate("/")}
           icon={<HomeIcon />}
-          name="Accueil"
+          name={`${t("mediacentre.sidebar.home")}`}
           selected={location.pathname === "/"}
         />
         <SidebarIcon
           action={() => navigate("/favorite")}
           icon={<StarIcon />}
-          name="Favoris"
+          name={`${t("mediacentre.sidebar.favorite")}`}
           selected={location.pathname === "/favorites"}
         />
         <SidebarIcon
           action={() => navigate("/search/plain_text")}
           icon={<SchoolIcon />}
-          name="Manuels"
+          name={`${t("mediacentre.sidebar.textbooks")}`}
           selected={
             location.pathname === "/search" &&
             searchParams.get("type") === "manuals"
@@ -72,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <SidebarIcon
           action={() => navigate("/search/plain_text")}
           icon={<LaptopIcon />}
-          name="Ressources"
+          name={`${t("mediacentre.sidebar.resources")}`}
           selected={
             location.pathname === "/search" &&
             searchParams.get("type") === "resources"
@@ -81,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <SidebarIcon
           action={() => navigate("/signet")}
           icon={<BookmarkIcon />}
-          name="Signets"
+          name={`${t("mediacentre.sidebar.signets")}`}
           selected={location.pathname === "/signet"}
         />
         <SidebarIcon
