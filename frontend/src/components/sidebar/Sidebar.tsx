@@ -7,11 +7,7 @@ import LaptopIcon from "@mui/icons-material/Laptop";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
 import StarIcon from "@mui/icons-material/Star";
-import {
-  useLocation,
-  useSearchParams,
-  useNavigate,
-} from "react-router-dom";
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
 import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
 
