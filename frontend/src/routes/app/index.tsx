@@ -148,9 +148,8 @@ export const App = () => {
   } else if (windowWidth >= 768) {
     return (
       <>
-        <Sidebar />
+        <MainLayout />
         <div className="med-container">
-          <Header />
           <ListCard
             scrollable={true}
             type={ListCardTypeEnum.pinned_resources}
@@ -183,9 +182,8 @@ export const App = () => {
   } else {
     return (
       <>
-        <Sidebar />
+        <MainLayout />
         <div className="med-container">
-          <Header />
           <ListCard
             scrollable={true}
             type={ListCardTypeEnum.pinned_resources}

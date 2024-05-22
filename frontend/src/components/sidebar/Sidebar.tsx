@@ -8,7 +8,6 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
 import StarIcon from "@mui/icons-material/Star";
 import {
-  redirect,
   useLocation,
   useSearchParams,
   useNavigate,

@@ -19,15 +19,6 @@ const routes = [
           };
         },
       },
-      {
-        path: "search",
-        async lazy() {
-          const { Search } = await import("./search");
-          return {
-            Component: Search,
-          };
-        },
-      },
     ],
   },
 ];

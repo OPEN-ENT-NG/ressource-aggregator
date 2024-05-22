@@ -20,10 +20,11 @@ export const SidebarIcon: React.FC<SidebarIconProps> = ({
         role="button"
         className={`sidebar-icon ${selected ? "selected" : ""}`}
         onClick={action}
+        onKeyDown={action}
         tabIndex={0}
       >
         <div className="sidebar-icon-img">{icon}</div>
-        <span>{name}</span>
+        <span className="sidebar-icon-text">{name}</span>
       </div>
     </>
   );
