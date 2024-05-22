@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import { ID } from "edifice-ts-client";
 
-import { Header } from "~/components/header/Header.tsx";
 import { ListCard } from "~/components/list-card/ListCard.tsx";
-import { Resource } from "~/components/resource/Resource";
 import { MainLayout } from "~/components/main-layout/MainLayout";
+import { Resource } from "~/components/resource/Resource";
 import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
 
 export interface AppProps {
