@@ -7,10 +7,10 @@ import LaptopIcon from "@mui/icons-material/Laptop";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
 import StarIcon from "@mui/icons-material/Star";
+import { useTranslation } from "react-i18next";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
 import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
-import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   sidebarOpen: boolean;
