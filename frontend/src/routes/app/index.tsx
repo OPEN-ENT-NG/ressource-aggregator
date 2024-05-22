@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { ID } from "edifice-ts-client";
 
@@ -6,8 +6,6 @@ import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { Resource } from "~/components/resource/Resource";
 import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
-import { useGetFavoriteQuery } from "~/services/api/favorite.service";
-import { useGetSignetsQuery } from "~/services/api/signet.service";
 
 export interface AppProps {
   _id: string;

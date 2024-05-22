@@ -12,3 +12,8 @@ export const favoriteApi = createApi({
 });
 
 export const { useGetFavoriteQuery } = favoriteApi;
+
+export const getFavorite = () => {
+  const { data: favorite } = useGetFavoriteQuery(null);
+  return favorite && favorite.data && favorite.data.length > 0 ? favorite.data : [];
+}

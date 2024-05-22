@@ -5,10 +5,15 @@ export const signetsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/mediacentre/" }),
   tagTypes: [],
   endpoints: (builder) => ({
-    getSignets: builder.query({
+    getPublishedSignets: builder.query({
       query: () => "signets",
     }),
+
   }),
 });
 
-export const { useGetSignetsQuery } = signetsApi;
+const getAllSignets = () => {
+  return []
+}
+
+export const { useGetPublishedSignetsQuery } = signetsApi;
