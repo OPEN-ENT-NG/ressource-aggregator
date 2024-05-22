@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const favoriteApi = createApi({
-  reducerPath: 'favorite',
+export const signetsApi = createApi({
+  reducerPath: 'signets',
   baseQuery: fetchBaseQuery({ baseUrl: "/mediacentre/" }),
   tagTypes: [],
   endpoints: (builder) => ({
-    getFavorite: builder.query({
-      query: () => "favorites",
+    getSignets: builder.query({
+      query: () => "signets",
     }),
   }),
 });
 
-export const { useGetFavoriteQuery } = favoriteApi;
+export const { useGetSignetsQuery } = signetsApi;
