@@ -63,14 +63,14 @@ export const App = () => {
   const updateFavoriteStatus = (id: string, isFavorite: boolean) => {
     let newSignets: Signet[] = [...homeSignets];
     newSignets = newSignets.map((signet: Signet) =>
-      signet.id.toString() == id.toString()
+      signet?.id?.toString() == id.toString()
         ? { ...signet, favorite: isFavorite }
         : signet,
     );
     setHomeSignets(newSignets);
     let newTextbooks: Textbook[] = [...textbooks];
     newTextbooks = newTextbooks.map((textbook: Textbook) =>
-      textbook.id.toString() == id.toString()
+      textbook?.id?.toString() == id.toString()
         ? { ...textbook, favorite: isFavorite }
         : textbook,
     );
@@ -151,11 +151,11 @@ export const App = () => {
                       type={CardTypeEnum.manuals}
                       components={textbooks.map((textbook: Textbook) => (
                         <Resource
-                          id={textbook.id}
+                          id={textbook?.id ?? ""}
                           key={textbook.id}
-                          image={textbook.image}
+                          image={textbook?.image ?? "/img/no-avatar.svg"}
                           title={textbook.title}
-                          subtitle={textbook.editors.join(", ")}
+                          subtitle={textbook?.editors?.join(", ") ?? ""}
                           type={CardTypeEnum.manuals}
                           favorite={textbook.favorite}
                           link={textbook.link ?? textbook.url ?? "/"}
@@ -178,9 +178,9 @@ export const App = () => {
                       type={CardTypeEnum.book_mark}
                       components={homeSignets.map((signet: Signet) => (
                         <Resource
-                          id={signet.id ?? signet._id}
-                          key={signet.id ?? signet._id}
-                          image={signet.image}
+                          id={signet?.id ?? signet?._id ?? ""}
+                          key={signet.id ?? signet?._id ?? ""}
+                          image={signet?.image ?? "/img/no-avatar.svg"}
                           title={signet.title}
                           subtitle={
                             signet.orientation
@@ -188,17 +188,18 @@ export const App = () => {
                               : ""
                           }
                           type={CardTypeEnum.book_mark}
-                          favorite={signet.favorite}
-                          link={signet.link ?? signet.url ?? "/"}
-                          footerImage={
-                            signet.owner_id
-                              ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                              : `/img/no-avatar.svg`
-                          }
-                          footerText={
-                            signet.owner_name ?? signet.authors
+                        favorite={signet.favorite}
+                        link={signet.link ?? signet.url ?? "/"}
+                        footerImage={
+                          signet.owner_id
+                            ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                            : `/img/no-avatar.svg`
+                        }
+                        footerText={
+                          signet.owner_name ??
+                          (signet.authors
                               ? signet.authors[0]
-                              : " "
+                              : " ")
                           }
                           setAlertText={(arg: string, type: AlertTypes) => {
                             setAlertText(arg);
@@ -221,9 +222,9 @@ export const App = () => {
                   type={CardTypeEnum.favorites}
                   components={favorites.map((favorite: Favorite) => (
                     <Resource
-                      id={favorite.id}
-                      key={favorite.id}
-                      image={favorite.image}
+                      id={favorite?.id ?? ""}
+                      key={favorite?.id ?? ""}
+                      image={favorite?.image ?? "/img/no-avatar.svg"}
                       title={favorite.title}
                       subtitle={favorite.description}
                       type={CardTypeEnum.favorites}
@@ -274,9 +275,9 @@ export const App = () => {
             type={CardTypeEnum.favorites}
             components={favorites.map((favorite: Favorite) => (
               <Resource
-                id={favorite.id}
+                id={favorite?.id ?? ""}
                 key={favorite.id}
-                image={favorite.image}
+                image={favorite?.image ?? "/img/no-avatar.svg"}
                 title={favorite.title}
                 subtitle={favorite.description}
                 type={CardTypeEnum.favorites}
@@ -299,11 +300,11 @@ export const App = () => {
                 type={CardTypeEnum.manuals}
                 components={textbooks.map((textbook: Textbook) => (
                   <Resource
-                    id={textbook.id}
+                    id={textbook?.id ?? ""}
                     key={textbook.id}
-                    image={textbook.image}
+                    image={textbook?.image ?? "/img/no-avatar.svg"}
                     title={textbook.title}
-                    subtitle={textbook.editors.join(", ")}
+                    subtitle={textbook?.editors?.join(", ") ?? ""}
                     type={CardTypeEnum.manuals}
                     favorite={textbook.favorite}
                     link={textbook.link ?? textbook.url ?? "/"}
@@ -324,9 +325,9 @@ export const App = () => {
                 type={CardTypeEnum.book_mark}
                 components={homeSignets.map((signet: Signet) => (
                   <Resource
-                    id={signet.id ?? signet._id}
+                    id={signet?.id ?? signet?._id ?? ""}
                     key={signet.id ?? signet._id}
-                    image={signet.image}
+                    image={signet?.image ?? "/img/no-avatar.svg"}
                     title={signet.title}
                     subtitle={
                       signet.orientation
@@ -342,9 +343,8 @@ export const App = () => {
                         : `/img/no-avatar.svg`
                     }
                     footerText={
-                      signet.owner_name ?? signet.authors
-                        ? signet.authors[0]
-                        : " "
+                      signet.owner_name ??
+                      (signet.authors ? signet.authors[0] : "")
                     }
                     setAlertText={(arg: string, type: AlertTypes) => {
                       setAlertText(arg);
@@ -390,9 +390,9 @@ export const App = () => {
             type={CardTypeEnum.favorites}
             components={favorites.map((favorite: Favorite) => (
               <Resource
-                id={favorite.id}
+                id={favorite?.id ?? ""}
                 key={favorite.id}
-                image={favorite.image}
+                image={favorite?.image ?? "/img/no-avatar.svg"}
                 title={favorite.title}
                 subtitle={favorite.description}
                 type={CardTypeEnum.favorites}
@@ -413,11 +413,11 @@ export const App = () => {
             type={CardTypeEnum.manuals}
             components={textbooks.map((textbook: Textbook) => (
               <Resource
-                id={textbook.id}
-                key={textbook.id}
-                image={textbook.image}
+                id={textbook?.id ?? ""}
+                key={textbook?.id ?? ""}
+                image={textbook?.image ?? "/img/no-avatar.svg"}
                 title={textbook.title}
-                subtitle={textbook.editors.join(", ")}
+                subtitle={textbook?.editors?.join(", ") ?? ""}
                 type={CardTypeEnum.manuals}
                 favorite={textbook.favorite}
                 link={textbook.link ?? textbook.url ?? "/"}
@@ -436,9 +436,9 @@ export const App = () => {
             type={CardTypeEnum.book_mark}
             components={homeSignets.map((signet: Signet) => (
               <Resource
-                id={signet.id ?? signet._id}
-                key={signet.id ?? signet._id}
-                image={signet.image}
+                id={signet?.id ?? signet?._id ?? ""}
+                key={signet?.id ?? signet?._id ?? ""}
+                image={signet?.image ?? "/img/no-avatar.svg"}
                 title={signet.title}
                 subtitle={
                   signet.orientation ? t("mediacentre.signet.orientation") : ""
@@ -452,7 +452,7 @@ export const App = () => {
                     : `/img/no-avatar.svg`
                 }
                 footerText={
-                  signet.owner_name ?? signet.authors ? signet.authors[0] : " "
+                  signet.owner_name ?? (signet.authors ? signet.authors[0] : "")
                 }
                 setAlertText={(arg: string, type: AlertTypes) => {
                   setAlertText(arg);

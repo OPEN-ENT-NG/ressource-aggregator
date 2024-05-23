@@ -17,6 +17,7 @@ import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
+import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 
 interface ResourceProps {
   resource: Signet | Favorite | Textbook;
@@ -104,8 +105,14 @@ export const Resource: React.FC<ResourceProps> = ({
       >
         <a className="med-body" href={newLink !== "/" ? newLink : "/"}>
           <Card.Body space={"0"}>
-            {image && (
+            {image ? (
               <img src={image} alt="Resource" className="med-resource-image" />
+            ) : (
+              <img
+                src="/img/no-avatar.svg"
+                alt="Resource"
+                className="med-resource-image"
+              />
             )}
           </Card.Body>
           <div className="med-text-body">
