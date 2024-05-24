@@ -1,19 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const signetsApi = createApi({
-  reducerPath: 'signets',
+  reducerPath: "signets",
   baseQuery: fetchBaseQuery({ baseUrl: "/mediacentre/" }),
   tagTypes: [],
   endpoints: (builder) => ({
     getPublishedSignets: builder.query({
       query: () => "signets",
     }),
-
+    getMySignets: builder.query({
+      query: () => "mysignets",
+    }),
   }),
 });
 
-const getAllSignets = () => {
-  return []
-}
-
-export const { useGetPublishedSignetsQuery } = signetsApi;
+export const { useGetPublishedSignetsQuery, useGetMySignetsQuery } = signetsApi;

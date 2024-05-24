@@ -6,6 +6,10 @@ import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { Resource } from "~/components/resource/Resource";
 import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
+import { useFavorite } from "~/hooks/useFavorite";
+import { useSignet } from "~/hooks/useSignet";
+import { Favorite } from "~/model/Favorite.model";
+import { Signet } from "~/model/Signet.model";
 
 export interface AppProps {
   _id: string;
@@ -21,6 +25,8 @@ export interface AppProps {
 
 export const App = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { favorites } = useFavorite();
+  const { homeSignets } = useSignet();
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,17 +37,6 @@ export const App = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const getFavoriteCard = () => {
-    return (
-      <Resource
-        image="https://via.placeholder.com/150"
-        title="Favorite Resource Title"
-        type={ListCardTypeEnum.favorites}
-        favorite={true}
-      />
-    );
-  };
 
   const getManualCard = () => {
     return (
@@ -85,9 +80,6 @@ export const App = () => {
     const cards = [];
     for (let i = 0; i < nbCards; i++) {
       switch (type) {
-        case ListCardTypeEnum.favorites:
-          cards.push(getFavoriteCard());
-          break;
         case ListCardTypeEnum.manuals:
           cards.push(getManualCard());
           break;
@@ -128,7 +120,17 @@ export const App = () => {
                   <ListCard
                     scrollable={false}
                     type={ListCardTypeEnum.book_mark}
-                    components={getCards(8, ListCardTypeEnum.book_mark)}
+                    components={homeSignets.map((signet: Signet) => (
+                      <Resource
+                        key={signet.id}
+                        image={signet.image}
+                        title={signet.title}
+                        subtitle="Modifié le 06/07/2024"
+                        footerText="Lycée Connecté"
+                        type={ListCardTypeEnum.book_mark}
+                        favorite={signet.favorite}
+                      />
+                    ))}
                   />
                 </div>
               </div>
@@ -137,7 +139,16 @@ export const App = () => {
               <ListCard
                 scrollable={false}
                 type={ListCardTypeEnum.favorites}
-                components={getCards(8, ListCardTypeEnum.favorites)}
+                components={favorites.map((favorite: Favorite) => (
+                  <Resource
+                    key={favorite._id}
+                    image={favorite.image}
+                    title={favorite.title}
+                    subtitle={favorite.description}
+                    type={ListCardTypeEnum.favorites}
+                    favorite={favorite.favorite}
+                  />
+                ))}
               />
             </div>
           </div>
