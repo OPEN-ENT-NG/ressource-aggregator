@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { ID } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
 
 import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { MainLayout } from "~/components/main-layout/MainLayout";
@@ -11,7 +12,6 @@ import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
 import { Favorite } from "~/model/Favorite.model";
 import { Signet } from "~/model/Signet.model";
-import { useTranslation } from "react-i18next";
 import { Textbook } from "~/model/Textbook.model";
 
 export interface AppProps {
@@ -43,31 +43,6 @@ export const App = () => {
     };
   }, []);
 
-  const getManualCard = () => {
-    return (
-      <Resource
-        image="https://via.placeholder.com/150"
-        title="Ressource Histoire Géographie"
-        subtitle="Nathan"
-        type={ListCardTypeEnum.manuals}
-        favorite={false}
-      />
-    );
-  };
-
-  const getBookMarkCard = () => {
-    return (
-      <Resource
-        image="https://via.placeholder.com/150"
-        title="Parcours Sup"
-        subtitle="Modifié le 06/07/2024"
-        footerText="Lycée Connecté"
-        type={ListCardTypeEnum.book_mark}
-        favorite={false}
-      />
-    );
-  };
-
   const getPinnedResourceCard = () => {
     return (
       <Resource
@@ -77,6 +52,7 @@ export const App = () => {
         footerText="Offert par la Région"
         type={ListCardTypeEnum.pinned_resources}
         favorite={false}
+        link={"/"}
       />
     );
   };
@@ -85,12 +61,6 @@ export const App = () => {
     const cards = [];
     for (let i = 0; i < nbCards; i++) {
       switch (type) {
-        case ListCardTypeEnum.manuals:
-          cards.push(getManualCard());
-          break;
-        case ListCardTypeEnum.book_mark:
-          cards.push(getBookMarkCard());
-          break;
         case ListCardTypeEnum.pinned_resources:
           cards.push(getPinnedResourceCard());
           break;
@@ -122,10 +92,10 @@ export const App = () => {
                       <Resource
                         image={textbook.image}
                         title={textbook.title}
-                        subtitle={textbook.editors.join(', ')}
+                        subtitle={textbook.editors.join(", ")}
                         type={ListCardTypeEnum.manuals}
                         favorite={textbook.favorite}
-                        link={textbook.link ?? '/'}
+                        link={textbook.link ?? "/"}
                       />
                     ))}
                   />
@@ -139,11 +109,20 @@ export const App = () => {
                         key={signet.id}
                         image={signet.image}
                         title={signet.title}
-                        subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
-                        footerText="Lycée Connecté"
+                        subtitle={
+                          signet.orientation
+                            ? t("mediacentre.signet.orientation")
+                            : ""
+                        }
                         type={ListCardTypeEnum.book_mark}
                         favorite={signet.favorite}
-                        link={signet.url ?? '/'}
+                        link={signet.url ?? "/"}
+                        footerImage={
+                          signet.owner_id
+                            ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                            : `/img/no-avatar.svg`
+                        }
+                        footerText={signet.owner_name ?? " "}
                       />
                     ))}
                   />
@@ -162,7 +141,7 @@ export const App = () => {
                     subtitle={favorite.description}
                     type={ListCardTypeEnum.favorites}
                     favorite={favorite.favorite}
-                    link={favorite.link ?? '/'}
+                    link={favorite.link ?? "/"}
                   />
                 ))}
               />
@@ -192,7 +171,7 @@ export const App = () => {
                 subtitle={favorite.description}
                 type={ListCardTypeEnum.favorites}
                 favorite={favorite.favorite}
-                link={favorite.link ?? '/'}
+                link={favorite.link ?? "/"}
               />
             ))}
           />
@@ -205,10 +184,10 @@ export const App = () => {
                   <Resource
                     image={textbook.image}
                     title={textbook.title}
-                    subtitle={textbook.editors.join(', ')}
+                    subtitle={textbook.editors.join(", ")}
                     type={ListCardTypeEnum.manuals}
                     favorite={textbook.favorite}
-                    link={textbook.link ?? '/'}
+                    link={textbook.link ?? "/"}
                   />
                 ))}
               />
@@ -222,11 +201,20 @@ export const App = () => {
                     key={signet.id}
                     image={signet.image}
                     title={signet.title}
-                    subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
-                    footerText="Lycée Connecté"
+                    subtitle={
+                      signet.orientation
+                        ? t("mediacentre.signet.orientation")
+                        : ""
+                    }
                     type={ListCardTypeEnum.book_mark}
                     favorite={signet.favorite}
-                    link={signet.url ?? '/'}
+                    link={signet.url ?? "/"}
+                    footerImage={
+                      signet.owner_id
+                        ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                        : `/img/no-avatar.svg`
+                    }
+                    footerText={signet.owner_name ?? " "}
                   />
                 ))}
               />
@@ -256,7 +244,7 @@ export const App = () => {
                 subtitle={favorite.description}
                 type={ListCardTypeEnum.favorites}
                 favorite={favorite.favorite}
-                link={favorite.link ?? '/'}
+                link={favorite.link ?? "/"}
               />
             ))}
           />
@@ -267,10 +255,10 @@ export const App = () => {
               <Resource
                 image={textbook.image}
                 title={textbook.title}
-                subtitle={textbook.editors.join(', ')}
+                subtitle={textbook.editors.join(", ")}
                 type={ListCardTypeEnum.manuals}
                 favorite={textbook.favorite}
-                link={textbook.link ?? '/'}
+                link={textbook.link ?? "/"}
               />
             ))}
           />
@@ -282,11 +270,18 @@ export const App = () => {
                 key={signet.id}
                 image={signet.image}
                 title={signet.title}
-                subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
-                footerText="Lycée Connecté"
+                subtitle={
+                  signet.orientation ? t("mediacentre.signet.orientation") : ""
+                }
                 type={ListCardTypeEnum.book_mark}
                 favorite={signet.favorite}
-                link={signet.url ?? '/'}
+                link={signet.url ?? "/"}
+                footerImage={
+                  signet.owner_id
+                    ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                    : `/img/no-avatar.svg`
+                }
+                footerText={signet.owner_name ?? " "}
               />
             ))}
           />

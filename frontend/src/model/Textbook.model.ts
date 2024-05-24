@@ -1,4 +1,4 @@
-import { Resource } from "./Resource.model"
+import { Resource } from "./Resource.model";
 
 export interface Textbook extends Resource {
   authors: string[];

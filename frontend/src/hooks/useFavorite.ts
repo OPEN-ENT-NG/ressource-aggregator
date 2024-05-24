@@ -8,11 +8,7 @@ export const useFavorite = () => {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
 
   useEffect(() => {
-    setFavorites(
-      favorite && favorite.data && favorite.data.length > 0
-        ? favorite.data
-        : [],
-    );
+    setFavorites(favorite?.data ?? []);
   }, [favorite]);
 
   return { favorites, error, isLoading };

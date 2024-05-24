@@ -10,7 +10,11 @@ const rootReducer = combineReducers({
   [textbooksApi.reducerPath]: textbooksApi.reducer,
 });
 
-const middlewares = [favoriteApi.middleware, signetsApi.middleware, textbooksApi.middleware];
+const middlewares = [
+  favoriteApi.middleware,
+  signetsApi.middleware,
+  textbooksApi.middleware,
+];
 
 export const setupStore = () => {
   return configureStore({
