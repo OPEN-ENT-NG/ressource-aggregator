@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { breakpoints } from "../../core/constants/breakpoints";
 import { Header } from "../header/Header";
@@ -16,6 +16,12 @@ export const MainLayout: React.FC<MainLayoutProps> = () => {
       setIsSidebarOpen(!isSidebarOpen);
     }
   };
+
+  useEffect(() => {
+    if (window.innerWidth < breakpoints.md) {
+      setIsSidebarOpen(false);
+    }
+  }, []);
 
   return (
     <>
