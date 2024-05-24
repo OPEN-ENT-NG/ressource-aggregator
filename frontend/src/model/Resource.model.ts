@@ -5,7 +5,7 @@ export interface Resource {
   favorite?: boolean;
   image: string;
   levels: string[];
-  plain_text: string[] | string[][];
+  plain_text: string | string[] | string[][];
   source: string;
   title: string;
   id?: string;

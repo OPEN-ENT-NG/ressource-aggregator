@@ -5,8 +5,10 @@ import {
   useGetPublishedSignetsQuery,
   useGetMySignetsQuery,
 } from "./../services/api/signet.service";
+import { useUser } from "@edifice-ui/react";
 
 export const useSignet = () => {
+  const { user } = useUser();
   const {
     data: publicSignets,
     error: publicSignetError,
@@ -20,11 +22,15 @@ export const useSignet = () => {
   const [homeSignets, setHomeSignets] = useState<Signet[]>([]);
 
   useEffect(() => {
-    const publicSignetsData = publicSignets?.data?.resources
-      ? publicSignets.data.resources
+    const publicSignetsData = publicSignets?.data?.signets?.resources
+      ? publicSignets.data.signets.resources
       : [];
-    const mySignetsData = mySignets ? mySignets : [];
-    setHomeSignets([...publicSignetsData, ...mySignetsData]);
+    const mySignetsData = mySignets ? mySignets.filter((signet: Signet) => signet.owner_id != user?.userId) : [];
+    const updatedPublicSignetsData = publicSignetsData.map((signet: Signet) => ({
+      ...signet,
+      orientation: signet.document_types.some(type => type.toLowerCase().includes("orientation"))
+    }))
+    setHomeSignets([...updatedPublicSignetsData, ...mySignetsData]);
   }, [publicSignets, mySignets]);
 
   return {

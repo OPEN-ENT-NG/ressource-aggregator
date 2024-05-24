@@ -2,13 +2,15 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 import { favoriteApi } from "./services/api/favorite.service";
 import { signetsApi } from "./services/api/signet.service";
+import { textbooksApi } from "./services/api/textbook.service";
 
 const rootReducer = combineReducers({
   [favoriteApi.reducerPath]: favoriteApi.reducer,
   [signetsApi.reducerPath]: signetsApi.reducer,
+  [textbooksApi.reducerPath]: textbooksApi.reducer,
 });
 
-const middlewares = [favoriteApi.middleware, signetsApi.middleware];
+const middlewares = [favoriteApi.middleware, signetsApi.middleware, textbooksApi.middleware];
 
 export const setupStore = () => {
   return configureStore({

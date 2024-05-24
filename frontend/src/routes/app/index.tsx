@@ -8,8 +8,11 @@ import { Resource } from "~/components/resource/Resource";
 import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum.ts";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useSignet } from "~/hooks/useSignet";
+import { useTextbook } from "~/hooks/useTextbook";
 import { Favorite } from "~/model/Favorite.model";
 import { Signet } from "~/model/Signet.model";
+import { useTranslation } from "react-i18next";
+import { Textbook } from "~/model/Textbook.model";
 
 export interface AppProps {
   _id: string;
@@ -27,6 +30,8 @@ export const App = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { favorites } = useFavorite();
   const { homeSignets } = useSignet();
+  const { textbooks } = useTextbook();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -113,7 +118,16 @@ export const App = () => {
                   <ListCard
                     scrollable={false}
                     type={ListCardTypeEnum.manuals}
-                    components={getCards(8, ListCardTypeEnum.manuals)}
+                    components={textbooks.map((textbook: Textbook) => (
+                      <Resource
+                        image={textbook.image}
+                        title={textbook.title}
+                        subtitle={textbook.editors.join(', ')}
+                        type={ListCardTypeEnum.manuals}
+                        favorite={textbook.favorite}
+                        link={textbook.link ?? '/'}
+                      />
+                    ))}
                   />
                 </div>
                 <div className="bottom-right-container">
@@ -125,10 +139,11 @@ export const App = () => {
                         key={signet.id}
                         image={signet.image}
                         title={signet.title}
-                        subtitle="Modifié le 06/07/2024"
+                        subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
                         footerText="Lycée Connecté"
                         type={ListCardTypeEnum.book_mark}
                         favorite={signet.favorite}
+                        link={signet.url ?? '/'}
                       />
                     ))}
                   />
@@ -147,6 +162,7 @@ export const App = () => {
                     subtitle={favorite.description}
                     type={ListCardTypeEnum.favorites}
                     favorite={favorite.favorite}
+                    link={favorite.link ?? '/'}
                   />
                 ))}
               />
@@ -168,21 +184,51 @@ export const App = () => {
           <ListCard
             scrollable={false}
             type={ListCardTypeEnum.favorites}
-            components={getCards(8, ListCardTypeEnum.favorites)}
+            components={favorites.map((favorite: Favorite) => (
+              <Resource
+                key={favorite._id}
+                image={favorite.image}
+                title={favorite.title}
+                subtitle={favorite.description}
+                type={ListCardTypeEnum.favorites}
+                favorite={favorite.favorite}
+                link={favorite.link ?? '/'}
+              />
+            ))}
           />
           <div className="bottom-container">
             <div className="bottom-left-container">
               <ListCard
                 scrollable={false}
                 type={ListCardTypeEnum.manuals}
-                components={getCards(8, ListCardTypeEnum.manuals)}
+                components={textbooks.map((textbook: Textbook) => (
+                  <Resource
+                    image={textbook.image}
+                    title={textbook.title}
+                    subtitle={textbook.editors.join(', ')}
+                    type={ListCardTypeEnum.manuals}
+                    favorite={textbook.favorite}
+                    link={textbook.link ?? '/'}
+                  />
+                ))}
               />
             </div>
             <div className="bottom-right-container">
               <ListCard
                 scrollable={false}
                 type={ListCardTypeEnum.book_mark}
-                components={getCards(8, ListCardTypeEnum.book_mark)}
+                components={homeSignets.map((signet: Signet) => (
+                  <Resource
+                    key={signet.id}
+                    image={signet.image}
+                    title={signet.title}
+                    subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
+                    footerText="Lycée Connecté"
+                    type={ListCardTypeEnum.book_mark}
+                    favorite={signet.favorite}
+                    link={signet.url ?? '/'}
+                  />
+                ))}
               />
             </div>
           </div>
@@ -202,17 +248,47 @@ export const App = () => {
           <ListCard
             scrollable={false}
             type={ListCardTypeEnum.favorites}
-            components={getCards(8, ListCardTypeEnum.favorites)}
+            components={favorites.map((favorite: Favorite) => (
+              <Resource
+                key={favorite._id}
+                image={favorite.image}
+                title={favorite.title}
+                subtitle={favorite.description}
+                type={ListCardTypeEnum.favorites}
+                favorite={favorite.favorite}
+                link={favorite.link ?? '/'}
+              />
+            ))}
           />
           <ListCard
             scrollable={false}
             type={ListCardTypeEnum.manuals}
-            components={getCards(8, ListCardTypeEnum.manuals)}
+            components={textbooks.map((textbook: Textbook) => (
+              <Resource
+                image={textbook.image}
+                title={textbook.title}
+                subtitle={textbook.editors.join(', ')}
+                type={ListCardTypeEnum.manuals}
+                favorite={textbook.favorite}
+                link={textbook.link ?? '/'}
+              />
+            ))}
           />
           <ListCard
             scrollable={false}
             type={ListCardTypeEnum.book_mark}
-            components={getCards(8, ListCardTypeEnum.book_mark)}
+            components={homeSignets.map((signet: Signet) => (
+              <Resource
+                key={signet.id}
+                image={signet.image}
+                title={signet.title}
+                subtitle={signet.orientation ? t('mediacentre.signet.orientation') : ""}
+                footerText="Lycée Connecté"
+                type={ListCardTypeEnum.book_mark}
+                favorite={signet.favorite}
+                link={signet.url ?? '/'}
+              />
+            ))}
           />
         </div>
       </>
