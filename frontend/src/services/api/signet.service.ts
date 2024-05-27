@@ -1,9 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { emptySplitApi } from "./emptySplitApi.service";
 
-export const signetsApi = createApi({
-  reducerPath: "signets",
-  baseQuery: fetchBaseQuery({ baseUrl: "/mediacentre/" }),
-  tagTypes: [],
+export const signetsApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublishedSignets: builder.query({
       query: () => "signets",

@@ -1,27 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-import { favoriteApi } from "./services/api/favorite.service";
-import { signetsApi } from "./services/api/signet.service";
-import { textbooksApi } from "./services/api/textbook.service";
+import { emptySplitApi } from "./services/api/emptySplitApi.service";
 
 const rootReducer = combineReducers({
-  [favoriteApi.reducerPath]: favoriteApi.reducer,
-  [signetsApi.reducerPath]: signetsApi.reducer,
-  [textbooksApi.reducerPath]: textbooksApi.reducer,
+  [emptySplitApi.reducerPath]: emptySplitApi.reducer,
 });
-
-const middlewares = [
-  favoriteApi.middleware,
-  signetsApi.middleware,
-  textbooksApi.middleware,
-];
 
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       // adding the api middleware enables caching, invalidation, polling and other features of `rtk-query`
-      getDefaultMiddleware().concat(...middlewares),
+      getDefaultMiddleware().concat(emptySplitApi.middleware),
   });
 };
 

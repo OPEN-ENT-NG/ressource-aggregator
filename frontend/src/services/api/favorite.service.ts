@@ -1,9 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { emptySplitApi } from "./emptySplitApi.service";
 
-export const favoriteApi = createApi({
-  reducerPath: "favorite",
-  baseQuery: fetchBaseQuery({ baseUrl: "/mediacentre/" }),
-  tagTypes: [],
+export const favoriteApi = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
     getFavorite: builder.query({
       query: () => "favorites",
