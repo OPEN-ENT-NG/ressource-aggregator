@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Alert } from "@edifice-ui/react";
+import { Alert, AlertTypes } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
@@ -30,8 +30,9 @@ export interface AppProps {
 export const App = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [alertText, setAlertText] = useState<string>("");
-  const { favorites } = useFavorite();
-  const { homeSignets } = useSignet();
+  const [alertType, setAlertType] = useState<AlertTypes>("success");
+  const { favorites, setFavorites } = useFavorite();
+  const { homeSignets, setHomeSignets } = useSignet();
   const { textbooks } = useTextbook();
   const { t } = useTranslation();
 
@@ -40,14 +41,41 @@ export const App = () => {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [alertText]);
+  }, [alertText, setHomeSignets, homeSignets]);
 
-  const getPinnedResourceCard = () => {
+  const handleAddFavorite = (resource: any) => {
+    resource.favorite = true;
+    setFavorites((prevFavorites) => [...prevFavorites, resource]);
+  };
+
+  const handleRemoveFavorite = (id: string) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.filter((fav) => fav.id !== id),
+    );
+    updateFavoriteStatus(id, false);
+  };
+
+  const updateFavoriteStatus = (id: string, isFavorite: boolean) => {
+    setHomeSignets(
+      homeSignets
+        .slice()
+        .map((signet) =>
+          signet.id.toString() == id.toString()
+            ? { ...signet, favorite: isFavorite }
+            : signet,
+        ),
+    );
+  };
+
+  const getPinnedResourceCard: any = () => {
     return (
       <Resource
+        resource={{}}
+        id="1"
         image="https://via.placeholder.com/150"
         title="Universalis"
         subtitle="Une encyclopédie en ligne pour tous vos exposés"
@@ -55,7 +83,12 @@ export const App = () => {
         type={ListCardTypeEnum.pinned_resources}
         favorite={false}
         link={"/"}
-        setAlertText={(arg: string) => setAlertText(arg)}
+        setAlertText={(arg: string, type: AlertTypes) => {
+          setAlertText(arg);
+          setAlertType(type);
+        }}
+        handleAddFavorite={handleAddFavorite}
+        handleRemoveFavorite={handleRemoveFavorite}
       />
     );
   };
@@ -84,9 +117,12 @@ export const App = () => {
             autoCloseDelay={3000}
             isDismissible
             isToast
-            onClose={() => setAlertText("")}
+            onClose={() => {
+              setAlertText("");
+              setAlertType("success");
+            }}
             position="top-right"
-            type="success"
+            type={alertType}
             className="med-alert"
           >
             {alertText}
@@ -102,74 +138,101 @@ export const App = () => {
               />
               <div className="bottom-container">
                 <div className="bottom-left-container">
-                  <ListCard
-                    scrollable={false}
-                    type={ListCardTypeEnum.manuals}
-                    components={textbooks.map((textbook: Textbook) => (
-                      <Resource
-                        key={textbook.id}
-                        image={textbook.image}
-                        title={textbook.title}
-                        subtitle={textbook.editors.join(", ")}
-                        type={ListCardTypeEnum.manuals}
-                        favorite={textbook.favorite}
-                        link={textbook.link ?? textbook.url ?? "/"}
-                        setAlertText={(arg: string) => setAlertText(arg)}
-                      />
-                    ))}
-                  />
+                  {textbooks && (
+                    <ListCard
+                      scrollable={false}
+                      type={ListCardTypeEnum.manuals}
+                      components={textbooks.map((textbook: Textbook) => (
+                        <Resource
+                          id={textbook.id}
+                          key={textbook.id}
+                          image={textbook.image}
+                          title={textbook.title}
+                          subtitle={textbook.editors.join(", ")}
+                          type={ListCardTypeEnum.manuals}
+                          favorite={textbook.favorite}
+                          link={textbook.link ?? textbook.url ?? "/"}
+                          setAlertText={(arg: string, type: AlertTypes) => {
+                            setAlertText(arg);
+                            setAlertType(type);
+                          }}
+                          resource={textbook}
+                          handleAddFavorite={handleAddFavorite}
+                          handleRemoveFavorite={handleRemoveFavorite}
+                        />
+                      ))}
+                    />
+                  )}
                 </div>
                 <div className="bottom-right-container">
-                  <ListCard
-                    scrollable={false}
-                    type={ListCardTypeEnum.book_mark}
-                    components={homeSignets.map((signet: Signet) => (
-                      <Resource
-                        key={signet.id}
-                        image={signet.image}
-                        title={signet.title}
-                        subtitle={
-                          signet.orientation
-                            ? t("mediacentre.signet.orientation")
-                            : ""
-                        }
-                        type={ListCardTypeEnum.book_mark}
-                        favorite={signet.favorite}
-                        link={signet.link ?? signet.url ?? "/"}
-                        footerImage={
-                          signet.owner_id
-                            ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                            : `/img/no-avatar.svg`
-                        }
-                        footerText={
-                          signet.owner_name ?? signet.authors
-                            ? signet.authors[0]
-                            : " "
-                        }
-                        setAlertText={(arg: string) => setAlertText(arg)}
-                      />
-                    ))}
-                  />
+                  {homeSignets && (
+                    <ListCard
+                      scrollable={false}
+                      type={ListCardTypeEnum.book_mark}
+                      components={homeSignets.map((signet: Signet) => (
+                        <Resource
+                          id={signet.id ?? signet._id}
+                          key={signet.id ?? signet._id}
+                          image={signet.image}
+                          title={signet.title}
+                          subtitle={
+                            signet.orientation
+                              ? t("mediacentre.signet.orientation")
+                              : ""
+                          }
+                          type={ListCardTypeEnum.book_mark}
+                          favorite={signet.favorite}
+                          link={signet.link ?? signet.url ?? "/"}
+                          footerImage={
+                            signet.owner_id
+                              ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                              : `/img/no-avatar.svg`
+                          }
+                          footerText={
+                            signet.owner_name ?? signet.authors
+                              ? signet.authors[0]
+                              : " "
+                          }
+                          setAlertText={(arg: string, type: AlertTypes) => {
+                            setAlertText(arg);
+                            setAlertType(type);
+                          }}
+                          resource={signet}
+                          handleAddFavorite={handleAddFavorite}
+                          handleRemoveFavorite={handleRemoveFavorite}
+                        />
+                      ))}
+                    />
+                  )}
                 </div>
               </div>
             </div>
             <div className="right-container">
-              <ListCard
-                scrollable={false}
-                type={ListCardTypeEnum.favorites}
-                components={favorites.map((favorite: Favorite) => (
-                  <Resource
-                    key={favorite.id}
-                    image={favorite.image}
-                    title={favorite.title}
-                    subtitle={favorite.description}
-                    type={ListCardTypeEnum.favorites}
-                    favorite={favorite.favorite}
-                    link={favorite.link ?? favorite.url ?? "/"}
-                    setAlertText={(arg: string) => setAlertText(arg)}
-                  />
-                ))}
-              />
+              {favorites && (
+                <ListCard
+                  scrollable={false}
+                  type={ListCardTypeEnum.favorites}
+                  components={favorites.map((favorite: Favorite) => (
+                    <Resource
+                      id={favorite.id}
+                      key={favorite.id}
+                      image={favorite.image}
+                      title={favorite.title}
+                      subtitle={favorite.description}
+                      type={ListCardTypeEnum.favorites}
+                      favorite={favorite.favorite}
+                      link={favorite.link ?? favorite.url ?? "/"}
+                      setAlertText={(arg: string, type: AlertTypes) => {
+                        setAlertText(arg);
+                        setAlertType(type);
+                      }}
+                      resource={favorite}
+                      handleAddFavorite={handleAddFavorite}
+                      handleRemoveFavorite={handleRemoveFavorite}
+                    />
+                  ))}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -204,6 +267,7 @@ export const App = () => {
             type={ListCardTypeEnum.favorites}
             components={favorites.map((favorite: Favorite) => (
               <Resource
+                id={favorite.id}
                 key={favorite.id}
                 image={favorite.image}
                 title={favorite.title}
@@ -211,7 +275,13 @@ export const App = () => {
                 type={ListCardTypeEnum.favorites}
                 favorite={favorite.favorite}
                 link={favorite.link ?? favorite.url ?? "/"}
-                setAlertText={(arg: string) => setAlertText(arg)}
+                setAlertText={(arg: string, type: AlertTypes) => {
+                  setAlertText(arg);
+                  setAlertType(type);
+                }}
+                resource={favorite}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             ))}
           />
@@ -222,6 +292,7 @@ export const App = () => {
                 type={ListCardTypeEnum.manuals}
                 components={textbooks.map((textbook: Textbook) => (
                   <Resource
+                    id={textbook.id}
                     key={textbook.id}
                     image={textbook.image}
                     title={textbook.title}
@@ -229,7 +300,13 @@ export const App = () => {
                     type={ListCardTypeEnum.manuals}
                     favorite={textbook.favorite}
                     link={textbook.link ?? textbook.url ?? "/"}
-                    setAlertText={(arg: string) => setAlertText(arg)}
+                    setAlertText={(arg: string, type: AlertTypes) => {
+                      setAlertText(arg);
+                      setAlertType(type);
+                    }}
+                    resource={textbook}
+                    handleAddFavorite={handleAddFavorite}
+                    handleRemoveFavorite={handleRemoveFavorite}
                   />
                 ))}
               />
@@ -240,7 +317,8 @@ export const App = () => {
                 type={ListCardTypeEnum.book_mark}
                 components={homeSignets.map((signet: Signet) => (
                   <Resource
-                    key={signet.id}
+                    id={signet.id ?? signet._id}
+                    key={signet.id ?? signet._id}
                     image={signet.image}
                     title={signet.title}
                     subtitle={
@@ -261,7 +339,13 @@ export const App = () => {
                         ? signet.authors[0]
                         : " "
                     }
-                    setAlertText={(arg: string) => setAlertText(arg)}
+                    setAlertText={(arg: string, type: AlertTypes) => {
+                      setAlertText(arg);
+                      setAlertType(type);
+                    }}
+                    resource={signet}
+                    handleAddFavorite={handleAddFavorite}
+                    handleRemoveFavorite={handleRemoveFavorite}
                   />
                 ))}
               />
@@ -299,6 +383,7 @@ export const App = () => {
             type={ListCardTypeEnum.favorites}
             components={favorites.map((favorite: Favorite) => (
               <Resource
+                id={favorite.id}
                 key={favorite.id}
                 image={favorite.image}
                 title={favorite.title}
@@ -306,7 +391,13 @@ export const App = () => {
                 type={ListCardTypeEnum.favorites}
                 favorite={favorite.favorite}
                 link={favorite.link ?? favorite.url ?? "/"}
-                setAlertText={(arg: string) => setAlertText(arg)}
+                setAlertText={(arg: string, type: AlertTypes) => {
+                  setAlertText(arg);
+                  setAlertType(type);
+                }}
+                resource={favorite}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             ))}
           />
@@ -315,6 +406,7 @@ export const App = () => {
             type={ListCardTypeEnum.manuals}
             components={textbooks.map((textbook: Textbook) => (
               <Resource
+                id={textbook.id}
                 key={textbook.id}
                 image={textbook.image}
                 title={textbook.title}
@@ -322,7 +414,13 @@ export const App = () => {
                 type={ListCardTypeEnum.manuals}
                 favorite={textbook.favorite}
                 link={textbook.link ?? textbook.url ?? "/"}
-                setAlertText={(arg: string) => setAlertText(arg)}
+                setAlertText={(arg: string, type: AlertTypes) => {
+                  setAlertText(arg);
+                  setAlertType(type);
+                }}
+                resource={textbook}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             ))}
           />
@@ -331,7 +429,8 @@ export const App = () => {
             type={ListCardTypeEnum.book_mark}
             components={homeSignets.map((signet: Signet) => (
               <Resource
-                key={signet.id}
+                id={signet.id ?? signet._id}
+                key={signet.id ?? signet._id}
                 image={signet.image}
                 title={signet.title}
                 subtitle={
@@ -348,7 +447,13 @@ export const App = () => {
                 footerText={
                   signet.owner_name ?? signet.authors ? signet.authors[0] : " "
                 }
-                setAlertText={(arg: string) => setAlertText(arg)}
+                setAlertText={(arg: string, type: AlertTypes) => {
+                  setAlertText(arg);
+                  setAlertType(type);
+                }}
+                resource={signet}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             ))}
           />
