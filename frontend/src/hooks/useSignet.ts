@@ -31,7 +31,7 @@ export const useSignet = () => {
     const mySignetsData: Signet[] = mySignets
       ? mySignets.filter((signet: Signet) => signet.owner_id != user?.userId)
       : [];
-    const updatedPublicSignetsData = publicSignetsData.map(
+    const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
         ...signet,
         orientation: signet.document_types.some((type) =>
@@ -54,7 +54,7 @@ export const useSignet = () => {
   useEffect(() => {
     if (favorites) {
       const signetsData = getHomeSignets();
-      setHomeSignets(signetsData.reverse()); // reverse a enlever
+      setHomeSignets(signetsData);
     }
   }, [
     publicSignets,
@@ -62,7 +62,6 @@ export const useSignet = () => {
     user?.userId,
     favorites,
     setHomeSignets,
-    getHomeSignets,
   ]);
 
   return {

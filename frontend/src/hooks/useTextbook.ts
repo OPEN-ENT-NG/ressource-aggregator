@@ -12,12 +12,13 @@ export const useTextbook = () => {
 
   useEffect(() => {
     if (favorites) {
-      let textbookData = textbook?.data?.textbooks ?? [];
-      textbookData = textbookData.map((textbook: Textbook) => {
-        textbook.favorite = favorites.some(
+      let textbookData: Textbook[] = textbook?.data?.textbooks ?? [];
+      textbookData = textbookData.map((textbook: Textbook) => ({
+        ...textbook,
+        favorite: favorites.some(
           (fav: Favorite) => fav.id === textbook.id,
-        );
-      });
+        )
+      }));
       setTextbooks(textbookData);
     }
   }, [textbook, favorites]);

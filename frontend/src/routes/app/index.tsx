@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 
 import { Alert, AlertTypes } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
@@ -31,9 +31,10 @@ export const App = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
   const { favorites, setFavorites } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
-  const { textbooks } = useTextbook();
+  const { textbooks, setTextbooks } = useTextbook();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export const App = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [alertText, setHomeSignets, homeSignets]);
+  }, [alertText]);
 
   const handleAddFavorite = (resource: any) => {
     resource.favorite = true;
@@ -60,15 +61,21 @@ export const App = () => {
   };
 
   const updateFavoriteStatus = (id: string, isFavorite: boolean) => {
-    setHomeSignets(
-      homeSignets
-        .slice()
-        .map((signet) =>
-          signet.id.toString() == id.toString()
-            ? { ...signet, favorite: isFavorite }
-            : signet,
-        ),
+    let newSignets: Signet[] = [...homeSignets];
+    newSignets = newSignets.map((signet: Signet) =>
+      signet.id.toString() == id.toString()
+        ? { ...signet, favorite: isFavorite }
+        : signet,
+    )
+    setHomeSignets(newSignets);
+    let newTextbooks: Textbook[] = [...textbooks];
+    newTextbooks = newTextbooks.map((textbook: Textbook) =>
+      textbook.id.toString() == id.toString()
+        ? { ...textbook, favorite: isFavorite }
+        : textbook,
     );
+    setTextbooks(newTextbooks);
+    forceUpdate(); // List are not re-rendering without this
   };
 
   const getPinnedResourceCard: any = () => {

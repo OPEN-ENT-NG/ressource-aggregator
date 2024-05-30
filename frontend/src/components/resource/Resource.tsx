@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 import "./Resource.scss";
 import { AlertTypes, Card } from "@edifice-ui/react";
@@ -47,7 +47,6 @@ export const Resource: React.FC<ResourceProps> = ({
   handleRemoveFavorite,
 }) => {
   const [newLink, setNewLink] = useState<string>("");
-  const [isFavorite, setIsFavorite] = useState<boolean>(favorite);
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const { t } = useTranslation();
@@ -67,7 +66,6 @@ export const Resource: React.FC<ResourceProps> = ({
       await addFavorite({ id, resource });
       setAlertText(t("mediacentre.notification.addFavorite"), "success");
       handleAddFavorite(resource);
-      setIsFavorite(true);
     } catch (e) {
       console.error(e);
     }
@@ -77,7 +75,6 @@ export const Resource: React.FC<ResourceProps> = ({
       await removeFavorite({ id, source: resource.source });
       setAlertText(t("mediacentre.notification.removeFavorite"), "success");
       handleRemoveFavorite(id);
-      setIsFavorite(false);
     } catch (e) {
       console.error(e);
     }
@@ -131,7 +128,7 @@ export const Resource: React.FC<ResourceProps> = ({
           <div className="med-footer-svg">
             <PushPinIcon className="med-pin" onClick={() => pin()} />
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
-            {isFavorite ? (
+            {favorite ? (
               <StarIcon className="med-star" onClick={() => unfav()} />
             ) : (
               <StarBorderIcon className="med-star" onClick={() => fav()} />
@@ -166,7 +163,7 @@ export const Resource: React.FC<ResourceProps> = ({
           <div className="med-footer-svg">
             <PushPinIcon className="med-pin" onClick={() => pin()} />
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
-            {isFavorite ? (
+            {favorite ? (
               <StarIcon className="med-star" onClick={() => unfav()} />
             ) : (
               <StarBorderIcon className="med-star" onClick={() => fav()} />
