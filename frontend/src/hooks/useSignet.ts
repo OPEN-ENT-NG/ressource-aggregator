@@ -62,6 +62,7 @@ export const useSignet = () => {
     user?.userId,
     favorites,
     setHomeSignets,
+    getHomeSignets,
   ]);
 
   return {

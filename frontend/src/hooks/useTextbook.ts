@@ -15,9 +15,7 @@ export const useTextbook = () => {
       let textbookData: Textbook[] = textbook?.data?.textbooks ?? [];
       textbookData = textbookData.map((textbook: Textbook) => ({
         ...textbook,
-        favorite: favorites.some(
-          (fav: Favorite) => fav.id === textbook.id,
-        )
+        favorite: favorites.some((fav: Favorite) => fav.id === textbook.id),
       }));
       setTextbooks(textbookData);
     }

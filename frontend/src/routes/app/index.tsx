@@ -31,7 +31,7 @@ export const App = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const { favorites, setFavorites } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
   const { textbooks, setTextbooks } = useTextbook();
@@ -66,7 +66,7 @@ export const App = () => {
       signet.id.toString() == id.toString()
         ? { ...signet, favorite: isFavorite }
         : signet,
-    )
+    );
     setHomeSignets(newSignets);
     let newTextbooks: Textbook[] = [...textbooks];
     newTextbooks = newTextbooks.map((textbook: Textbook) =>

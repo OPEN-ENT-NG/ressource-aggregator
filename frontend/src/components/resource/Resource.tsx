@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Resource.scss";
 import { AlertTypes, Card } from "@edifice-ui/react";
