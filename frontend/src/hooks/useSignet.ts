@@ -39,7 +39,7 @@ export const useSignet = () => {
         ),
       }),
     );
-    let signetsData = [...updatedPublicSignetsData, ...mySignetsData];
+    let signetsData: Signet[] = [...updatedPublicSignetsData, ...mySignetsData];
     signetsData = signetsData.map((signet: Signet) => ({
       ...signet,
       favorite: favorites.some((fav: Favorite) =>

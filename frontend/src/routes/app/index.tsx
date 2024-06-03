@@ -81,7 +81,7 @@ export const App = () => {
   const getPinnedResourceCard: any = () => {
     return (
       <Resource
-        resource={{}}
+        resource={{} as Signet}
         id="1"
         image="https://via.placeholder.com/150"
         title="Universalis"

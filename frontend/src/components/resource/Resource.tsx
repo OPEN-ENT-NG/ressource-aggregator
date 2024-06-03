@@ -10,13 +10,16 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
 
 import { ListCardTypeEnum } from "~/core/enum/list-card-type.enum";
+import { Favorite } from "~/model/Favorite.model";
+import { Signet } from "~/model/Signet.model";
+import { Textbook } from "~/model/Textbook.model";
 import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
 
 interface ResourceProps {
-  resource: any;
+  resource: Signet | Favorite | Textbook;
   id: string;
   image: string;
   title: string;

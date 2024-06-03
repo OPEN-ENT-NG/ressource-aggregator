@@ -8,7 +8,8 @@ export const useFavorite = () => {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
 
   useEffect(() => {
-    let favoriteData = favorite?.data?.length > 0 ? favorite.data : [] ?? [];
+    let favoriteData: Favorite[] =
+      favorite?.data?.length > 0 ? favorite.data : [] ?? [];
     favoriteData = favoriteData.map((favorite: Favorite) => ({
       ...favorite,
       favorite: true,
