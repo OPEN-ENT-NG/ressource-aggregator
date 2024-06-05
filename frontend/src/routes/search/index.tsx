@@ -9,7 +9,6 @@ import { ListCard } from "~/components/list-card/ListCard";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { SearchResource } from "~/components/search-resource/SearchResource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
-
 import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
 import { Resource } from "~/model/Resource.model";
