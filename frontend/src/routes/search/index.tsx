@@ -7,11 +7,10 @@ import { useLocation } from "react-router-dom";
 import { FilterLayout } from "../../components/filter-layout/FilterLayout";
 import { ListCard } from "~/components/list-card/ListCard";
 import { MainLayout } from "~/components/main-layout/MainLayout";
-import { SearchResource } from "~/components/search-resource/SearchResource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
-import { Resource } from "~/model/Resource.model";
+import { SearchCard } from "~/components/search-card/SearchCard";
 import { SearchResultData } from "~/model/SearchResultData.model";
 export interface SearchProps {
   searchBody: object;
@@ -59,8 +58,8 @@ export const Search: React.FC = () => {
                   ...allResourcesDisplayed.externals_resources,
                   ...allResourcesDisplayed.signets,
                   ...allResourcesDisplayed.moodle,
-                ].map((resource: Resource) => (
-                  <SearchResource resource={resource} />
+                ].map((searchResource: any) => (
+                  <SearchCard searchResource={searchResource} />
                 ))}
               />
             )}
