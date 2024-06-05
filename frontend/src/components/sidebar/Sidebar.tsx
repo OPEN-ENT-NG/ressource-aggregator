@@ -4,7 +4,6 @@ import "./Sidebar.scss";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import HomeIcon from "@mui/icons-material/Home";
 import LaptopIcon from "@mui/icons-material/Laptop";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
 import StarIcon from "@mui/icons-material/Star";
 import { useTranslation } from "react-i18next";
@@ -87,11 +86,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             selected={location.pathname === "/signet"}
           />
         </a>
-        <SidebarIcon
-          action={() => console.log(6)}
-          icon={<MenuBookIcon />}
-          name="CDI"
-        />
       </div>
     </div>
   );
