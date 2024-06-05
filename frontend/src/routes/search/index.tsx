@@ -8,9 +8,9 @@ import { FilterLayout } from "../../components/filter-layout/FilterLayout";
 import { ListCard } from "~/components/list-card/ListCard";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
+import { SearchCard } from "~/components/search-card/SearchCard";
 import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
-import { SearchCard } from "~/components/search-card/SearchCard";
 import { SearchResultData } from "~/model/SearchResultData.model";
 export interface SearchProps {
   searchBody: object;
