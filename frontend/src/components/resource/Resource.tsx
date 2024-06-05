@@ -17,7 +17,6 @@ import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
-import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 
 interface ResourceProps {
   resource: Signet | Favorite | Textbook;
@@ -76,7 +75,7 @@ export const Resource: React.FC<ResourceProps> = ({
   };
   const unfav = async () => {
     try {
-      await removeFavorite({ id, source: resource.source });
+      await removeFavorite({ id, source: resource?.source ?? "" });
       setAlertText(t("mediacentre.notification.removeFavorite"), "success");
       handleRemoveFavorite(id);
     } catch (e) {

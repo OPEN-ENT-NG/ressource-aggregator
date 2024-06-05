@@ -5,11 +5,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import StarIcon from "@mui/icons-material/Star";
-import ComputerIcon from '@mui/icons-material/Computer';
-import ComputerIcon from '@mui/icons-material/Computer';
-import PersonIcon from '@mui/icons-material/Person';
-import StarsIcon from '@mui/icons-material/Stars';
-import BookIcon from '@mui/icons-material/Book';
+import StarsIcon from "@mui/icons-material/Stars";
 
 import Moodle from "/img/fr.openent.mediacentre.source.Moodle.png";
 

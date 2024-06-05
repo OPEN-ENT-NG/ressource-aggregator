@@ -321,5 +321,4 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       </div>
     </>
   );
-}
-;
+};

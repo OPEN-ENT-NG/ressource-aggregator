@@ -188,18 +188,16 @@ export const App = () => {
                               : ""
                           }
                           type={CardTypeEnum.book_mark}
-                        favorite={signet.favorite}
-                        link={signet.link ?? signet.url ?? "/"}
-                        footerImage={
-                          signet.owner_id
-                            ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                            : `/img/no-avatar.svg`
-                        }
-                        footerText={
-                          signet.owner_name ??
-                          (signet.authors
-                              ? signet.authors[0]
-                              : " ")
+                          favorite={signet.favorite}
+                          link={signet.link ?? signet.url ?? "/"}
+                          footerImage={
+                            signet.owner_id
+                              ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
+                              : `/img/no-avatar.svg`
+                          }
+                          footerText={
+                            signet.owner_name ??
+                            (signet.authors ? signet.authors[0] : " ")
                           }
                           setAlertText={(arg: string, type: AlertTypes) => {
                             setAlertText(arg);
