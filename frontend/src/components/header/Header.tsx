@@ -5,7 +5,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
 import "./Header.scss";
-import { AdvancedSearch } from "../advanced-search/AdvancedSearch";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -49,12 +48,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           }}
         />
       </div>
-      {isModalOpen && (
-        <AdvancedSearch
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-        />
-      )}
       <div className="med-header-container">
         <SearchBar
           isVariant={false}

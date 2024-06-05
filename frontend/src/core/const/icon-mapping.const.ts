@@ -13,15 +13,15 @@ import { ResourceDetailsEnum } from "../enum/resource-details.enum";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 import { SearchCardTypeEnum } from "~/core/enum/search-card-type.enum.ts";
 export const IconMapping: { [key in string]: any } = {
-    [CardTypeEnum.favorites]: StarIcon,
-    [CardTypeEnum.manuals]: SchoolIcon,
-    [CardTypeEnum.book_mark]: BookmarkIcon,
-    [CardTypeEnum.pinned_resources]: FlagIcon,
-    [SearchCardTypeEnum.external_resources]: ComputerIcon,
-    [SearchCardTypeEnum.moodle]: Moodle,
-    [ResourceDetailsEnum.authors]: PersonIcon,
-    [ResourceDetailsEnum.editors]: PersonIcon,
-    [ResourceDetailsEnum.disciplines]: SchoolIcon,
-    [ResourceDetailsEnum.levels]: StarsIcon,
-    [ResourceDetailsEnum.keywords]: BookIcon,
+  [CardTypeEnum.favorites]: StarIcon,
+  [CardTypeEnum.manuals]: SchoolIcon,
+  [CardTypeEnum.book_mark]: BookmarkIcon,
+  [CardTypeEnum.pinned_resources]: FlagIcon,
+  [SearchCardTypeEnum.external_resources]: ComputerIcon,
+  [SearchCardTypeEnum.moodle]: Moodle,
+  [ResourceDetailsEnum.authors]: PersonIcon,
+  [ResourceDetailsEnum.editors]: PersonIcon,
+  [ResourceDetailsEnum.disciplines]: SchoolIcon,
+  [ResourceDetailsEnum.levels]: StarsIcon,
+  [ResourceDetailsEnum.keywords]: BookIcon,
 };
