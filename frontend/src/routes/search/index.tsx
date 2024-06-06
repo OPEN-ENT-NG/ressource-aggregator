@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
@@ -15,9 +15,19 @@ import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { Alert, AlertTypes } from "@edifice-ui/react";
+import { Favorite } from "~/model/Favorite.model";
+import { useFavorite } from "~/hooks/useFavorite";
+export interface SearchProps {
+  searchBody: object;
+}
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
+  const [alertText, setAlertText] = useState<string>("");
+  const [alertType, setAlertType] = useState<AlertTypes>("success");
+  const { favorites, setFavorites } = useFavorite();
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const location = useLocation();
   const searchBody = location.state?.searchBody;
 
@@ -33,6 +43,33 @@ export const Search: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
+
+  const handleAddFavorite = (resource: any) => {
+    resource.favorite = true;
+  };
+
+  const handleRemoveFavorite = (id: string) => {
+    updateFavoriteStatus(id, false);
+  };
+
+  const updateFavoriteStatus = (id: string, isFavorite: boolean) => {
+    const updateFavoriteInCategory = (items: any[]) => {
+      return items.map(item =>
+          item?.id?.toString() === id.toString()
+              ? { ...item, favorite: isFavorite }
+              : item
+      );
+    };
+
+    setAllResourcesDisplayed(prevState => ({
+        ...prevState,
+        textbooks: updateFavoriteInCategory(prevState.textbooks),
+        externals_resources: updateFavoriteInCategory(prevState.externals_resources),
+        signets: updateFavoriteInCategory(prevState.signets),
+        moodle: updateFavoriteInCategory(prevState.moodle)
+    }));
+    forceUpdate(); // List are not re-rendering without this
+  };
 
   const flattenResources = (resources: SearchResultData) => [
     ...resources.textbooks,
@@ -118,6 +155,23 @@ export const Search: React.FC = () => {
   return (
     <>
       <MainLayout />
+      {alertText !== "" && (
+        <Alert
+          autoClose
+          autoCloseDelay={3000}
+          isDismissible
+          isToast
+          onClose={() => {
+            setAlertText("");
+            setAlertType("success");
+          }}
+          position="top-right"
+          type={alertType}
+          className="med-alert"
+        >
+          {alertText}
+        </Alert>
+      )}
       <div className="med-container">
         <div className="med-search-page-header">
           <div className="med-search-page-title">
@@ -144,7 +198,12 @@ export const Search: React.FC = () => {
                   ...visibleResources.signets,
                   ...visibleResources.moodle,
                 ].map((searchResource: any) => (
-                  <SearchCard searchResource={searchResource} />
+                  <SearchCard
+                    searchResource={searchResource}
+                    handleAddFavorite={handleAddFavorite}
+                    handleRemoveFavorite={handleRemoveFavorite}
+                    setAlertText={setAlertText}
+                  />
                 ))}
               />
             )}

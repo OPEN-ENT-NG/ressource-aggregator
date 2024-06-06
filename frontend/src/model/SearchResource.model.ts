@@ -10,6 +10,7 @@ export interface SearchResource {
   image?: string;
   levels?: string[];
   link?: string;
+  url?: string;
   plain_text?: string[];
   source?: string;
   title?: string;

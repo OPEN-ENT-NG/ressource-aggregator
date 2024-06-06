@@ -5,7 +5,6 @@ import { AlertTypes, Card } from "@edifice-ui/react";
 import { Tooltip } from "@edifice-ui/react";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import PushPinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
@@ -61,9 +60,6 @@ export const Resource: React.FC<ResourceProps> = ({
       console.error("Clipboard not available");
     }
     setAlertText(t("mediacentre.notification.copy"), "success");
-  };
-  const pin = () => {
-    console.log("pin");
   };
   const fav = async () => {
     try {
@@ -144,9 +140,6 @@ export const Resource: React.FC<ResourceProps> = ({
             </div>
           ) : null}
           <div className="med-footer-svg">
-            <Tooltip message={t("mediacentre.card.pin")}>
-              <PushPinIcon className="med-pin" onClick={() => pin()} />
-            </Tooltip>
             <Tooltip message={t("mediacentre.card.copy")}>
               <ContentCopyIcon className="med-link" onClick={() => copy()} />
             </Tooltip>
@@ -187,9 +180,6 @@ export const Resource: React.FC<ResourceProps> = ({
             </div>
           ) : null}
           <div className="med-footer-svg">
-            <Tooltip message={t("mediacentre.card.pin")}>
-              <PushPinIcon className="med-pin" onClick={() => pin()} />
-            </Tooltip>
             <Tooltip message={t("mediacentre.card.copy")}>
               <ContentCopyIcon className="med-link" onClick={() => copy()} />
             </Tooltip>
