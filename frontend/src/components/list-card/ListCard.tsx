@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEventHandler } from "react";
 
 import { Grid } from "@edifice-ui/react";
 import Brightness1Icon from "@mui/icons-material/Brightness1";
@@ -13,18 +13,22 @@ import {
   NbComponentsListCard,
 } from "~/core/const/home-element-list-sizes.const";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
+import { NavigateFunction } from "react-router-dom";
 
 interface ListCardProps {
   scrollable: boolean;
   type?: CardTypeEnum;
   components?: any[];
+  redirectLink: (string) | (NavigateFunction);
 }
 
 export const ListCard: React.FC<ListCardProps> = ({
   scrollable,
   type = CardTypeEnum.favorites,
   components,
+  redirectLink
 }) => {
+  console.log(typeof redirectLink);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -66,17 +70,24 @@ export const ListCard: React.FC<ListCardProps> = ({
     }
   };
 
+  const redirect = typeof redirectLink;
   if (!scrollable) {
     return (
       <div className={`list-card ${type}`}>
         {type !== CardTypeEnum.search && (
           <div className="list-card-header">
             <ListCardTitle type={type} />
-            {components && tooMuchComponents(components) && (
-              <a href="/" className="right-button">
-                Voir plus
-              </a>
-            )}
+            {components && tooMuchComponents(components) && 
+              redirect === "string" ? (
+                <a href={redirectLink as string} className="right-button">
+                  Voir plus
+                </a>
+              ) : (
+                <a onClick={redirectLink as MouseEventHandler<HTMLAnchorElement>} className="right-button">
+                  Voir plus
+                </a>
+              )
+            }
           </div>
         )}
         <Grid className={`grid-${NbColumns(windowWidth)}`}>
