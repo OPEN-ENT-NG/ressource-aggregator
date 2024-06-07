@@ -140,16 +140,12 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
                 <ContentCopyIcon className="med-link" onClick={() => copy()} />
               </Tooltip>
               {searchResource.favorite ? (
-                <Tooltip
-                  message={t("mediacentre.card.unfavorite")}
-                  placement="top"
+                <Tooltip message={t("mediacentre.card.unfavorite")} placement="top"
                 >
                   <StarIcon className="med-star" onClick={() => unfav()} />
                 </Tooltip>
               ) : (
-                <Tooltip
-                  message={t("mediacentre.card.favorite")}
-                  placement="top"
+                <Tooltip message={t("mediacentre.card.favorite")} placement="top"
                 >
                   <StarBorderIcon className="med-star" onClick={() => fav()} />
                 </Tooltip>
