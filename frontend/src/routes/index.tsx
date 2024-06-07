@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 
 import Root from "~/app/root";
 import ErrorPage from "~/components/page-error";
@@ -71,6 +71,4 @@ const routes = [
   },
 ];
 
-export const router = createBrowserRouter(routes, {
-  basename: import.meta.env.PROD ? "/mediacentre" : "/",
-});
+export const router = createHashRouter(routes);
