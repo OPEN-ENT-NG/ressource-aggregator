@@ -147,7 +147,10 @@ export const Resource: React.FC<ResourceProps> = ({
               <ContentCopyIcon className="med-link" onClick={() => copy()} />
             </Tooltip>
             {favorite ? (
-              <Tooltip message={t("mediacentre.card.unfavorite")} placement="top">
+              <Tooltip
+                message={t("mediacentre.card.unfavorite")}
+                placement="top"
+              >
                 <StarIcon className="med-star" onClick={() => unfav()} />
               </Tooltip>
             ) : (
@@ -201,7 +204,10 @@ export const Resource: React.FC<ResourceProps> = ({
               <ContentCopyIcon className="med-link" onClick={() => copy()} />
             </Tooltip>
             {favorite ? (
-              <Tooltip message={t("mediacentre.card.unfavorite")} placement="top">
+              <Tooltip
+                message={t("mediacentre.card.unfavorite")}
+                placement="top"
+              >
                 <StarIcon className="med-star" onClick={() => unfav()} />
               </Tooltip>
             ) : (
