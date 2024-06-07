@@ -71,4 +71,5 @@ const routes = [
   },
 ];
 
+// add # before roots to distinguish front roots (#/search) from back roots (/search)
 export const router = createHashRouter(routes);
