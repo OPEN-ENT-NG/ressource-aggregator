@@ -81,20 +81,20 @@ export const ListCard: React.FC<ListCardProps> = ({
           <div className="list-card-header">
             <ListCardTitle type={type} />
             {components &&
-            tooMuchComponents(components) &&
-            typeof redirectLink === "string" ? (
-              <a href={redirectLink as string} className="right-button">
-                Voir plus
-              </a>
-            ) : (
-              <button
-                onClick={redirectLink as MouseEventHandler}
-                onKeyDown={redirectLink as KeyboardEventHandler}
-                className="right-button list-card-button"
-              >
-                Voir plus
-              </button>
-            )}
+              tooMuchComponents(components) &&
+              (typeof redirectLink === "string" ? (
+                <a href={redirectLink as string} className="right-button">
+                  Voir plus
+                </a>
+              ) : (
+                <button
+                  onClick={redirectLink as MouseEventHandler}
+                  onKeyDown={redirectLink as KeyboardEventHandler}
+                  className="right-button list-card-button"
+                >
+                  Voir plus
+                </button>
+              ))}
           </div>
         )}
         <Grid className={`grid-${NbColumns(windowWidth)}`}>
