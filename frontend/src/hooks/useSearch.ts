@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { useFavorite } from "./useFavorite";
 import { useSearchQuery } from "../services/api/search.service";
+import { Favorite } from "~/model/Favorite.model";
 import { Moodle } from "~/model/Moodle.model";
 import { Resource } from "~/model/Resource.model";
 import { SearchResultCategory } from "~/model/SearchResultCategory";
@@ -140,24 +142,36 @@ export const useSearch = (query: any) => {
           ) ?? [];
       }
       if (favorites) {
-        const updateFavoritesInCategory = (categoryData: any[], favorites: Favorite[]) => {
-          return categoryData.map(item => ({
-              ...item,
-              favorite: favorites.some(fav => fav.id === item.id)
+        const updateFavoritesInCategory = (
+          categoryData: any[],
+          favorites: Favorite[],
+        ) => {
+          return categoryData.map((item) => ({
+            ...item,
+            favorite: favorites.some((fav) => fav.id === item.id),
           }));
         };
-  
+
         const updatedSearchResultData: SearchResultData = {
-            signets: updateFavoritesInCategory(searchResultData.signets, favorites),
-            textbooks: updateFavoritesInCategory(searchResultData.textbooks, favorites),
-            externals_resources: updateFavoritesInCategory(searchResultData.externals_resources, favorites),
-            moodle: updateFavoritesInCategory(searchResultData.moodle, favorites),
+          signets: updateFavoritesInCategory(
+            searchResultData.signets,
+            favorites,
+          ),
+          textbooks: updateFavoritesInCategory(
+            searchResultData.textbooks,
+            favorites,
+          ),
+          externals_resources: updateFavoritesInCategory(
+            searchResultData.externals_resources,
+            favorites,
+          ),
+          moodle: updateFavoritesInCategory(searchResultData.moodle, favorites),
         };
         searchResultData = updatedSearchResultData;
       }
       setAllResources(searchResultData);
     }
-  }, [data, isLoading]);
+  }, [data, isLoading, favorites]);
 
   return { allResources, disciplines, levels, types, error, isLoading };
 };

@@ -63,7 +63,7 @@ export const Resource: React.FC<ResourceProps> = ({
   };
   const fav = async () => {
     try {
-      await addFavorite({ id, resource });
+      await addFavorite({ id: resource._id ?? resource.id ?? "", resource });
       setAlertText(t("mediacentre.notification.addFavorite"), "success");
       handleAddFavorite(resource);
     } catch (e) {
@@ -72,7 +72,10 @@ export const Resource: React.FC<ResourceProps> = ({
   };
   const unfav = async () => {
     try {
-      await removeFavorite({ id, source: resource?.source ?? "" });
+      await removeFavorite({
+        id: resource._id ?? resource.id ?? "",
+        source: resource?.source ?? "",
+      });
       setAlertText(t("mediacentre.notification.removeFavorite"), "success");
       handleRemoveFavorite(id);
     } catch (e) {

@@ -7,6 +7,7 @@ export interface SearchResource {
   editors?: string[];
   favorite?: boolean;
   id?: string;
+  _id?: string;
   image?: string;
   levels?: string[];
   link?: string;

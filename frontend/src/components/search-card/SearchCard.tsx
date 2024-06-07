@@ -23,15 +23,11 @@ import {
 interface SearchResourceProps {
   searchResource: SearchResource;
   setAlertText: (arg: string, type: AlertTypes) => void;
-  handleAddFavorite: (resource: any) => void;
-  handleRemoveFavorite: (id: string) => void;
 }
 
 export const SearchCard: React.FC<SearchResourceProps> = ({
   searchResource,
   setAlertText,
-  handleAddFavorite,
-  handleRemoveFavorite,
 }) => {
   const { t } = useTranslation();
   const [addFavorite] = useAddFavoriteMutation();
@@ -60,7 +56,9 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
 
   const copy = () => {
     if (navigator?.clipboard) {
-      navigator.clipboard.writeText(searchResource?.link ?? searchResource?.url ?? "");
+      navigator.clipboard.writeText(
+        searchResource?.link ?? searchResource?.url ?? "",
+      );
       setAlertText(t("mediacentre.notification.copy"), "success");
     } else {
       console.error("Clipboard not available");
@@ -68,18 +66,24 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   };
   const fav = async () => {
     try {
-      await addFavorite({ id: searchResource?.id ?? "", resource: searchResource });
+      await addFavorite({
+        id: searchResource?._id ?? searchResource?.id ?? "",
+        resource: searchResource,
+      });
       setAlertText(t("mediacentre.notification.addFavorite"), "success");
-      handleAddFavorite(searchResource);
+      searchResource.favorite = true;
     } catch (e) {
       console.error(e);
     }
   };
   const unfav = async () => {
     try {
-      await removeFavorite({ id: searchResource?.id ?? "", source: searchResource?.source ?? "" });
+      await removeFavorite({
+        id: searchResource?._id ?? searchResource?.id ?? "",
+        source: searchResource?.source ?? "",
+      });
       setAlertText(t("mediacentre.notification.removeFavorite"), "success");
-      handleRemoveFavorite(searchResource?.id ?? "");
+      searchResource.favorite = false;
     } catch (e) {
       console.error(e);
     }
