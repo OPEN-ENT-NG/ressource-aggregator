@@ -1,10 +1,16 @@
-import React, { useState, useEffect, MouseEventHandler } from "react";
+import React, {
+  useState,
+  useEffect,
+  MouseEventHandler,
+  KeyboardEventHandler,
+} from "react";
 
 import { Grid } from "@edifice-ui/react";
 import Brightness1Icon from "@mui/icons-material/Brightness1";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./ListCard.scss";
+import { NavigateFunction } from "react-router-dom";
 
 import { ListCardTitle } from "./list-card-title/ListCardTitle";
 import { breakpoints } from "~/core/const/breakpoints.ts";
@@ -13,22 +19,20 @@ import {
   NbComponentsListCard,
 } from "~/core/const/home-element-list-sizes.const";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
-import { NavigateFunction } from "react-router-dom";
 
 interface ListCardProps {
   scrollable: boolean;
   type?: CardTypeEnum;
   components?: any[];
-  redirectLink: (string) | (NavigateFunction);
+  redirectLink: string | NavigateFunction;
 }
 
 export const ListCard: React.FC<ListCardProps> = ({
   scrollable,
   type = CardTypeEnum.favorites,
   components,
-  redirectLink
+  redirectLink,
 }) => {
-  console.log(typeof redirectLink);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -70,24 +74,27 @@ export const ListCard: React.FC<ListCardProps> = ({
     }
   };
 
-  const redirect = typeof redirectLink;
   if (!scrollable) {
     return (
       <div className={`list-card ${type}`}>
         {type !== CardTypeEnum.search && (
           <div className="list-card-header">
             <ListCardTitle type={type} />
-            {components && tooMuchComponents(components) && 
-              redirect === "string" ? (
-                <a href={redirectLink as string} className="right-button">
-                  Voir plus
-                </a>
-              ) : (
-                <a onClick={redirectLink as MouseEventHandler<HTMLAnchorElement>} className="right-button">
-                  Voir plus
-                </a>
-              )
-            }
+            {components &&
+            tooMuchComponents(components) &&
+            typeof redirectLink === "string" ? (
+              <a href={redirectLink as string} className="right-button">
+                Voir plus
+              </a>
+            ) : (
+              <button
+                onClick={redirectLink as MouseEventHandler}
+                onKeyDown={redirectLink as KeyboardEventHandler}
+                className="right-button list-card-button"
+              >
+                Voir plus
+              </button>
+            )}
           </div>
         )}
         <Grid className={`grid-${NbColumns(windowWidth)}`}>
