@@ -2,19 +2,19 @@ import { useState, useEffect, useReducer } from "react";
 
 import { Alert, AlertTypes } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { ListCard } from "~/components/list-card/ListCard.tsx";
 import { MainLayout } from "~/components/main-layout/MainLayout";
-import { Resource } from "~/components/resource/Resource";
-import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
 import { Favorite } from "~/model/Favorite.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { ExternalResource } from "~/model/ExternalResource.model";
+import { HomeManualsList } from "~/components/home-lists/HomeManualsList";
+import { HomeFavoritesList } from "~/components/home-lists/HomeFavoritesList";
+import { HomeBookMarksList } from "~/components/home-lists/HomeBookMarksList";
+import { HomeExternalResourcesList } from "~/components/home-lists/HomeExternalResourcesList";
 
 export interface AppProps {
   _id: string;
@@ -35,9 +35,8 @@ export const App = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const { favorites, setFavorites } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
-  const { textbooks, setTextbooks } = useTextbook();
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { textbooks, setTextbooks, externalResources, setExternalResources } =
+    useTextbook();
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,8 +76,65 @@ export const App = () => {
         : textbook,
     );
     setTextbooks(newTextbooks);
+    let newExternalResources: ExternalResource[] = [...externalResources];
+    newExternalResources = newExternalResources.map((externalResource: ExternalResource) =>
+      externalResource?.id?.toString() == id.toString()
+        ? { ...externalResource, favorite: isFavorite }
+        : externalResource,
+    );
+    setExternalResources(newExternalResources);
     forceUpdate(); // List are not re-rendering without this
   };
+
+  const firstColumn = () => {
+    if(textbooks && textbooks.length > 0) {
+      return (
+        <HomeManualsList
+          textbooks={textbooks}
+          setAlertText={setAlertText}
+          setAlertType={setAlertType}
+          handleAddFavorite={handleAddFavorite}
+          handleRemoveFavorite={handleRemoveFavorite}
+        />
+      );
+    }
+    else if (externalResources && externalResources.length > 0) {
+      return (
+        <HomeExternalResourcesList
+          externalResources={externalResources}
+          setAlertText={setAlertText}
+          setAlertType={setAlertType}
+          handleAddFavorite={handleAddFavorite}
+          handleRemoveFavorite={handleRemoveFavorite}
+        />
+      );
+    }
+  }
+
+  const secondColumn = () => {
+    if (homeSignets && homeSignets.length > 0) {
+      return (
+        <HomeBookMarksList
+          homeSignets={homeSignets}
+          setAlertText={setAlertText}
+          setAlertType={setAlertType}
+          handleAddFavorite={handleAddFavorite}
+          handleRemoveFavorite={handleRemoveFavorite}
+        />
+      );
+    }
+    else if (externalResources && externalResources.length > 0) {
+      return (
+        <HomeExternalResourcesList
+          externalResources={externalResources}
+          setAlertText={setAlertText}
+          setAlertType={setAlertType}
+          handleAddFavorite={handleAddFavorite}
+          handleRemoveFavorite={handleRemoveFavorite}
+        />
+      );
+    }
+  }
 
   if (windowWidth >= 1280) {
     return (
@@ -106,111 +162,21 @@ export const App = () => {
             <div className="left-container">
               <div className="bottom-container">
                 <div className="bottom-left-container">
-                  {textbooks && (
-                    <ListCard
-                      scrollable={false}
-                      type={CardTypeEnum.manuals}
-                      components={textbooks.map((textbook: Textbook) => (
-                        <Resource
-                          id={textbook?.id ?? ""}
-                          key={textbook.id}
-                          image={
-                            textbook?.image ??
-                            "/mediacentre/public/img/no-avatar.svg"
-                          }
-                          title={textbook.title}
-                          subtitle={textbook?.editors?.join(", ") ?? ""}
-                          type={CardTypeEnum.manuals}
-                          favorite={textbook.favorite}
-                          link={textbook.link ?? textbook.url ?? "/"}
-                          setAlertText={(arg: string, type: AlertTypes) => {
-                            setAlertText(arg);
-                            setAlertType(type);
-                          }}
-                          resource={textbook}
-                          handleAddFavorite={handleAddFavorite}
-                          handleRemoveFavorite={handleRemoveFavorite}
-                        />
-                      ))}
-                      redirectLink={() => navigate("/textbook")}
-                    />
-                  )}
+                  {firstColumn()}
                 </div>
                 <div className="bottom-right-container">
-                  {homeSignets && (
-                    <ListCard
-                      scrollable={false}
-                      type={CardTypeEnum.book_mark}
-                      components={homeSignets.map((signet: Signet) => (
-                        <Resource
-                          id={signet?.id ?? signet?._id ?? ""}
-                          key={signet.id ?? signet?._id ?? ""}
-                          image={
-                            signet?.image ??
-                            "/mediacentre/public/img/no-avatar.svg"
-                          }
-                          title={signet.title}
-                          subtitle={
-                            signet.orientation
-                              ? t("mediacentre.signet.orientation")
-                              : ""
-                          }
-                          type={CardTypeEnum.book_mark}
-                          favorite={signet.favorite}
-                          link={signet.link ?? signet.url ?? "/"}
-                          shared={signet?.shared ?? false}
-                          footerImage={
-                            signet.owner_id
-                              ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                              : `/mediacentre/public/img/no-avatar.svg`
-                          }
-                          footerText={
-                            signet.owner_name ??
-                            (signet.authors ? signet.authors[0] : " ")
-                          }
-                          setAlertText={(arg: string, type: AlertTypes) => {
-                            setAlertText(arg);
-                            setAlertType(type);
-                          }}
-                          resource={signet}
-                          handleAddFavorite={handleAddFavorite}
-                          handleRemoveFavorite={handleRemoveFavorite}
-                        />
-                      ))}
-                      redirectLink="/mediacentre?view=angular#/signet"
-                    />
-                  )}
+                  {secondColumn()}
                 </div>
               </div>
             </div>
             <div className="right-container">
               {favorites && (
-                <ListCard
-                  scrollable={false}
-                  type={CardTypeEnum.favorites}
-                  components={favorites.map((favorite: Favorite) => (
-                    <Resource
-                      id={favorite?.id ?? ""}
-                      key={favorite?.id ?? ""}
-                      image={
-                        favorite?.image ??
-                        "/mediacentre/public/img/no-avatar.svg"
-                      }
-                      title={favorite.title}
-                      subtitle={favorite.description}
-                      type={CardTypeEnum.favorites}
-                      favorite={favorite.favorite}
-                      link={favorite.link ?? favorite.url ?? "/"}
-                      setAlertText={(arg: string, type: AlertTypes) => {
-                        setAlertText(arg);
-                        setAlertType(type);
-                      }}
-                      resource={favorite}
-                      handleAddFavorite={handleAddFavorite}
-                      handleRemoveFavorite={handleRemoveFavorite}
-                    />
-                  ))}
-                  redirectLink="/mediacentre?view=angular#/favorite"
+                <HomeFavoritesList
+                  favorites={favorites}
+                  setAlertText={setAlertText}
+                  setAlertType={setAlertType}
+                  handleAddFavorite={handleAddFavorite}
+                  handleRemoveFavorite={handleRemoveFavorite}
                 />
               )}
             </div>
@@ -237,101 +203,30 @@ export const App = () => {
           </Alert>
         )}
         <div className="med-container">
-          <ListCard
-            scrollable={false}
-            type={CardTypeEnum.favorites}
-            components={favorites.map((favorite: Favorite) => (
-              <Resource
-                id={favorite?.id ?? ""}
-                key={favorite.id}
-                image={
-                  favorite?.image ?? "/mediacentre/public/img/no-avatar.svg"
-                }
-                title={favorite.title}
-                subtitle={favorite.description}
-                type={CardTypeEnum.favorites}
-                favorite={favorite.favorite}
-                link={favorite.link ?? favorite.url ?? "/"}
-                setAlertText={(arg: string, type: AlertTypes) => {
-                  setAlertText(arg);
-                  setAlertType(type);
-                }}
-                resource={favorite}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            ))}
-            redirectLink="/mediacentre?view=angular#/favorite"
+          <HomeFavoritesList
+            favorites={favorites}
+            setAlertText={setAlertText}
+            setAlertType={setAlertType}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
           />
           <div className="bottom-container">
             <div className="bottom-left-container">
-              <ListCard
-                scrollable={false}
-                type={CardTypeEnum.manuals}
-                components={textbooks.map((textbook: Textbook) => (
-                  <Resource
-                    id={textbook?.id ?? ""}
-                    key={textbook.id}
-                    image={
-                      textbook?.image ?? "/mediacentre/public/img/no-avatar.svg"
-                    }
-                    title={textbook.title}
-                    subtitle={textbook?.editors?.join(", ") ?? ""}
-                    type={CardTypeEnum.manuals}
-                    favorite={textbook.favorite}
-                    link={textbook.link ?? textbook.url ?? "/"}
-                    setAlertText={(arg: string, type: AlertTypes) => {
-                      setAlertText(arg);
-                      setAlertType(type);
-                    }}
-                    resource={textbook}
-                    handleAddFavorite={handleAddFavorite}
-                    handleRemoveFavorite={handleRemoveFavorite}
-                  />
-                ))}
-                redirectLink={() => navigate("/textbook")}
+              <HomeManualsList
+                textbooks={textbooks}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             </div>
             <div className="bottom-right-container">
-              <ListCard
-                scrollable={false}
-                type={CardTypeEnum.book_mark}
-                components={homeSignets.map((signet: Signet) => (
-                  <Resource
-                    id={signet?.id ?? signet?._id ?? ""}
-                    key={signet.id ?? signet._id}
-                    image={
-                      signet?.image ?? "/mediacentre/public/img/no-avatar.svg"
-                    }
-                    title={signet.title}
-                    subtitle={
-                      signet.orientation
-                        ? t("mediacentre.signet.orientation")
-                        : ""
-                    }
-                    type={CardTypeEnum.book_mark}
-                    favorite={signet.favorite}
-                    link={signet.link ?? signet.url ?? "/"}
-                    footerImage={
-                      signet.owner_id
-                        ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                        : `/mediacentre/public/img/no-avatar.svg`
-                    }
-                    footerText={
-                      signet.owner_name ??
-                      (signet.authors ? signet.authors[0] : "")
-                    }
-                    shared={signet?.shared ?? false}
-                    setAlertText={(arg: string, type: AlertTypes) => {
-                      setAlertText(arg);
-                      setAlertType(type);
-                    }}
-                    resource={signet}
-                    handleAddFavorite={handleAddFavorite}
-                    handleRemoveFavorite={handleRemoveFavorite}
-                  />
-                ))}
-                redirectLink="/mediacentre?view=angular#/signet"
+              <HomeBookMarksList
+                homeSignets={homeSignets}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
               />
             </div>
           </div>
@@ -357,92 +252,26 @@ export const App = () => {
           </Alert>
         )}
         <div className="med-container">
-          <ListCard
-            scrollable={false}
-            type={CardTypeEnum.favorites}
-            components={favorites.map((favorite: Favorite) => (
-              <Resource
-                id={favorite?.id ?? ""}
-                key={favorite.id}
-                image={
-                  favorite?.image ?? "/mediacentre/public/img/no-avatar.svg"
-                }
-                title={favorite.title}
-                subtitle={favorite.description}
-                type={CardTypeEnum.favorites}
-                favorite={favorite.favorite}
-                link={favorite.link ?? favorite.url ?? "/"}
-                setAlertText={(arg: string, type: AlertTypes) => {
-                  setAlertText(arg);
-                  setAlertType(type);
-                }}
-                resource={favorite}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            ))}
-            redirectLink="/mediacentre?view=angular#/favorite"
+          <HomeFavoritesList
+            favorites={favorites}
+            setAlertText={setAlertText}
+            setAlertType={setAlertType}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
           />
-          <ListCard
-            scrollable={false}
-            type={CardTypeEnum.manuals}
-            components={textbooks.map((textbook: Textbook) => (
-              <Resource
-                id={textbook?.id ?? ""}
-                key={textbook?.id ?? ""}
-                image={
-                  textbook?.image ?? "/mediacentre/public/img/no-avatar.svg"
-                }
-                title={textbook.title}
-                subtitle={textbook?.editors?.join(", ") ?? ""}
-                type={CardTypeEnum.manuals}
-                favorite={textbook.favorite}
-                link={textbook.link ?? textbook.url ?? "/"}
-                setAlertText={(arg: string, type: AlertTypes) => {
-                  setAlertText(arg);
-                  setAlertType(type);
-                }}
-                resource={textbook}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            ))}
-            redirectLink={() => navigate("/textbook")}
+          <HomeManualsList
+            textbooks={textbooks}
+            setAlertText={setAlertText}
+            setAlertType={setAlertType}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
           />
-          <ListCard
-            scrollable={false}
-            type={CardTypeEnum.book_mark}
-            components={homeSignets.map((signet: Signet) => (
-              <Resource
-                id={signet?.id ?? signet?._id ?? ""}
-                key={signet?.id ?? signet?._id ?? ""}
-                image={signet?.image ?? "/mediacentre/public/img/no-avatar.svg"}
-                title={signet.title}
-                subtitle={
-                  signet.orientation ? t("mediacentre.signet.orientation") : ""
-                }
-                type={CardTypeEnum.book_mark}
-                favorite={signet.favorite}
-                link={signet.link ?? signet.url ?? "/"}
-                footerImage={
-                  signet.owner_id
-                    ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
-                    : `/mediacentre/public/img/no-avatar.svg`
-                }
-                footerText={
-                  signet.owner_name ?? (signet.authors ? signet.authors[0] : "")
-                }
-                shared={signet?.shared ?? false}
-                setAlertText={(arg: string, type: AlertTypes) => {
-                  setAlertText(arg);
-                  setAlertType(type);
-                }}
-                resource={signet}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            ))}
-            redirectLink="/mediacentre?view=angular#/signet"
+          <HomeBookMarksList
+            homeSignets={homeSignets}
+            setAlertText={setAlertText}
+            setAlertType={setAlertType}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
           />
         </div>
       </>
