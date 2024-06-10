@@ -11,6 +11,7 @@ interface HomeManualsListProps {
   setAlertType: (arg: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string) => void;
+  double?: boolean;
 }
 
 export const HomeManualsList: React.FC<HomeManualsListProps> = ({
@@ -19,6 +20,7 @@ export const HomeManualsList: React.FC<HomeManualsListProps> = ({
   setAlertType,
   handleAddFavorite,
   handleRemoveFavorite,
+  double,
 }) => {
   const navigate = useNavigate();
   return (
@@ -45,6 +47,7 @@ export const HomeManualsList: React.FC<HomeManualsListProps> = ({
         />
       ))}
       redirectLink={() => navigate("/textbook")}
+      homeDouble={double}
     />
   );
 };

@@ -11,6 +11,7 @@ interface HomeBookMarksListProps {
   setAlertType: (arg: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string) => void;
+  double?: boolean;
 }
 
 export const HomeBookMarksList: React.FC<HomeBookMarksListProps> = ({
@@ -19,6 +20,7 @@ export const HomeBookMarksList: React.FC<HomeBookMarksListProps> = ({
   setAlertType,
   handleAddFavorite,
   handleRemoveFavorite,
+  double,
 }) => {
   const { t } = useTranslation();
   return (
@@ -55,6 +57,7 @@ export const HomeBookMarksList: React.FC<HomeBookMarksListProps> = ({
         />
       ))}
       redirectLink="/mediacentre?view=angular#/signet"
+      homeDouble={double}
     />
   );
 };

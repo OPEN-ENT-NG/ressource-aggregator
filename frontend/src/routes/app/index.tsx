@@ -86,33 +86,13 @@ export const App = () => {
     forceUpdate(); // List are not re-rendering without this
   };
 
-  const firstColumn = () => {
-    if(textbooks && textbooks.length > 0) {
-      return (
-        <HomeManualsList
-          textbooks={textbooks}
-          setAlertText={setAlertText}
-          setAlertType={setAlertType}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-        />
-      );
-    }
-    else if (externalResources && externalResources.length > 0) {
-      return (
-        <HomeExternalResourcesList
-          externalResources={externalResources}
-          setAlertText={setAlertText}
-          setAlertType={setAlertType}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-        />
-      );
-    }
-  }
+  function isArrayEmpty(arr:any[]) {
+    return !(arr && arr.length > 0);
+  };
 
-  const secondColumn = () => {
-    if (homeSignets && homeSignets.length > 0) {
+  const leftContainer = () => {
+    // case 1: textbooks and externalResources are empty and homeSignets is not empty
+    if( isArrayEmpty(textbooks) && isArrayEmpty(externalResources) && !isArrayEmpty(homeSignets)) {
       return (
         <HomeBookMarksList
           homeSignets={homeSignets}
@@ -120,10 +100,12 @@ export const App = () => {
           setAlertType={setAlertType}
           handleAddFavorite={handleAddFavorite}
           handleRemoveFavorite={handleRemoveFavorite}
+          double={true}
         />
       );
     }
-    else if (externalResources && externalResources.length > 0) {
+    // case 2: textbooks and homeSignets are empty and externalResources is not empty
+    else if( isArrayEmpty(textbooks) && isArrayEmpty(homeSignets) && !isArrayEmpty(externalResources)) {
       return (
         <HomeExternalResourcesList
           externalResources={externalResources}
@@ -131,8 +113,96 @@ export const App = () => {
           setAlertType={setAlertType}
           handleAddFavorite={handleAddFavorite}
           handleRemoveFavorite={handleRemoveFavorite}
+          double={true}
         />
       );
+    }
+    // case 3: externalResources and homeSignets are empty and textbooks is not empty
+    else if( isArrayEmpty(externalResources) && isArrayEmpty(homeSignets) && !isArrayEmpty(textbooks)) {
+      return (
+        <HomeManualsList
+          textbooks={textbooks}
+          setAlertText={setAlertText}
+          setAlertType={setAlertType}
+          handleAddFavorite={handleAddFavorite}
+          handleRemoveFavorite={handleRemoveFavorite}
+          double={true}
+        />
+      );
+    }
+    // case 4: all lists are empty
+    else if (isArrayEmpty(textbooks) && isArrayEmpty(homeSignets) && isArrayEmpty(externalResources)) {
+      return (
+        <div className="empty-list">
+          <p>No data available</p>
+        </div>
+      );
+    }
+    // case 5: there at least two lists with data
+    else {
+      // case 5.1: textbooks is empty
+      if (isArrayEmpty(textbooks)) {
+        return (
+          <>
+            <HomeExternalResourcesList
+              externalResources={externalResources}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+            <HomeBookMarksList
+              homeSignets={homeSignets}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+          </>
+        );
+      }
+      // case 5.2: bookmarks is empty
+      else if (isArrayEmpty(homeSignets)) {
+        return (
+          <>
+            <HomeManualsList
+              textbooks={textbooks}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+            <HomeExternalResourcesList
+              externalResources={externalResources}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+          </>
+        );
+      }
+      // case 5.3: externalResources is empty or all lists have data
+      else {
+        return (
+          <>
+            <HomeManualsList
+              textbooks={textbooks}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+            <HomeBookMarksList
+              homeSignets={homeSignets}
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+          </>
+        );
+      }
     }
   }
 
@@ -161,12 +231,7 @@ export const App = () => {
           <div className="list-container">
             <div className="left-container">
               <div className="bottom-container">
-                <div className="bottom-left-container">
-                  {firstColumn()}
-                </div>
-                <div className="bottom-right-container">
-                  {secondColumn()}
-                </div>
+                {leftContainer()}
               </div>
             </div>
             <div className="right-container">

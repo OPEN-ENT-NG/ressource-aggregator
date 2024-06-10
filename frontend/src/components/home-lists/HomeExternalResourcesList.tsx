@@ -11,6 +11,7 @@ interface HomeExternalResourcesListProps {
   setAlertType: (arg: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string) => void;
+  double?: boolean;
 }
 
 export const HomeExternalResourcesList: React.FC<
@@ -21,6 +22,7 @@ export const HomeExternalResourcesList: React.FC<
   setAlertType,
   handleAddFavorite,
   handleRemoveFavorite,
+  double,
 }) => {
   const navigate = useNavigate();
   return (
@@ -51,6 +53,7 @@ export const HomeExternalResourcesList: React.FC<
         ),
       )}
       redirectLink={() => navigate("/resources")}
+      homeDouble={double}
     />
   );
 };

@@ -10,6 +10,7 @@ interface HomeFavoritesListProps {
   setAlertType: (arg: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string) => void;
+  double?: boolean;
 }
 
 export const HomeFavoritesList: React.FC<HomeFavoritesListProps> = ({
@@ -18,6 +19,7 @@ export const HomeFavoritesList: React.FC<HomeFavoritesListProps> = ({
   setAlertType,
   handleAddFavorite,
   handleRemoveFavorite,
+  double,
 }) => (
   <ListCard
     scrollable={false}
@@ -42,5 +44,6 @@ export const HomeFavoritesList: React.FC<HomeFavoritesListProps> = ({
       />
     ))}
     redirectLink="/mediacentre?view=angular#/favorite"
+    homeDouble={double}
   />
 );
