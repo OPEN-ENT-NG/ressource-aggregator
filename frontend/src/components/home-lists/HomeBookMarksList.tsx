@@ -6,7 +6,6 @@ import { Resource } from "../resource/Resource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { Signet } from "~/model/Signet.model";
 
-
 interface HomeBookMarksListProps {
   homeSignets: Signet[];
   setAlertText: (arg: string) => void;

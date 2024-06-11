@@ -27,7 +27,8 @@ export const useTextbook = () => {
       );
       const externalResourceData = garData.filter(
         (externalResource: ExternalResource) =>
-          externalResource.document_types?.includes("site web") ?? false,
+          !externalResource.document_types?.includes("livre numérique") ??
+          false,
       );
       setTextbooks(textbookData);
       setExternalResources(externalResourceData);

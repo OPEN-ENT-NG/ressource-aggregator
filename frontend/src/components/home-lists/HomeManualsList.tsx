@@ -6,7 +6,6 @@ import { Resource } from "../resource/Resource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { Textbook } from "~/model/Textbook.model";
 
-
 interface HomeManualsListProps {
   textbooks: Textbook[];
   setAlertText: (arg: string) => void;

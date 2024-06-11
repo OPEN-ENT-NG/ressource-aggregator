@@ -17,7 +17,6 @@ import { Favorite } from "~/model/Favorite.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
 
-
 export interface AppProps {
   _id: string;
   created: Date;

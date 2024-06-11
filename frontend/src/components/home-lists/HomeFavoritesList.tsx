@@ -5,7 +5,6 @@ import { Resource } from "../resource/Resource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { Favorite } from "~/model/Favorite.model";
 
-
 interface HomeFavoritesListProps {
   favorites: Favorite[];
   setAlertText: (arg: string) => void;
