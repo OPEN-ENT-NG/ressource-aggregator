@@ -70,36 +70,26 @@ public class GAR implements Source {
      * @param handler     Function handler returning data
      */
     private void getResources(UserInfos user, String structureId, Handler<Either<String, JsonArray>> handler) {
+        if(WorkflowActionUtils.hasRight(user, WorkflowActions.GAR_RIGHT.toString())) {
+            JsonObject action = new JsonObject()
+                    .put("action", "getResources")
+                    .put("structure", structureId)
+                    .put("user", user.getUserId())
+                    .put("hostname", config.getString("host").split("//")[1]);
+                    
+            String GAR_ADDRESS = "openent.mediacentre";
+            eb.send(GAR_ADDRESS, action, handlerToAsyncHandler(event -> {
+                if (!"ok".equals(event.body().getString("status"))) {
+                    log.error("[Gar@search] Failed to retrieve gar resources", event.body().getString("message"));
+                    handler.handle(new Either.Left<>(event.body().getString("message")));
+                    return;
+                }
 
-        String defaultResources = "[{   \"title\": \"Universalis Education\",   \"editors\": [     \"ENCYCLOPAEDIA UNIVERSALIS FRANCE\"   ],   \"authors\": [],   \"image\": \"https://vignette.gar.education.fr/VAprod/gar/137.png\",   \"disciplines\": [],   \"levels\": [     \"lycée général et technologique\",     \"section DUT\",     \"section BTS\",     \"terminale technologique\",     \"CPGE - 1re année\",     \"BTS - 1re année\",     \"BTS - 2e année\",     \"1re générale\",     \"CPGE - 2e année\",     \"DUT - 1re année\",     \"1re technologique\",     \"DUT - 2e année\",     \"terminale générale\",     \"voies générale, technologique, professionnelle\",     \"enseignement supérieur en lycée\",     \"cycles de l'enseignement scolaire (2016)\",     \"2de générale et technologique\",     \"Niveau éducatif détaillé (2015-)\",     \"voie CPGE\",     \"terminale générale et technologique\",     \"tranches d'âge de l'enseignement scolaire\",     \"15-18 ans\",     \"cycle terminal\",     \"1re générale et technologique\"   ],   \"document_types\": [     \"chronologie\",     \"collection de documents\",     \"diaporama\",     \"biographie\",     \"carte\",     \"carte heuristique et conceptuelle\",     \"article\",     \"atlas\",     \"base de données\",     \"bibliographie / sitographie\",     \"image, animation 3D\",     \"schéma / graphique\",     \"site Web\",     \"photographie\",     \"image numérique\"   ],   \"link\": \"https://idp-auth.gar.education.fr/domaineGar?idENT=QjA=&idEtab=MDg3MDA1OVM=&idRessource=ark%3A%2F34885%2Fwr0000001\",   \"source\": \"fr.openent.mediacentre.source.GAR\",   \"plain_text\": \"animation cours / présentation activité pédagogique matériel de référence glossaire \",   \"id\": \"ark:/34885/wr0000001\",   \"favorite\": false,   \"date\": 1717597219963,   \"structure_name\": \"RECTORAT-ACADEMIE DE LIMOGES-LIMOGES\",   \"structure_uai\": \"0870059S\" }]";
-        //  JsonObject response = new JsonObject()
-        //                     .put("status", "ok")
-        //                     .put("message", new JsonArray(defaultResources));
-        handler.handle(new Either.Right<>(new JsonArray(defaultResources)));
-
-
-        // if(WorkflowActionUtils.hasRight(user, WorkflowActions.GAR_RIGHT.toString())) {
-        //     JsonObject action = new JsonObject()
-        //             .put("action", "getResources")
-        //             .put("structure", structureId)
-        //             .put("user", user.getUserId())
-        //             .put("hostname", config.getString("host").split("//")[1]);
-        //     log.info("before eb.send");
-        //     String GAR_ADDRESS = "openent.mediacentre";
-        //     eb.send(GAR_ADDRESS, action, handlerToAsyncHandler(event -> {
-        //         if (!"ok".equals(event.body().getString("status"))) {
-        //             log.error("[Gar@search] Failed to retrieve gar resources", event.body().getString("message"));
-        //             handler.handle(new Either.Left<>(event.body().getString("message")));
-        //             return;
-        //         }
-
-        //         log.info(event.body());
-
-        //         handler.handle(new Either.Right<>(event.body().getJsonArray("message")));
-        //     }));
-        // } else {
-        //     handler.handle(new Either.Right<>(new JsonArray()));
-        // }
+                handler.handle(new Either.Right<>(event.body().getJsonArray("message")));
+            }));
+        } else {
+            handler.handle(new Either.Right<>(new JsonArray()));
+        }
     }
 
     /**
@@ -244,7 +234,6 @@ public class GAR implements Source {
     }
 
     private Integer getOccurrenceCount(String query, JsonArray values) {
-        if (value == null) return 0;
         Integer count = 0;
         for (int i = 0; i < values.size(); i++) {
             count += getOccurrenceCount(query, values.getString(i));
