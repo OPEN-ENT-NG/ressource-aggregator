@@ -16,9 +16,7 @@ export const useActions = () => {
   return useQuery<Record<string, boolean>, Error, IAction[]>({
     queryKey: ["actions"],
     queryFn: async () => {
-      const availableRights = await sessionHasWorkflowRights([
-        signets
-      ]);
+      const availableRights = await sessionHasWorkflowRights([signets]);
       return availableRights;
     },
     select: (data) => {

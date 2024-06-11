@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import "./Sidebar.scss";
+import { isActionAvailable } from "@edifice-ui/react";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import HomeIcon from "@mui/icons-material/Home";
 import LaptopIcon from "@mui/icons-material/Laptop";
@@ -11,7 +12,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
 import { useActions } from "~/services/queries";
-import { isActionAvailable } from "@edifice-ui/react";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -27,7 +27,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navigate = useNavigate(); // uniquement pour routes react, utiliser des <a> pour rediriger vers angular
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const {data: actions} = useActions();
+  const { data: actions } = useActions();
   const canAccessSignet = isActionAvailable("signets", actions);
 
   useEffect(() => {

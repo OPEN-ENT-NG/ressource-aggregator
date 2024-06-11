@@ -1,5 +1,6 @@
 export const workflows = {
-  signets: 'fr.openent.mediacentre.controller.MediacentreController|initSignetResourceRight'
+  signets:
+    "fr.openent.mediacentre.controller.MediacentreController|initSignetResourceRight",
 };
 
 export const rights = {
