@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { useFavorite } from "./useFavorite";
 import { useGetTextbooksQuery } from "../services/api/textbook.service";
+import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { Textbook } from "~/model/Textbook.model";
-import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const useTextbook = () => {
   const { data: textbook, error, isLoading } = useGetTextbooksQuery(null);
@@ -21,11 +21,11 @@ export const useTextbook = () => {
         ...textbook,
         favorite: favorites.some((fav: Favorite) => fav.id === textbook.id),
       }));
-      let textbookData = garData.filter(
+      const textbookData = garData.filter(
         (textbook: Textbook) =>
           textbook.document_types?.includes("livre numérique") ?? false,
       );
-      let externalResourceData = garData.filter(
+      const externalResourceData = garData.filter(
         (externalResource: ExternalResource) =>
           externalResource.document_types?.includes("site web") ?? false,
       );

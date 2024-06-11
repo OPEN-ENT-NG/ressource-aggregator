@@ -2,19 +2,21 @@ import { useState, useEffect, useReducer } from "react";
 
 import { Alert, AlertTypes } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
 
+import { HomeBookMarksList } from "~/components/home-lists/HomeBookMarksList";
+import { HomeExternalResourcesList } from "~/components/home-lists/HomeExternalResourcesList";
+import { HomeFavoritesList } from "~/components/home-lists/HomeFavoritesList";
+import { HomeManualsList } from "~/components/home-lists/HomeManualsList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
+import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { ExternalResource } from "~/model/ExternalResource.model";
-import { HomeManualsList } from "~/components/home-lists/HomeManualsList";
-import { HomeFavoritesList } from "~/components/home-lists/HomeFavoritesList";
-import { HomeBookMarksList } from "~/components/home-lists/HomeBookMarksList";
-import { HomeExternalResourcesList } from "~/components/home-lists/HomeExternalResourcesList";
+
 
 export interface AppProps {
   _id: string;
@@ -35,9 +37,10 @@ export const App = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const { favorites, setFavorites } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
+
   const { textbooks, setTextbooks, externalResources, setExternalResources } =
     useTextbook();
-
+  const { t } = useTranslation();
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -77,22 +80,27 @@ export const App = () => {
     );
     setTextbooks(newTextbooks);
     let newExternalResources: ExternalResource[] = [...externalResources];
-    newExternalResources = newExternalResources.map((externalResource: ExternalResource) =>
-      externalResource?.id?.toString() == id.toString()
-        ? { ...externalResource, favorite: isFavorite }
-        : externalResource,
+    newExternalResources = newExternalResources.map(
+      (externalResource: ExternalResource) =>
+        externalResource?.id?.toString() == id.toString()
+          ? { ...externalResource, favorite: isFavorite }
+          : externalResource,
     );
     setExternalResources(newExternalResources);
     forceUpdate(); // List are not re-rendering without this
   };
 
-  function isArrayEmpty(arr:any[]) {
+  function isArrayEmpty(arr: any[]) {
     return !(arr && arr.length > 0);
-  };
+  }
 
   const leftContainer = () => {
     // case 1: textbooks and externalResources are empty and homeSignets is not empty
-    if( isArrayEmpty(textbooks) && isArrayEmpty(externalResources) && !isArrayEmpty(homeSignets)) {
+    if (
+      isArrayEmpty(textbooks) &&
+      isArrayEmpty(externalResources) &&
+      !isArrayEmpty(homeSignets)
+    ) {
       return (
         <HomeBookMarksList
           homeSignets={homeSignets}
@@ -105,7 +113,11 @@ export const App = () => {
       );
     }
     // case 2: textbooks and homeSignets are empty and externalResources is not empty
-    else if( isArrayEmpty(textbooks) && isArrayEmpty(homeSignets) && !isArrayEmpty(externalResources)) {
+    else if (
+      isArrayEmpty(textbooks) &&
+      isArrayEmpty(homeSignets) &&
+      !isArrayEmpty(externalResources)
+    ) {
       return (
         <HomeExternalResourcesList
           externalResources={externalResources}
@@ -118,7 +130,11 @@ export const App = () => {
       );
     }
     // case 3: externalResources and homeSignets are empty and textbooks is not empty
-    else if( isArrayEmpty(externalResources) && isArrayEmpty(homeSignets) && !isArrayEmpty(textbooks)) {
+    else if (
+      isArrayEmpty(externalResources) &&
+      isArrayEmpty(homeSignets) &&
+      !isArrayEmpty(textbooks)
+    ) {
       return (
         <HomeManualsList
           textbooks={textbooks}
@@ -131,10 +147,21 @@ export const App = () => {
       );
     }
     // case 4: all lists are empty
-    else if (isArrayEmpty(textbooks) && isArrayEmpty(homeSignets) && isArrayEmpty(externalResources)) {
+    else if (
+      isArrayEmpty(textbooks) &&
+      isArrayEmpty(homeSignets) &&
+      isArrayEmpty(externalResources)
+    ) {
       return (
-        <div className="empty-list">
-          <p>No data available</p>
+        <div className="empty-state">
+          <img
+            src="/mediacentre/public/img/empty-state.png"
+            alt="empty-state"
+            className="empty-state-img"
+          />
+          <span className="empty-state-text">
+            {t("mediacentre.ressources.empty")}
+          </span>
         </div>
       );
     }
@@ -144,20 +171,24 @@ export const App = () => {
       if (isArrayEmpty(textbooks)) {
         return (
           <>
-            <HomeExternalResourcesList
-              externalResources={externalResources}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
-            <HomeBookMarksList
-              homeSignets={homeSignets}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
+            <div className="bottom-left-container">
+              <HomeExternalResourcesList
+                externalResources={externalResources}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
+            <div className="bottom-right-container">
+              <HomeBookMarksList
+                homeSignets={homeSignets}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
           </>
         );
       }
@@ -165,20 +196,24 @@ export const App = () => {
       else if (isArrayEmpty(homeSignets)) {
         return (
           <>
-            <HomeManualsList
-              textbooks={textbooks}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
-            <HomeExternalResourcesList
-              externalResources={externalResources}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
+            <div className="bottom-left-container">
+              <HomeManualsList
+                textbooks={textbooks}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
+            <div className="bottom-right-container">
+              <HomeExternalResourcesList
+                externalResources={externalResources}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
           </>
         );
       }
@@ -186,25 +221,29 @@ export const App = () => {
       else {
         return (
           <>
-            <HomeManualsList
-              textbooks={textbooks}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
-            <HomeBookMarksList
-              homeSignets={homeSignets}
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-            />
+            <div className="bottom-left-container">
+              <HomeManualsList
+                textbooks={textbooks}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
+            <div className="bottom-right-container">
+              <HomeBookMarksList
+                homeSignets={homeSignets}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+              />
+            </div>
           </>
         );
       }
     }
-  }
+  };
 
   if (windowWidth >= 1280) {
     return (
@@ -230,9 +269,7 @@ export const App = () => {
         <div className="med-container">
           <div className="list-container">
             <div className="left-container">
-              <div className="bottom-container">
-                {leftContainer()}
-              </div>
+              <div className="bottom-container">{leftContainer()}</div>
             </div>
             <div className="right-container">
               {favorites && (
@@ -249,7 +286,7 @@ export const App = () => {
         </div>
       </>
     );
-  } else if (windowWidth >= 768) {
+  } else if (windowWidth >= 992) {
     return (
       <>
         <MainLayout />
@@ -275,24 +312,9 @@ export const App = () => {
             handleAddFavorite={handleAddFavorite}
             handleRemoveFavorite={handleRemoveFavorite}
           />
-          <div className="bottom-container">
-            <div className="bottom-left-container">
-              <HomeManualsList
-                textbooks={textbooks}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-            <div className="bottom-right-container">
-              <HomeBookMarksList
-                homeSignets={homeSignets}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
+          <div className="list-container">
+            <div className="left-container">
+              <div className="bottom-container">{leftContainer()}</div>
             </div>
           </div>
         </div>

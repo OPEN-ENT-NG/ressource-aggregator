@@ -11,6 +11,7 @@ import Brightness1Icon from "@mui/icons-material/Brightness1";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./ListCard.scss";
+import { useTranslation } from "react-i18next";
 import { NavigateFunction } from "react-router-dom";
 
 import { ListCardTitle } from "./list-card-title/ListCardTitle";
@@ -37,6 +38,7 @@ export const ListCard: React.FC<ListCardProps> = ({
   redirectLink,
   homeDouble = false,
 }) => {
+  const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { data: actions } = useActions();
   const canAccessSignet = isActionAvailable("signets", actions);
@@ -57,7 +59,7 @@ export const ListCard: React.FC<ListCardProps> = ({
     const nbComponent = NbComponentsListCard[type];
     const double = homeDouble ? 2 : 1;
     if (windowWidth < breakpoints.md) return nbComponent.sm;
-    if (windowWidth < breakpoints.lg) return nbComponent.md;
+    if (windowWidth < breakpoints.lg) return nbComponent.md * double;
     if (windowWidth < breakpoints.xl) return nbComponent.lg * double;
     return nbComponent.xl * double;
   };
@@ -66,7 +68,7 @@ export const ListCard: React.FC<ListCardProps> = ({
     const nbColumns = NbColumnsListCard[type];
     const double = homeDouble ? 2 : 1;
     if (windowWidth < breakpoints.md) return nbColumns.sm;
-    if (windowWidth < breakpoints.lg) return nbColumns.md;
+    if (windowWidth < breakpoints.lg) return nbColumns.md * double;
     if (windowWidth < breakpoints.xl) return nbColumns.lg * double;
     return nbColumns.xl * double;
   };
@@ -106,12 +108,29 @@ export const ListCard: React.FC<ListCardProps> = ({
               ))}
           </div>
         )}
-        <Grid className={`grid-${NbColumns(windowWidth)}`}>
-          {components &&
-            components.map((component, index) =>
-              showComponent(component, index),
-            )}
-        </Grid>
+        {components && components.length > 0 ? (
+          <Grid className={`grid-${NbColumns(windowWidth)}`}>
+            {components &&
+              components.map((component, index) =>
+                showComponent(component, index),
+              )}
+          </Grid>
+        ) : (
+          type === CardTypeEnum.favorites && (
+            <div className="favorite-empty-state">
+              <img
+                src={"/mediacentre/public/img/empty-state.png"}
+                alt="empty-state"
+                className="empty-state-img"
+              />
+              <span className="empty-state-text">
+                {t("mediacentre.favorite.empty.first")}
+                <br />
+                {t("mediacentre.favorite.empty.second")}
+              </span>
+            </div>
+          )
+        )}
       </div>
     );
   } else {

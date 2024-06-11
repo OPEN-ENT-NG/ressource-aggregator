@@ -1,8 +1,9 @@
-import { CardTypeEnum } from "~/core/enum/card-type.enum";
-import { ListCard } from "../list-card/ListCard";
-import { Resource } from "../resource/Resource";
 import { AlertTypes } from "@edifice-ui/react";
 import { useNavigate } from "react-router-dom";
+
+import { ListCard } from "../list-card/ListCard";
+import { Resource } from "../resource/Resource";
+import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { ExternalResource } from "~/model/ExternalResource.model";
 
 interface HomeExternalResourcesListProps {

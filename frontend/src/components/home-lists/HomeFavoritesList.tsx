@@ -1,8 +1,10 @@
-import { Favorite } from "~/model/Favorite.model";
+import { AlertTypes } from "@edifice-ui/react";
+
 import { ListCard } from "../list-card/ListCard";
 import { Resource } from "../resource/Resource";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
-import { AlertTypes } from "@edifice-ui/react";
+import { Favorite } from "~/model/Favorite.model";
+
 
 interface HomeFavoritesListProps {
   favorites: Favorite[];

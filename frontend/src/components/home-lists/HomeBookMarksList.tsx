@@ -1,9 +1,11 @@
-import { CardTypeEnum } from "~/core/enum/card-type.enum";
-import { ListCard } from "../list-card/ListCard";
-import { Resource } from "../resource/Resource";
-import { Signet } from "~/model/Signet.model";
 import { AlertTypes } from "@edifice-ui/react";
 import { useTranslation } from "react-i18next";
+
+import { ListCard } from "../list-card/ListCard";
+import { Resource } from "../resource/Resource";
+import { CardTypeEnum } from "~/core/enum/card-type.enum";
+import { Signet } from "~/model/Signet.model";
+
 
 interface HomeBookMarksListProps {
   homeSignets: Signet[];
@@ -39,6 +41,7 @@ export const HomeBookMarksList: React.FC<HomeBookMarksListProps> = ({
           type={CardTypeEnum.book_mark}
           favorite={signet.favorite}
           link={signet.link ?? signet.url ?? "/"}
+          shared={signet?.shared ?? false}
           footerImage={
             signet.owner_id
               ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`
