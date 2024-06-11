@@ -141,28 +141,30 @@ export const Resource: React.FC<ResourceProps> = ({
           </div>
         </a>
         <Card.Footer>
-          {footerText ? shared ? (
-            <div className="med-footer-text">
-              <img
-                src="/mediacentre/public/img/no-avatar.svg"
-                alt="Resource"
-                className="med-resource-footer-image"
-              />
-              Signet de la plateforme
-            </div>
-          ) : (
-            <div className="med-footer-text">
-              <img
-                src={footerImage}
-                alt="Resource"
-                className="med-resource-footer-image"
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  currentTarget.src = "/mediacentre/public/img/no-avatar.svg";
-                }}
-              />
-              {footerText}
-            </div>
+          {footerText ? (
+            shared ? (
+              <div className="med-footer-text">
+                <img
+                  src="/mediacentre/public/img/no-avatar.svg"
+                  alt="Resource"
+                  className="med-resource-footer-image"
+                />
+                Signet de la plateforme
+              </div>
+            ) : (
+              <div className="med-footer-text">
+                <img
+                  src={footerImage}
+                  alt="Resource"
+                  className="med-resource-footer-image"
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = "/mediacentre/public/img/no-avatar.svg";
+                  }}
+                />
+                {footerText}
+              </div>
+            )
           ) : null}
           <div className="med-footer-svg">
             <Tooltip message={t("mediacentre.card.copy")} placement="top">
