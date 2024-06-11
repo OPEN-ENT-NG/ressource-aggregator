@@ -50,7 +50,7 @@ public class GAR implements Source {
                 handler.handle(new Either.Left<>(event.cause().getMessage()));
             } else {
                 JsonArray formattedResources = new JsonArray();
-
+                log.info(formattedResources.toString());
                 for (int i = 0; i < getResourcesFuture.result().size(); i++) {
                     formattedResources.add(format(getResourcesFuture.result().getJsonObject(i)));
                 }
