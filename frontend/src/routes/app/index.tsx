@@ -158,6 +158,7 @@ export const App = () => {
                           type={CardTypeEnum.book_mark}
                           favorite={signet.favorite}
                           link={signet.link ?? signet.url ?? "/"}
+                          shared={signet.shared}
                           footerImage={
                             signet.owner_id
                               ? `/userbook/avatar/${signet.owner_id}?thumbnail=48x48`

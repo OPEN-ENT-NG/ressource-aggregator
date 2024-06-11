@@ -29,6 +29,7 @@ interface ResourceProps {
   favorite?: boolean;
   link: string;
   footerImage?: string;
+  shared?: boolean;
   setAlertText: (arg: string, type: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string) => void;
@@ -43,6 +44,7 @@ export const Resource: React.FC<ResourceProps> = ({
   footerText,
   type = CardTypeEnum.favorites,
   favorite = false,
+  shared = false,
   link,
   footerImage,
   setAlertText,
@@ -139,7 +141,16 @@ export const Resource: React.FC<ResourceProps> = ({
           </div>
         </a>
         <Card.Footer>
-          {footerText ? (
+          {footerText ? shared ? (
+            <div className="med-footer-text">
+              <img
+                src="/mediacentre/public/img/no-avatar.svg"
+                alt="Resource"
+                className="med-resource-footer-image"
+              />
+              Signet de la plateforme
+            </div>
+          ) : (
             <div className="med-footer-text">
               <img
                 src={footerImage}

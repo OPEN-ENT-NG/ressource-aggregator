@@ -31,15 +31,24 @@ export const useSignet = () => {
     const mySignetsData: Signet[] = mySignets
       ? mySignets.filter((signet: Signet) => signet.owner_id != user?.userId)
       : [];
+      console.log("mysignets", mySignets)
+    const updatedMySignetsData: Signet[] = mySignetsData.map(
+      (signet: Signet) => ({
+        ...signet,
+        shared: false,
+      })
+    )
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
         ...signet,
         orientation: signet?.document_types?.some((type) =>
           type.toLowerCase().includes("orientation"),
         ),
+        shared: true,
       }),
     );
-    let signetsData: Signet[] = [...updatedPublicSignetsData, ...mySignetsData];
+    console.log("updated", updatedMySignetsData)
+    let signetsData: Signet[] = [...updatedPublicSignetsData, ...updatedMySignetsData];
     signetsData = signetsData.map((signet: Signet) => ({
       ...signet,
       favorite: favorites.some((fav: Favorite) =>
@@ -48,6 +57,7 @@ export const useSignet = () => {
           : fav?.id?.toString() === signet?._id,
       ),
     }));
+    console.log("signets", signetsData)
     return signetsData;
   }, [favorites, mySignets, publicSignets, user?.userId]);
 
