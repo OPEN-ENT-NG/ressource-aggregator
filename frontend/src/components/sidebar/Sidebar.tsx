@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarIcon } from "../sidebar-icon/SidebarIcon";
+import { useActions } from "~/services/queries";
+import { isActionAvailable } from "@edifice-ui/react";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -24,6 +26,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useTranslation();
   const navigate = useNavigate(); // uniquement pour routes react, utiliser des <a> pour rediriger vers angular
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const {data: actions} = useActions();
+  const canAccessSignet = isActionAvailable("signets", actions);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -71,14 +76,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
           name={`${t("mediacentre.sidebar.resources")}`}
           selected={location.pathname === "/resources"}
         />
-        <a href="/mediacentre?view=angular#/signet">
-          <SidebarIcon
-            action={() => {}}
-            icon={<BookmarkIcon />}
-            name={`${t("mediacentre.sidebar.signets")}`}
-            selected={location.pathname === "/signet"}
-          />
-        </a>
+        {canAccessSignet && (
+          <a href="/mediacentre?view=angular#/signet">
+            <SidebarIcon
+              action={() => {}}
+              icon={<BookmarkIcon />}
+              name={`${t("mediacentre.sidebar.signets")}`}
+              selected={location.pathname === "/signet"}
+            />
+          </a>
+        )}
       </div>
     </div>
   );

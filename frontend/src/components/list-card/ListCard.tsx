@@ -19,6 +19,8 @@ import {
   NbComponentsListCard,
 } from "~/core/const/home-element-list-sizes.const";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
+import { useActions } from "~/services/queries";
+import { isActionAvailable } from "@edifice-ui/react";
 
 interface ListCardProps {
   scrollable: boolean;
@@ -34,6 +36,8 @@ export const ListCard: React.FC<ListCardProps> = ({
   redirectLink,
 }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { data: actions } = useActions();
+  const canAccessSignet = isActionAvailable("signets", actions);
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,7 +85,8 @@ export const ListCard: React.FC<ListCardProps> = ({
           <div className="list-card-header">
             <ListCardTitle type={type} />
             {components &&
-              tooMuchComponents(components) &&
+              tooMuchComponents(components) && 
+              (type !== CardTypeEnum.book_mark || canAccessSignet)  &&    
               (typeof redirectLink === "string" ? (
                 <a href={redirectLink as string} className="right-button">
                   Voir plus

@@ -11,26 +11,21 @@ import { workflows } from "~/config";
  */
 // const { actions } = getAppParams();
 export const useActions = () => {
-  const { exportpng, exportsvg } = workflows;
+  const { signets } = workflows;
 
   return useQuery<Record<string, boolean>, Error, IAction[]>({
     queryKey: ["actions"],
     queryFn: async () => {
       const availableRights = await sessionHasWorkflowRights([
-        exportpng,
-        exportsvg,
+        signets
       ]);
       return availableRights;
     },
     select: (data) => {
       const actions: any[] = [
         {
-          id: "export-png",
-          workflow: exportpng,
-        },
-        {
-          id: "export-svg",
-          workflow: exportsvg,
+          id: "signets",
+          workflow: signets,
         },
       ];
       return actions.map((action) => ({
