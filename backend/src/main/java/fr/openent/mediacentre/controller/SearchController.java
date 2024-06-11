@@ -42,6 +42,7 @@ public class SearchController extends ControllerHelper {
                 log.error("User not found in session.");
                 Renders.unauthorized(request);
             }
+            log.info("Requête search");
 
             if (!request.params().contains(Field.JSONDATA)) {
                 badRequest(request);

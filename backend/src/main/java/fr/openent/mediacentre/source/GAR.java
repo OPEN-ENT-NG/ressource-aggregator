@@ -41,7 +41,8 @@ public class GAR implements Source {
      * @param handler     Function handler returning data
      */
     private void getData(UserInfos user, String structureId, Handler<Either<String, JsonArray>> handler) {
-
+        
+        log.info("getData - structureId : " + structureId);
         Future<JsonArray> getResourcesFuture = Future.future();
         Future<JsonArray> getFavoritesResourcesFuture = Future.future();
 
@@ -50,7 +51,8 @@ public class GAR implements Source {
                 handler.handle(new Either.Left<>(event.cause().getMessage()));
             } else {
                 JsonArray formattedResources = new JsonArray();
-                log.info("getResourcesFuture is : ", getResourcesFuture.result().toString());
+                log.info("getResourcesFuture result");
+                log.info(getResourcesFuture.result().toString());
                 for (int i = 0; i < getResourcesFuture.result().size(); i++) {
                     formattedResources.add(format(getResourcesFuture.result().getJsonObject(i)));
                 }
@@ -77,7 +79,7 @@ public class GAR implements Source {
                     .put("structure", structureId)
                     .put("user", user.getUserId())
                     .put("hostname", config.getString("host").split("//")[1]);
-
+            log.info("before eb.send");
             String GAR_ADDRESS = "openent.mediacentre";
             eb.send(GAR_ADDRESS, action, handlerToAsyncHandler(event -> {
                 if (!"ok".equals(event.body().getString("status"))) {
@@ -85,6 +87,8 @@ public class GAR implements Source {
                     handler.handle(new Either.Left<>(event.body().getString("message")));
                     return;
                 }
+
+                log.info(event.body());
 
                 handler.handle(new Either.Right<>(event.body().getJsonArray("message")));
             }));
@@ -144,6 +148,7 @@ public class GAR implements Source {
     @Override
     public void plainTextSearch(String query, UserInfos user, Handler<Either<JsonObject, JsonObject>> handler) {
         List<Future> futures = new ArrayList<>();
+        log.info("search GAR");
         getStructuresData(user, futures, event -> {
             JsonArray resources = new JsonArray();
             for (Future future : futures) {
