@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Checkbox, Dropdown } from "@edifice-ui/react";
-
 import "./FilterLayout.scss";
-import { SearchResultData } from "~/model/SearchResultData.model";
 import { useTranslation } from "react-i18next";
+
+import { SearchResultData } from "~/model/SearchResultData.model";
 
 interface FilterLayoutProps {
   resources: SearchResultData;

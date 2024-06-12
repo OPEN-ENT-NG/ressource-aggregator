@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Dropdown } from "@edifice-ui/react";
-
 import "../filter-layout/FilterLayout.scss";
+import { useTranslation } from "react-i18next";
+
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
-import { useTranslation } from "react-i18next";
 
 interface FilterResourceLayoutProps {
   resources: ExternalResource[];
@@ -24,7 +24,7 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
   types,
   setAllResourcesDisplayed,
 }) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [selectedCheckboxesLevels, setSelectedCheckboxesLevels] =
     useState<string[]>(levels);
   const [selectedCheckboxesTypes, setSelectedCheckboxesTypes] =
