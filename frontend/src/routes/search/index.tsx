@@ -12,10 +12,10 @@ import { SearchCard } from "~/components/search-card/SearchCard";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
+import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
-import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
@@ -75,7 +75,9 @@ export const Search: React.FC = () => {
 
     items.forEach((item) => {
       if (
-        allResourcesDisplayed.externals_resources.includes(item as ExternalResource)
+        allResourcesDisplayed.externals_resources.includes(
+          item as ExternalResource,
+        )
       ) {
         newVisibleResources.externals_resources.push(item as ExternalResource);
       } else if (allResourcesDisplayed.signets.includes(item as Signet)) {

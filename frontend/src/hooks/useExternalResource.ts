@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 
 import { useFavorite } from "./useFavorite";
 import { useSearchQuery } from "../services/api/search.service";
+import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { SearchResultCategory } from "~/model/SearchResultCategory";
-import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const useExternalResource = () => {
   const query = {
     state: "PLAIN_TEXT",
-      data: {
-        query: ".*",
-      },
-      event: "search",
-      sources: ["fr.openent.mediacentre.source.GAR"],
-    };
+    data: {
+      query: ".*",
+    },
+    event: "search",
+    sources: ["fr.openent.mediacentre.source.GAR"],
+  };
 
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
@@ -22,7 +22,9 @@ export const useExternalResource = () => {
 
   const { data, error, isLoading } = useSearchQuery(query);
 
-  const [externalResources, setExternalResources] = useState<ExternalResource[]>([]);
+  const [externalResources, setExternalResources] = useState<
+    ExternalResource[]
+  >([]);
   const { favorites } = useFavorite();
 
   const selectDisciplines = (externalResources: ExternalResource[]) => {
@@ -39,7 +41,7 @@ export const useExternalResource = () => {
     });
 
     setDisciplines(disciplines);
-  }
+  };
 
   const selectLevels = (externalResources: ExternalResource[]) => {
     const levels: string[] = [];
@@ -55,7 +57,7 @@ export const useExternalResource = () => {
     });
 
     setLevels(levels);
-  }
+  };
 
   const selectTypes = (externalResources: ExternalResource[]) => {
     const types: string[] = [];
@@ -71,7 +73,7 @@ export const useExternalResource = () => {
     });
 
     setTypes(types);
-  }
+  };
 
   useEffect(() => {
     if (!isLoading) {
@@ -80,9 +82,11 @@ export const useExternalResource = () => {
         (result) => result?.data?.source == "fr.openent.mediacentre.source.GAR",
       );
       const externalResources: ExternalResource[] = gar?.data?.resources || [];
-      if(favorites) {
+      if (favorites) {
         externalResources.forEach((externalResource: ExternalResource) => {
-          externalResource.favorite = favorites.some((fav: Favorite) => fav.id === externalResource.id);
+          externalResource.favorite = favorites.some(
+            (fav: Favorite) => fav.id === externalResource.id,
+          );
         });
       }
       selectDisciplines(externalResources);
@@ -91,7 +95,15 @@ export const useExternalResource = () => {
 
       setExternalResources(externalResources);
     }
-  }, [externalResources, favorites]);
+  }, [externalResources, favorites, data, isLoading]);
 
-  return { externalResources, setExternalResources, disciplines, levels, types, error, isLoading };
+  return {
+    externalResources,
+    setExternalResources,
+    disciplines,
+    levels,
+    types,
+    error,
+    isLoading,
+  };
 };

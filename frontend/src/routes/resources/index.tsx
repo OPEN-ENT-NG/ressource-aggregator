@@ -5,36 +5,31 @@ import LaptopIcon from "@mui/icons-material/Laptop";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { FilterLayout } from "../../components/filter-layout/FilterLayout";
+import { FilterResourceLayout } from "~/components/filter-resource-layout/FilterResourceLayout";
 import { ListCard } from "~/components/list-card/ListCard";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { SearchCard } from "~/components/search-card/SearchCard";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import "~/styles/page/search.scss";
+import { useExternalResource } from "~/hooks/useExternalResource";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { useExternalResource } from "~/hooks/useExternalResource";
 
 export const ResourcePage: React.FC = () => {
   const { t } = useTranslation();
-  const searchBody = {
-    state: "PLAIN_TEXT",
-    data: {
-      query: ".*",
-    },
-    event: "search",
-    sources: ["fr.openent.mediacentre.source.GAR"],
-  };
-
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
-  const { externalResources, disciplines, levels, types } = useExternalResource();
+  const { externalResources, disciplines, levels, types } =
+    useExternalResource();
   const [allResourcesDisplayed, setAllResourcesDisplayed] =
-    useState<SearchResultData>(allResources); // all resources after the filters
+    useState<SearchResultData>({
+      signets: [],
+      moodle: [],
+      externals_resources: externalResources,
+    }); // all resources after the filters
   const [visibleResources, setVisibleResources] = useState<SearchResultData>({
-    textbooks: [],
     externals_resources: [],
     signets: [],
     moodle: [],
@@ -53,7 +48,6 @@ export const ResourcePage: React.FC = () => {
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
-      textbooks: [],
       externals_resources: [],
       signets: [],
       moodle: [],
@@ -144,13 +138,12 @@ export const ResourcePage: React.FC = () => {
         </div>
         <div className="med-search-page-content">
           <div className="med-search-page-content-body">
-            <FilterLayout
-              resources={allResources}
+            <FilterResourceLayout
+              resources={externalResources}
               disciplines={disciplines}
               levels={levels}
               setAllResourcesDisplayed={setAllResourcesDisplayed}
               types={types}
-              type="externals_resources"
             />
             {visibleResources && (
               <ListCard

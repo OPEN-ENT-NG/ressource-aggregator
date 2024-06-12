@@ -26,7 +26,7 @@ export const useTextbook = () => {
     });
 
     setDisciplines(disciplines);
-  }
+  };
 
   const selectLevels = (textbooks: Textbook[]) => {
     const levels: string[] = [];
@@ -42,7 +42,7 @@ export const useTextbook = () => {
     });
 
     setLevels(levels);
-  }
+  };
 
   useEffect(() => {
     if (favorites) {
@@ -53,7 +53,7 @@ export const useTextbook = () => {
       }));
       selectDisciplines(textbookData);
       selectLevels(textbookData);
-      
+
       setTextbooks(textbookData);
     }
   }, [textbook, favorites]);

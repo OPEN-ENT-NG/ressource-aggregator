@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 
 import { useFavorite } from "./useFavorite";
 import { useSearchQuery } from "../services/api/search.service";
+import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultCategory } from "~/model/SearchResultCategory";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const useSearch = (query: any) => {
   const [allResources, setAllResources] = useState<SearchResultData>({
