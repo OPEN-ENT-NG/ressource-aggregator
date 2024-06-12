@@ -107,6 +107,7 @@ export const Search: React.FC = () => {
       ];
       return redistributeResources(newItems, allResourcesDisplayed);
     });
+    console.log("allResourcesDislayed");
     setLoading(false);
   }, [allResourcesDisplayed]); // for infinite scroll
 
@@ -133,6 +134,10 @@ export const Search: React.FC = () => {
       if (loader) observer.unobserve(loader);
     };
   }, [handleObserver]); // for infinite scroll
+
+  useEffect(() => {
+    loadMoreResources();
+  }, [allResourcesDisplayed, loadMoreResources]);
 
   return (
     <>
