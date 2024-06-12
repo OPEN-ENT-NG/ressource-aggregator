@@ -76,26 +76,22 @@ export const useExternalResource = () => {
   };
 
   useEffect(() => {
-    if (!isLoading) {
+    if (favorites) {
       const searchResult: SearchResultCategory[] = data;
       const gar = searchResult?.find(
         (result) => result?.data?.source == "fr.openent.mediacentre.source.GAR",
       );
-      const externalResources: ExternalResource[] = gar?.data?.resources || [];
-      if (favorites) {
-        externalResources.forEach((externalResource: ExternalResource) => {
-          externalResource.favorite = favorites.some(
-            (fav: Favorite) => fav.id === externalResource.id,
-          );
-        });
-      }
-      selectDisciplines(externalResources);
-      selectLevels(externalResources);
-      selectTypes(externalResources);
-
-      setExternalResources(externalResources);
+      let externalResourcesData: ExternalResource[] = gar?.data?.resources || [];
+      externalResourcesData = externalResourcesData.map((externalResource: ExternalResource) => ({
+        ...externalResource,
+        favorite: favorites.some((fav: Favorite) => fav.id === externalResource.id),
+      }));
+      selectDisciplines(externalResourcesData);
+      selectLevels(externalResourcesData);
+      selectTypes(externalResourcesData);
+      setExternalResources(externalResourcesData);
     }
-  }, [externalResources, favorites, data, isLoading]);
+  }, [favorites, data]);
 
   return {
     externalResources,

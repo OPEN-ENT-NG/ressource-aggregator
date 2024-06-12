@@ -47,9 +47,10 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
   };
 
   const fetchFilters = useCallback(() => {
+    console.log("fetchFilters")
     const filteredResources: SearchResultData = {
       signets: [],
-      externals_resources: [],
+      externals_resources: resources,
       moodle: [],
     };
     const filterByCriteria = (
@@ -90,11 +91,17 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
   useEffect(() => {
     setSelectedCheckboxesDiscipline(disciplines);
     setSelectedCheckboxesLevels(levels);
+    setAllResourcesDisplayed({signets:[], moodle:[], externals_resources: resources});
   }, [resources, disciplines, levels]);
 
   useEffect(() => {
     fetchFilters();
   }, [fetchFilters]);
+
+  useEffect(() => {
+    setAllResourcesDisplayed({signets:[], moodle:[], externals_resources: resources});
+  }, [resources]);
+
 
   return (
     <>

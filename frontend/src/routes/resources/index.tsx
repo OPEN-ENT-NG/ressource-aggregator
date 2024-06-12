@@ -15,7 +15,7 @@ import { useExternalResource } from "~/hooks/useExternalResource";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
-import { Textbook } from "~/model/Textbook.model";
+import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const ResourcePage: React.FC = () => {
   const { t } = useTranslation();
@@ -44,7 +44,7 @@ export const ResourcePage: React.FC = () => {
   ];
 
   const redistributeResources = (
-    items: (Signet | Moodle | Textbook)[],
+    items: (Signet | Moodle | ExternalResource)[],
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
@@ -55,9 +55,9 @@ export const ResourcePage: React.FC = () => {
 
     items.forEach((item) => {
       if (
-        allResourcesDisplayed.externals_resources.includes(item as Textbook)
+        allResourcesDisplayed.externals_resources.includes(item as ExternalResource)
       ) {
-        newVisibleResources.externals_resources.push(item as Textbook);
+        newVisibleResources.externals_resources.push(item as ExternalResource);
       }
     });
 

@@ -4,9 +4,10 @@ import { Dropdown } from "@edifice-ui/react";
 
 import "../filter-layout/FilterLayout.scss";
 import { SearchResultData } from "~/model/SearchResultData.model";
+import { ExternalResource } from "~/model/ExternalResource.model";
 
 interface FilterResourceLayoutProps {
-  resources: SearchResultData;
+  resources: ExternalResource[];
   disciplines: string[];
   levels: string[];
   types: string[];
@@ -52,7 +53,7 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
   const fetchFilters = useCallback(() => {
     const filteredResources: SearchResultData = {
       signets: [],
-      externals_resources: [],
+      externals_resources: resources,
       moodle: [],
     };
     const filterByCriteria = (
