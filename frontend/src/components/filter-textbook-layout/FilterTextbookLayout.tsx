@@ -5,6 +5,7 @@ import { Dropdown } from "@edifice-ui/react";
 import "../filter-layout/FilterLayout.scss";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Textbook } from "~/model/Textbook.model";
+import { useTranslation } from "react-i18next";
 
 interface FilterTextbookLayoutProps {
   resources: Textbook[];
@@ -21,6 +22,7 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
   levels,
   setAllResourcesDisplayed,
 }) => {
+  const { t } = useTranslation();
   const [selectedCheckboxesLevels, setSelectedCheckboxesLevels] =
     useState<string[]>(levels);
   const [selectedCheckboxesDiscipline, setSelectedCheckboxesDiscipline] =
@@ -126,8 +128,8 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
               }
             >
               {selectedCheckboxesLevels.length === checkboxOptionsLevels.length
-                ? "Tout désélectionner"
-                : "Tout sélectionner"}
+                ? t("mediacentre.combo.selectAll")
+                : t("mediacentre.combo.deselectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsLevels.map((option, index) => (

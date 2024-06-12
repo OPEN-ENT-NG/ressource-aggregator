@@ -4,6 +4,7 @@ import { Checkbox, Dropdown } from "@edifice-ui/react";
 
 import "./FilterLayout.scss";
 import { SearchResultData } from "~/model/SearchResultData.model";
+import { useTranslation } from "react-i18next";
 
 interface FilterLayoutProps {
   resources: SearchResultData;
@@ -24,6 +25,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   setAllResourcesDisplayed,
   type,
 }) => {
+  const { t } = useTranslation();
   const [checkboxResource, setCheckboxResource] = useState<boolean>(
     resources?.externals_resources?.length > 0 ?? false,
   );
@@ -196,8 +198,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
                   }
                 >
                   {selectedCheckboxesTypes.length === checkboxOptionsType.length
-                    ? "Tout désélectionner"
-                    : "Tout sélectionner"}
+                    ? t("mediacentre.combo.selectAll")
+                    : t("mediacentre.combo.deselectAll")}
                 </Dropdown.Item>
                 <Dropdown.Separator />
                 {checkboxOptionsType.map((option, index) => (
