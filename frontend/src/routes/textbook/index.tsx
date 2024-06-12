@@ -10,12 +10,12 @@ import { ListCard } from "~/components/list-card/ListCard";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { SearchCard } from "~/components/search-card/SearchCard";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
-import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { useTextbook } from "~/hooks/useTextbook";
 
 export const TextbookPage: React.FC = () => {
   const { t } = useTranslation();
@@ -29,9 +29,9 @@ export const TextbookPage: React.FC = () => {
   };
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
-  const { allResources, disciplines, levels, types } = useSearch(searchBody); // all resources
+  const { textbooks, disciplines, levels } = useTextbook();
   const [allResourcesDisplayed, setAllResourcesDisplayed] =
-    useState<SearchResultData>(allResources); // all resources after the filters
+    useState<SearchResultData>(); // all resources after the filters
   const [visibleResources, setVisibleResources] = useState<SearchResultData>({
     textbooks: [],
     externals_resources: [],
