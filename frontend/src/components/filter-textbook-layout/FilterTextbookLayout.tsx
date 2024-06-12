@@ -47,7 +47,7 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
   };
 
   const fetchFilters = useCallback(() => {
-    console.log("fetchFilters")
+    console.log("fetchFilters");
     const filteredResources: SearchResultData = {
       signets: [],
       externals_resources: resources,
@@ -80,6 +80,7 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
     selectedCheckboxesDiscipline,
     selectedCheckboxesLevels,
     setAllResourcesDisplayed,
+    resources,
   ]);
 
   const checkboxOptionsDiscipline = disciplines ?? [];
@@ -91,17 +92,24 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
   useEffect(() => {
     setSelectedCheckboxesDiscipline(disciplines);
     setSelectedCheckboxesLevels(levels);
-    setAllResourcesDisplayed({signets:[], moodle:[], externals_resources: resources});
-  }, [resources, disciplines, levels]);
+    setAllResourcesDisplayed({
+      signets: [],
+      moodle: [],
+      externals_resources: resources,
+    });
+  }, [resources, disciplines, levels, setAllResourcesDisplayed]);
 
   useEffect(() => {
     fetchFilters();
   }, [fetchFilters]);
 
   useEffect(() => {
-    setAllResourcesDisplayed({signets:[], moodle:[], externals_resources: resources});
-  }, [resources]);
-
+    setAllResourcesDisplayed({
+      signets: [],
+      moodle: [],
+      externals_resources: resources,
+    });
+  }, [resources, setAllResourcesDisplayed]);
 
   return (
     <>

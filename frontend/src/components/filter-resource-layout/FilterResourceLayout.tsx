@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Dropdown } from "@edifice-ui/react";
 
 import "../filter-layout/FilterLayout.scss";
-import { SearchResultData } from "~/model/SearchResultData.model";
 import { ExternalResource } from "~/model/ExternalResource.model";
+import { SearchResultData } from "~/model/SearchResultData.model";
 
 interface FilterResourceLayoutProps {
   resources: ExternalResource[];
@@ -89,6 +89,7 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
     selectedCheckboxesLevels,
     selectedCheckboxesTypes,
     setAllResourcesDisplayed,
+    resources,
   ]);
 
   const checkboxOptionsDiscipline = disciplines ?? [];

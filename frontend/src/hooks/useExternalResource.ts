@@ -81,11 +81,16 @@ export const useExternalResource = () => {
       const gar = searchResult?.find(
         (result) => result?.data?.source == "fr.openent.mediacentre.source.GAR",
       );
-      let externalResourcesData: ExternalResource[] = gar?.data?.resources || [];
-      externalResourcesData = externalResourcesData.map((externalResource: ExternalResource) => ({
-        ...externalResource,
-        favorite: favorites.some((fav: Favorite) => fav.id === externalResource.id),
-      }));
+      let externalResourcesData: ExternalResource[] =
+        gar?.data?.resources || [];
+      externalResourcesData = externalResourcesData.map(
+        (externalResource: ExternalResource) => ({
+          ...externalResource,
+          favorite: favorites.some(
+            (fav: Favorite) => fav.id === externalResource.id,
+          ),
+        }),
+      );
       selectDisciplines(externalResourcesData);
       selectLevels(externalResourcesData);
       selectTypes(externalResourcesData);
