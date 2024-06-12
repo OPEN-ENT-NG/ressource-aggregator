@@ -107,7 +107,6 @@ export const Search: React.FC = () => {
       ];
       return redistributeResources(newItems, allResourcesDisplayed);
     });
-    console.log("allResourcesDislayed");
     setLoading(false);
   }, [allResourcesDisplayed]); // for infinite scroll
 
