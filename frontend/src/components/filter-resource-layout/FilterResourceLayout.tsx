@@ -127,8 +127,8 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
               }
             >
               {selectedCheckboxesTypes.length === checkboxOptionsType.length
-                ? t("mediacentre.combo.selectAll")
-                : t("mediacentre.combo.deselectAll")}
+                ? t("mediacentre.combo.deselectAll")
+                : t("mediacentre.combo.selectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsType.map((option, index) => (

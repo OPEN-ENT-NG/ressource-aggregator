@@ -128,8 +128,8 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
               }
             >
               {selectedCheckboxesLevels.length === checkboxOptionsLevels.length
-                ? t("mediacentre.combo.selectAll")
-                : t("mediacentre.combo.deselectAll")}
+                ? t("mediacentre.combo.deselectAll")
+                : t("mediacentre.combo.selectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsLevels.map((option, index) => (
