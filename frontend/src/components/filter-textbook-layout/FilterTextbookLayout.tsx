@@ -167,8 +167,8 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
             >
               {selectedCheckboxesDiscipline.length ===
               checkboxOptionsDiscipline.length
-                ? "Tout désélectionner"
-                : "Tout sélectionner"}
+                ? t("mediacentre.combo.deselectAll")
+                : t("mediacentre.combo.selectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsDiscipline.map((option, index) => (

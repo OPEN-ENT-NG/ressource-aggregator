@@ -161,8 +161,8 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
               }
             >
               {selectedCheckboxesLevels.length === checkboxOptionsLevels.length
-                ? "Tout désélectionner"
-                : "Tout sélectionner"}
+                ? t("mediacentre.combo.deselectAll")
+                : t("mediacentre.combo.selectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsLevels.map((option, index) => (
@@ -200,8 +200,8 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
             >
               {selectedCheckboxesDiscipline.length ===
               checkboxOptionsDiscipline.length
-                ? "Tout désélectionner"
-                : "Tout sélectionner"}
+                ? t("mediacentre.combo.deselectAll")
+                : t("mediacentre.combo.selectAll")}
             </Dropdown.Item>
             <Dropdown.Separator />
             {checkboxOptionsDiscipline.map((option, index) => (
