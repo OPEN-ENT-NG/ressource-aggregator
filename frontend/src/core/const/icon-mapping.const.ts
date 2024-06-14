@@ -16,7 +16,8 @@ export const IconMapping: { [key in string]: any } = {
   [CardTypeEnum.book_mark]: BookmarkIcon,
   [CardTypeEnum.pinned_resources]: FlagIcon,
   [SearchCardTypeEnum.external_resources]: ComputerIcon,
-  [SearchCardTypeEnum.moodle]: "/mediacentre/public/img/fr.openent.mediacentre.source.Moodle.png",
+  [SearchCardTypeEnum.moodle]:
+    "/mediacentre/public/img/fr.openent.mediacentre.source.Moodle.png",
   [ResourceDetailsEnum.authors]: PersonIcon,
   [ResourceDetailsEnum.editors]: PersonIcon,
   [ResourceDetailsEnum.disciplines]: SchoolIcon,

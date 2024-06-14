@@ -19,7 +19,7 @@
       padding: 15px;
       height: 177px;
       width: 177px;
-      @media(max-width: 515px){
+      @media (max-width: 515px) {
         width: 150px;
       }
       display: flex;
@@ -35,7 +35,7 @@
     .med-search-resource-right-container {
       padding: 15px;
       width: calc(100% - 177px);
-      @media(max-width: 515px){
+      @media (max-width: 515px) {
         width: calc(100% - 150px);
       }
       height: 177px;
@@ -47,7 +47,7 @@
         justify-content: space-between;
         align-items: self-start;
         padding: 5px 0px !important;
-        a{
+        a {
           width: 100%;
           .card-title {
             font-family: Roboto;
@@ -69,12 +69,12 @@
         padding-left: 0px;
         background-color: transparent;
         padding-right: 0px;
-        gap:0px !important;
-        @media (max-width: 480px){
+        gap: 0px !important;
+        @media (max-width: 480px) {
           display: flex;
           flex-direction: column;
-          gap:5px !important;
-          align-items: flex-start
+          gap: 5px !important;
+          align-items: flex-start;
         }
         .med-footer-details {
           color: $med-blue;
@@ -84,7 +84,7 @@
           .med-footer-icon {
             font-size: 20px;
             margin-right: 5px;
-            @media (max-width: 480px){
+            @media (max-width: 480px) {
               margin-right: 0px;
             }
           }
@@ -99,8 +99,7 @@
           }
 
           .med-link {
-            
-            @media (max-width: 480px){
+            @media (max-width: 480px) {
               margin-left: 0px;
             }
             cursor: pointer;

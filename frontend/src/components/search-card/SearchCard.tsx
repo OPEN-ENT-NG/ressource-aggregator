@@ -157,7 +157,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   }, [link]);
 
   // case of large screen
-  if(windowWidth > 480){
+  if (windowWidth > 480) {
     return (
       <Card
         isSelectable={false}
@@ -210,7 +210,10 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
               </div>
               <div className="med-footer-svg">
                 <Tooltip message={t("mediacentre.card.copy")} placement="top">
-                  <ContentCopyIcon className="med-link" onClick={() => copy()} />
+                  <ContentCopyIcon
+                    className="med-link"
+                    onClick={() => copy()}
+                  />
                 </Tooltip>
                 {searchResource.source !=
                 "fr.openent.mediacentre.source.GlobalResource" ? (
@@ -247,7 +250,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
     );
   }
   //case of mobile screen
-  else{
+  else {
     return (
       <Card
         isSelectable={false}
@@ -285,7 +288,10 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
             <Card.Footer>
               <div className="med-footer-svg">
                 <Tooltip message={t("mediacentre.card.copy")} placement="top">
-                  <ContentCopyIcon className="med-link" onClick={() => copy()} />
+                  <ContentCopyIcon
+                    className="med-link"
+                    onClick={() => copy()}
+                  />
                 </Tooltip>
                 {searchResource.source !=
                 "fr.openent.mediacentre.source.GlobalResource" ? (
