@@ -35,6 +35,7 @@ export const TextbookPage: React.FC = () => {
     signets: [],
     moodle: [],
   }); // resources visible (load more with infinite scroll)
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
@@ -119,9 +120,20 @@ export const TextbookPage: React.FC = () => {
   }, [textbooks, favorites]);
 
   useEffect(() => {
+    if (!initialLoadDone) {
+      refetchFavorite();
+      refetchTextbooks();
+      setInitialLoadDone(true);
+    }
     const updated: Textbook[] = fetchFavoriteTextbook();
     setTextbooksData(updated);
-  }, [textbooks, fetchFavoriteTextbook]);
+  }, [
+    textbooks,
+    fetchFavoriteTextbook,
+    refetchFavorite,
+    refetchTextbooks,
+    initialLoadDone,
+  ]);
 
   useEffect(() => {
     const option = {
