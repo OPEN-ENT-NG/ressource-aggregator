@@ -119,10 +119,9 @@ export const TextbookPage: React.FC = () => {
   }, [textbooks, favorites]);
 
   useEffect(() => {
-    refetchFavorite();
     const updated: Textbook[] = fetchFavoriteTextbook();
     setTextbooksData(updated);
-  }, [textbooks, fetchFavoriteTextbook, refetchFavorite]);
+  }, [textbooks, fetchFavoriteTextbook]);
 
   useEffect(() => {
     const option = {
@@ -187,7 +186,10 @@ export const TextbookPage: React.FC = () => {
                       searchResource={searchResource}
                       link={searchResource.link ?? searchResource.url ?? "/"}
                       setAlertText={setAlertText}
-                      refetchSearch={refetchTextbooks}
+                      refetchSearch={() => {
+                        refetchFavorite();
+                        refetchTextbooks();
+                      }}
                     />
                   ),
                 )}
