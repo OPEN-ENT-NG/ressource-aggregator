@@ -4,11 +4,9 @@ import { Alert, AlertTypes, useUser } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
-import { HomeBookMarksList } from "~/components/home-lists/HomeBookMarksList";
-import { HomeExternalResourcesList } from "~/components/home-lists/HomeExternalResourcesList";
-import { HomeFavoritesList } from "~/components/home-lists/HomeFavoritesList";
-import { HomeManualsList } from "~/components/home-lists/HomeManualsList";
+import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
+import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useGlobal } from "~/hooks/useGlobal";
@@ -159,8 +157,9 @@ export const App = () => {
       !isArrayEmpty(homeSignets)
     ) {
       return (
-        <HomeBookMarksList
-          homeSignets={homeSignets}
+        <HomeList
+          resources={homeSignets}
+          type={CardTypeEnum.book_mark}
           setAlertText={setAlertText}
           setAlertType={setAlertType}
           handleAddFavorite={handleAddFavorite}
@@ -176,8 +175,9 @@ export const App = () => {
       !isArrayEmpty(externalsResourcesData)
     ) {
       return (
-        <HomeExternalResourcesList
-          externalResources={externalsResourcesData}
+        <HomeList
+          resources={externalsResourcesData}
+          type={CardTypeEnum.external_resources}
           setAlertText={setAlertText}
           setAlertType={setAlertType}
           handleAddFavorite={handleAddFavorite}
@@ -193,8 +193,9 @@ export const App = () => {
       !isArrayEmpty(textbooks)
     ) {
       return (
-        <HomeManualsList
-          textbooks={textbooksData}
+        <HomeList
+          resources={textbooksData}
+          type={CardTypeEnum.manuals}
           setAlertText={setAlertText}
           setAlertType={setAlertType}
           handleAddFavorite={handleAddFavorite}
@@ -229,8 +230,9 @@ export const App = () => {
         return (
           <>
             <div className="bottom-left-container">
-              <HomeExternalResourcesList
-                externalResources={externalsResourcesData}
+              <HomeList
+                resources={externalsResourcesData}
+                type={CardTypeEnum.external_resources}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -238,8 +240,9 @@ export const App = () => {
               />
             </div>
             <div className="bottom-right-container">
-              <HomeBookMarksList
-                homeSignets={homeSignets}
+              <HomeList
+                resources={homeSignets}
+                type={CardTypeEnum.book_mark}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -254,8 +257,9 @@ export const App = () => {
         return (
           <>
             <div className="bottom-left-container">
-              <HomeManualsList
-                textbooks={textbooksData}
+              <HomeList
+                resources={textbooksData}
+                type={CardTypeEnum.manuals}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -263,8 +267,9 @@ export const App = () => {
               />
             </div>
             <div className="bottom-right-container">
-              <HomeExternalResourcesList
-                externalResources={externalsResourcesData}
+              <HomeList
+                resources={externalsResourcesData}
+                type={CardTypeEnum.external_resources}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -279,8 +284,9 @@ export const App = () => {
         return (
           <>
             <div className="bottom-left-container">
-              <HomeManualsList
-                textbooks={textbooksData}
+              <HomeList
+                resources={textbooksData}
+                type={CardTypeEnum.manuals}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -288,8 +294,9 @@ export const App = () => {
               />
             </div>
             <div className="bottom-right-container">
-              <HomeBookMarksList
-                homeSignets={homeSignets}
+              <HomeList
+                resources={homeSignets}
+                type={CardTypeEnum.book_mark}
                 setAlertText={setAlertText}
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
@@ -330,8 +337,9 @@ export const App = () => {
             </div>
             <div className="right-container">
               {favorites && (
-                <HomeFavoritesList
-                  favorites={favorites}
+                <HomeList
+                  resources={favorites}
+                  type={CardTypeEnum.favorites}
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
                   handleAddFavorite={handleAddFavorite}
@@ -362,8 +370,9 @@ export const App = () => {
           </Alert>
         )}
         <div className="med-container">
-          <HomeFavoritesList
-            favorites={favorites}
+          <HomeList
+            resources={favorites}
+            type={CardTypeEnum.favorites}
             setAlertText={setAlertText}
             setAlertType={setAlertType}
             handleAddFavorite={handleAddFavorite}
@@ -396,8 +405,9 @@ export const App = () => {
           </Alert>
         )}
         <div className="med-container">
-          <HomeFavoritesList
-            favorites={favorites}
+          <HomeList
+            resources={favorites}
+            type={CardTypeEnum.favorites}
             setAlertText={setAlertText}
             setAlertType={setAlertType}
             handleAddFavorite={handleAddFavorite}
