@@ -38,19 +38,6 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const type = (): SearchCardTypeEnum => {
     if (searchResource?.source) {
@@ -211,10 +198,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
             </div>
             <div className="med-footer-svg">
               <Tooltip message={t("mediacentre.card.copy")} placement="top">
-                <ContentCopyIcon
-                  className="med-link"
-                  onClick={() => copy()}
-                />
+                <ContentCopyIcon className="med-link" onClick={() => copy()} />
               </Tooltip>
               {searchResource.source !=
               "fr.openent.mediacentre.source.GlobalResource" ? (
