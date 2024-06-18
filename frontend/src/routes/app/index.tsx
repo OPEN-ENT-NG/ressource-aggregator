@@ -32,7 +32,6 @@ export interface AppProps {
 
 export const App = () => {
   const { user } = useUser();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -47,17 +46,6 @@ export const App = () => {
   >([]);
   const [textbooksData, setTextbooksData] = useState<Textbook[]>([]);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [alertText]);
 
   useEffect(() => {
     let newExternalResourcesData: ExternalResource[] = [];
@@ -145,277 +133,137 @@ export const App = () => {
     forceUpdate(); // List are not re-rendering without this
   };
 
-  function isArrayEmpty(arr: any[]) {
-    return !(arr && arr.length > 0);
-  }
-
-  const leftContainer = () => {
-    // case 1: textbooks and externalResourcesData are empty and homeSignets is not empty
-    if (
-      isArrayEmpty(textbooks) &&
-      isArrayEmpty(externalsResourcesData) &&
-      !isArrayEmpty(homeSignets)
-    ) {
-      return (
-        <HomeList
-          resources={homeSignets}
-          type={CardTypeEnum.book_mark}
-          setAlertText={setAlertText}
-          setAlertType={setAlertType}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-          double={true}
-        />
-      );
-    }
-    // case 2: textbooks and homeSignets are empty and externalResources is not empty
-    else if (
-      isArrayEmpty(textbooks) &&
-      isArrayEmpty(homeSignets) &&
-      !isArrayEmpty(externalsResourcesData)
-    ) {
-      return (
-        <HomeList
-          resources={externalsResourcesData}
-          type={CardTypeEnum.external_resources}
-          setAlertText={setAlertText}
-          setAlertType={setAlertType}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-          double={true}
-        />
-      );
-    }
-    // case 3: externalResources and homeSignets are empty and textbooks is not empty
-    else if (
-      isArrayEmpty(externalsResourcesData) &&
-      isArrayEmpty(homeSignets) &&
-      !isArrayEmpty(textbooks)
-    ) {
-      return (
-        <HomeList
-          resources={textbooksData}
-          type={CardTypeEnum.manuals}
-          setAlertText={setAlertText}
-          setAlertType={setAlertType}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-          double={true}
-        />
-      );
-    }
-    // case 4: all lists are empty
-    else if (
-      isArrayEmpty(textbooks) &&
-      isArrayEmpty(homeSignets) &&
-      isArrayEmpty(externalsResourcesData)
-    ) {
-      return (
-        <div className="empty-state">
-          <img
-            src="/mediacentre/public/img/empty-state.png"
-            alt="empty-state"
-            className="empty-state-img"
-          />
-          <span className="empty-state-text">
-            {t("mediacentre.ressources.empty")}
-          </span>
-        </div>
-      );
-    }
-    // case 5: there at least two lists with data
-    else {
-      // case 5.1: textbooks is empty
-      if (isArrayEmpty(textbooks)) {
-        return (
-          <>
-            <div className="bottom-left-container">
-              <HomeList
-                resources={externalsResourcesData}
-                type={CardTypeEnum.external_resources}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-            <div className="bottom-right-container">
-              <HomeList
-                resources={homeSignets}
-                type={CardTypeEnum.book_mark}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-          </>
-        );
-      }
-      // case 5.2: bookmarks is empty
-      else if (isArrayEmpty(homeSignets)) {
-        return (
-          <>
-            <div className="bottom-left-container">
-              <HomeList
-                resources={textbooksData}
-                type={CardTypeEnum.manuals}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-            <div className="bottom-right-container">
-              <HomeList
-                resources={externalsResourcesData}
-                type={CardTypeEnum.external_resources}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-          </>
-        );
-      }
-      // case 5.3: externalResources is empty or all lists have data
-      else {
-        return (
-          <>
-            <div className="bottom-left-container">
-              <HomeList
-                resources={textbooksData}
-                type={CardTypeEnum.manuals}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-            <div className="bottom-right-container">
-              <HomeList
-                resources={homeSignets}
-                type={CardTypeEnum.book_mark}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </div>
-          </>
-        );
-      }
-    }
+  const isTextbooksEmpty = () => {
+    return textbooksData.length === 0;
   };
 
-  if (windowWidth >= 1280) {
-    return (
-      <>
-        <MainLayout />
-        {alertText !== "" && (
-          <Alert
-            autoClose
-            autoCloseDelay={3000}
-            isDismissible
-            isToast
-            onClose={() => {
-              setAlertText("");
-              setAlertType("success");
-            }}
-            position="top-right"
-            type={alertType}
-            className="med-alert"
-          >
-            {alertText}
-          </Alert>
-        )}
-        <div className="med-container">
-          <div className="list-container">
-            <div className="left-container">
-              <div className="bottom-container">{leftContainer()}</div>
+  const isExternalResourcesEmpty = () => {
+    return externalsResourcesData.length === 0;
+  };
+
+  const isHomeSignetsEmpty = () => {
+    return homeSignets.length === 0;
+  };
+
+  // return the type and the resource of the first non favorite list of resources
+  const fisrtNonFav = () => {
+    if (!isTextbooksEmpty()) {
+      return { type: CardTypeEnum.manuals, resource: textbooksData };
+    }
+    if (!isExternalResourcesEmpty()) {
+      // textbooks is empty
+      return {
+        type: CardTypeEnum.external_resources,
+        resource: externalsResourcesData,
+      };
+    }
+    if (!isHomeSignetsEmpty()) {
+      // textbooks and externalResources are empty
+      return { type: CardTypeEnum.book_mark, resource: homeSignets };
+    }
+    return null;
+  };
+
+  // return the type and the resource of the second non favorite list of resources
+  const secondNonFav = () => {
+    if (
+      !isHomeSignetsEmpty() &&
+      (!isTextbooksEmpty() || !isExternalResourcesEmpty())
+    ) {
+      return { type: CardTypeEnum.book_mark, resource: homeSignets };
+    }
+    if (
+      isHomeSignetsEmpty() &&
+      !isTextbooksEmpty() &&
+      !isExternalResourcesEmpty()
+    ) {
+      return {
+        type: CardTypeEnum.external_resources,
+        resource: externalsResourcesData,
+      };
+    }
+    return null;
+  };
+
+  return (
+    <>
+      <MainLayout />
+      {alertText !== "" && (
+        <Alert
+          autoClose
+          autoCloseDelay={3000}
+          isDismissible
+          isToast
+          onClose={() => setAlertText("")}
+          position="top-right"
+          type={alertType}
+          className="med-alert"
+        >
+          {alertText}
+        </Alert>
+      )}
+      <div className="med-container">
+        <div className="med-fav-container">
+          <HomeList
+            resources={favorites}
+            type={CardTypeEnum.favorites}
+            setAlertText={setAlertText}
+            setAlertType={setAlertType}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
+          />
+        </div>
+        <div className="med-non-fav-container">
+          {fisrtNonFav() === null ? ( // involve secondNonFavType() === null
+            <div className="empty-state">
+              <img
+                src="/mediacentre/public/img/empty-state.png"
+                alt="empty-state"
+                className="empty-state-img"
+              />
+              <span className="empty-state-text">
+                {t("mediacentre.ressources.empty")}
+              </span>
             </div>
-            <div className="right-container">
-              {favorites && (
+          ) : secondNonFav() === null ? ( // fisrtNonFavType() !== null
+            <HomeList
+              resources={fisrtNonFav()?.resource ?? []} // fisrtNonFav() is not null involve resource can't be null
+              type={fisrtNonFav()?.type ?? CardTypeEnum.manuals} // fisrtNonFav() is not null
+              setAlertText={setAlertText}
+              setAlertType={setAlertType}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+              double={true} // we double the number of cards to display because we have only one list
+            />
+          ) : (
+            // both not empty
+            <>
+              <div className="med-first-non-fav-container">
                 <HomeList
-                  resources={favorites}
-                  type={CardTypeEnum.favorites}
+                  resources={fisrtNonFav()?.resource ?? []} // fisrtNonFav() is not null involve resource can't be null
+                  type={fisrtNonFav()?.type ?? CardTypeEnum.manuals} // fisrtNonFav() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
                   handleAddFavorite={handleAddFavorite}
                   handleRemoveFavorite={handleRemoveFavorite}
+                  double={false} // we don't double the number of cards to display because we have two lists
                 />
-              )}
-            </div>
-          </div>
+              </div>
+              <div className="med-second-non-fav-container">
+                <HomeList
+                  resources={secondNonFav()?.resource ?? []} // secondNonFav() is not null involve resource can't be null
+                  type={secondNonFav()?.type ?? CardTypeEnum.manuals} // secondNonFav() is not null
+                  setAlertText={setAlertText}
+                  setAlertType={setAlertType}
+                  handleAddFavorite={handleAddFavorite}
+                  handleRemoveFavorite={handleRemoveFavorite}
+                  double={false} // we don't double the number of cards to display because we have two lists
+                />
+              </div>
+            </>
+          )}
         </div>
-      </>
-    );
-  } else if (windowWidth >= 992) {
-    return (
-      <>
-        <MainLayout />
-        {alertText !== "" && (
-          <Alert
-            autoClose
-            autoCloseDelay={3000}
-            isDismissible
-            isToast
-            onClose={() => setAlertText("")}
-            position="top-right"
-            type="success"
-            className="med-alert"
-          >
-            {alertText}
-          </Alert>
-        )}
-        <div className="med-container">
-          <HomeList
-            resources={favorites}
-            type={CardTypeEnum.favorites}
-            setAlertText={setAlertText}
-            setAlertType={setAlertType}
-            handleAddFavorite={handleAddFavorite}
-            handleRemoveFavorite={handleRemoveFavorite}
-          />
-          <div className="list-container">
-            <div className="left-container">
-              <div className="bottom-container">{leftContainer()}</div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <MainLayout />
-        {alertText !== "" && (
-          <Alert
-            autoClose
-            autoCloseDelay={3000}
-            isDismissible
-            isToast
-            onClose={() => setAlertText("")}
-            position="top-right"
-            type="success"
-            className="med-alert"
-          >
-            {alertText}
-          </Alert>
-        )}
-        <div className="med-container">
-          <HomeList
-            resources={favorites}
-            type={CardTypeEnum.favorites}
-            setAlertText={setAlertText}
-            setAlertType={setAlertType}
-            handleAddFavorite={handleAddFavorite}
-            handleRemoveFavorite={handleRemoveFavorite}
-          />
-          {leftContainer()}
-        </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 };
