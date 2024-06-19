@@ -1,6 +1,6 @@
 import { Resource } from "./Resource.model";
 
-export interface Signet extends Resource {
+export interface SignetD extends Resource {
   archived: boolean;
   collab: boolean;
   date_creation: string;
@@ -13,4 +13,22 @@ export interface Signet extends Resource {
   url?: string;
   _id?: string;
   shared?: boolean;
+}
+
+export interface Signet extends Resource {
+  description: string;
+  date?: number;
+  date_modification?: number;
+  date_creation?: number;
+  id: string | number;
+  resource_id?: string;
+  owner_id?: string;
+  owner_name?: string;
+  link?: string;
+  url?: string;
+  shared?: boolean;
+  archived?: boolean;
+  orientation?: boolean;
+  published?: boolean;
+  collab?: boolean;
 }

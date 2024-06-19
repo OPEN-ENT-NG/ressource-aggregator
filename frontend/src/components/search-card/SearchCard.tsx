@@ -97,7 +97,6 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
       }
       setAlertText(t("mediacentre.notification.addFavorite"), "success");
       refetchSearch();
-      searchResource.favorite = true;
     } catch (e) {
       console.error(e);
     }
@@ -124,7 +123,6 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
       }
       setAlertText(t("mediacentre.notification.removeFavorite"), "success");
       refetchSearch();
-      searchResource.favorite = false;
     } catch (e) {
       console.error(e);
     }

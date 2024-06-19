@@ -17,6 +17,7 @@ import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { useLocation } from "react-router-dom";
 
 export interface AppProps {
   _id: string;
@@ -31,6 +32,7 @@ export interface AppProps {
 }
 
 export const App = () => {
+  const location = useLocation();
   const { user } = useUser();
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
@@ -42,7 +44,7 @@ export const App = () => {
   const { externalResources, setExternalResources } = useExternalResource();
   const { globals } = useGlobal();
   const [externalsResourcesData, setExternalResourcesData] = useState<
-    ExternalResource[] | GlobalResource[]
+    (ExternalResource | GlobalResource)[]
   >([]);
   const [textbooksData, setTextbooksData] = useState<Textbook[]>([]);
   const { t } = useTranslation();
@@ -98,6 +100,10 @@ export const App = () => {
     refetchTextbooks();
   };
 
+  useEffect(() => {
+    refetchFavorite();
+  }, [location]);
+
   const handleRemoveFavorite = (id: string | number) => {
     setFavorites((prevFavorites: Favorite[]) =>
       prevFavorites.filter((fav) => fav.id != id),
@@ -146,9 +152,12 @@ export const App = () => {
   };
 
   // return the type and the resource of the first non favorite list of resources
-  const fisrtNonFav = () => {
+  const firstNonFav = () => {
     if (!isTextbooksEmpty()) {
-      return { type: CardTypeEnum.manuals, resource: textbooksData };
+      return {
+        type: CardTypeEnum.manuals, 
+        resource: textbooksData
+      };
     }
     if (!isExternalResourcesEmpty()) {
       // textbooks is empty
@@ -159,7 +168,10 @@ export const App = () => {
     }
     if (!isHomeSignetsEmpty()) {
       // textbooks and externalResources are empty
-      return { type: CardTypeEnum.book_mark, resource: homeSignets };
+      return { 
+        type: CardTypeEnum.book_mark,
+        resource: homeSignets
+      };
     }
     return null;
   };
@@ -214,7 +226,7 @@ export const App = () => {
           />
         </div>
         <div className="med-non-fav-container">
-          {fisrtNonFav() === null ? ( // involve secondNonFavType() === null
+          {firstNonFav() === null ? ( // involve secondNonFavType() === null
             <div className="empty-state">
               <img
                 src="/mediacentre/public/img/empty-state.png"
@@ -225,10 +237,10 @@ export const App = () => {
                 {t("mediacentre.ressources.empty")}
               </span>
             </div>
-          ) : secondNonFav() === null ? ( // fisrtNonFavType() !== null
+          ) : secondNonFav() === null ? ( // firstNonFavType() !== null
             <HomeList
-              resources={fisrtNonFav()?.resource ?? []} // fisrtNonFav() is not null involve resource can't be null
-              type={fisrtNonFav()?.type ?? CardTypeEnum.manuals} // fisrtNonFav() is not null
+              resources={firstNonFav()?.resource ?? []} // firstNonFav() is not null involve resource can't be null
+              type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
               setAlertText={setAlertText}
               setAlertType={setAlertType}
               handleAddFavorite={handleAddFavorite}
@@ -240,8 +252,8 @@ export const App = () => {
             <>
               <div className="med-first-non-fav-container">
                 <HomeList
-                  resources={fisrtNonFav()?.resource ?? []} // fisrtNonFav() is not null involve resource can't be null
-                  type={fisrtNonFav()?.type ?? CardTypeEnum.manuals} // fisrtNonFav() is not null
+                  resources={firstNonFav()?.resource ?? []} // firstNonFav() is not null involve resource can't be null
+                  type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
                   handleAddFavorite={handleAddFavorite}

@@ -207,7 +207,7 @@ export const ResourcePage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <div className="med-container">
+      <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">
             <div className="med-search-page-title">

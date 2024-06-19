@@ -17,6 +17,7 @@ import { useTextbook } from "~/hooks/useTextbook";
 import { Favorite } from "~/model/Favorite.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Textbook } from "~/model/Textbook.model";
+import { ExternalResource } from "~/model/ExternalResource.model";
 
 export const TextbookPage: React.FC = () => {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ export const TextbookPage: React.FC = () => {
   ];
 
   const redistributeResources = (
-    items: Textbook[],
+    items: Textbook[] | ExternalResource[],
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
@@ -59,7 +60,7 @@ export const TextbookPage: React.FC = () => {
     items.forEach((item) => {
       if (
         allResourcesDisplayed.externals_resources.some(
-          (resource: Textbook) => resource.id === item.id,
+          (resource: Textbook | ExternalResource) => resource.id === item.id,
         )
       ) {
         newVisibleResources.externals_resources.push(item as Textbook);
@@ -179,7 +180,7 @@ export const TextbookPage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <div className="med-container">
+      <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">
             <div className="med-search-page-title">

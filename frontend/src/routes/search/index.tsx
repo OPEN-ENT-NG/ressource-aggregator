@@ -17,6 +17,7 @@ import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
+import { Textbook } from "~/model/Textbook.model";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
@@ -177,7 +178,7 @@ export const Search: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <div className="med-container">
+      <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">
             <div className="med-search-page-title">
