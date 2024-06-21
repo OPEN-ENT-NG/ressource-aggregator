@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { Alert, AlertTypes } from "@edifice-ui/react";
+import { Alert, AlertTypes, LoadingScreen } from "@edifice-ui/react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
@@ -17,7 +17,6 @@ import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 import { Signet } from "~/model/Signet.model";
-import { Textbook } from "~/model/Textbook.model";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
@@ -48,14 +47,11 @@ export const Search: React.FC = () => {
     createSearchBody(searchQuery),
   );
   const [allResourcesDisplayed, setAllResourcesDisplayed] =
-    useState<SearchResultData>(allResources); // all resources after the filters
-  const [visibleResources, setVisibleResources] = useState<SearchResultData>({
-    externals_resources: [],
-    signets: [],
-    moodle: [],
-  }); // resources visible (load more with infinite scroll)
+    useState<SearchResultData | null>(null); // all resources after the filters
+  const [visibleResources, setVisibleResources] =
+    useState<SearchResultData | null>(null); // resources visible (load more with infinite scroll)
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const loaderRef = useRef(null);
   const navigate = useNavigate();
 
@@ -101,9 +97,18 @@ export const Search: React.FC = () => {
   };
 
   const loadMoreResources = useCallback(() => {
-    setLoading(true);
+    if (!allResourcesDisplayed) {
+      return;
+    }
     const limit = 10; // items to load per scroll
     setVisibleResources((prevVisibleResources) => {
+      if (!prevVisibleResources) {
+        prevVisibleResources = {
+          externals_resources: [],
+          signets: [],
+          moodle: [],
+        };
+      }
       const prevItems = flattenResources(prevVisibleResources);
       const allItems = flattenResources(allResourcesDisplayed);
 
@@ -122,7 +127,7 @@ export const Search: React.FC = () => {
 
       return redistributeResources(newItems, allResourcesDisplayed);
     });
-    setLoading(false);
+    setIsLoading(false);
   }, [allResourcesDisplayed]);
 
   const handleObserver = useCallback(
@@ -150,13 +155,16 @@ export const Search: React.FC = () => {
   }, [handleObserver]); // for infinite scroll
 
   useEffect(() => {
-    setVisibleResources({
-      externals_resources: [],
-      signets: [],
-      moodle: [],
-    }); // reset visible resources when use filters
+    setIsLoading(true);
+    if (visibleResources != null) {
+      setVisibleResources({
+        externals_resources: [],
+        signets: [],
+        moodle: [],
+      }); // reset visible resources when use filters
+    }
     loadMoreResources();
-  }, [allResourcesDisplayed, loadMoreResources]);
+  }, [allResourcesDisplayed, loadMoreResources, visibleResources]);
 
   return (
     <>
@@ -198,32 +206,41 @@ export const Search: React.FC = () => {
               types={types}
               refetchSearch={refetchSearch}
             />
-            {visibleResources &&
-            (visibleResources.externals_resources.length !== 0 ||
-              visibleResources.signets.length !== 0 ||
-              visibleResources.moodle.length !== 0) ? (
-              <ListCard
-                scrollable={false}
-                type={CardTypeEnum.search}
-                components={[
-                  ...visibleResources.externals_resources,
-                  ...visibleResources.signets,
-                  ...visibleResources.moodle,
-                ].map((searchResource: any) => (
-                  <SearchCard
-                    searchResource={searchResource}
-                    link={searchResource.link ?? searchResource.url ?? "/"}
-                    setAlertText={setAlertText}
-                    refetchSearch={refetchSearch}
-                  />
-                ))}
-                redirectLink={() => navigate("/search")}
-              />
+            {isLoading ? (
+              <LoadingScreen />
             ) : (
-              <EmptyState title="mediacentre.search.empty" />
+              <>
+                {visibleResources &&
+                (visibleResources.externals_resources.length !== 0 ||
+                  visibleResources.signets.length !== 0 ||
+                  visibleResources.moodle.length !== 0) ? (
+                  <>
+                    <ListCard
+                      scrollable={false}
+                      type={CardTypeEnum.search}
+                      components={[
+                        ...visibleResources.externals_resources,
+                        ...visibleResources.signets,
+                        ...visibleResources.moodle,
+                      ].map((searchResource: any) => (
+                        <SearchCard
+                          searchResource={searchResource}
+                          link={
+                            searchResource.link ?? searchResource.url ?? "/"
+                          }
+                          setAlertText={setAlertText}
+                          refetchSearch={refetchSearch}
+                        />
+                      ))}
+                      redirectLink={() => navigate("/search")}
+                    />
+                  </>
+                ) : (
+                  <EmptyState title="mediacentre.search.empty" />
+                )}
+              </>
             )}
             <div ref={loaderRef} />
-            {loading && <p>{t("mediacentre.load.more.items")}</p>}
           </div>
         </div>
       </div>

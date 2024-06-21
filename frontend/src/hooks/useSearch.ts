@@ -10,11 +10,9 @@ import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
 
 export const useSearch = (query: any) => {
-  const [allResources, setAllResources] = useState<SearchResultData>({
-    signets: [],
-    externals_resources: [],
-    moodle: [],
-  });
+  const [allResources, setAllResources] = useState<SearchResultData | null>(
+    null,
+  );
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);

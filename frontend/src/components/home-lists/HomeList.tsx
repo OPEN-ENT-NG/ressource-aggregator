@@ -1,4 +1,4 @@
-import { AlertTypes } from "@edifice-ui/react";
+import { AlertTypes, LoadingScreen } from "@edifice-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { ListCard } from "../list-card/ListCard";
@@ -16,7 +16,8 @@ interface HomeListProps {
     | ExternalResource[]
     | GlobalResource[]
     | Favorite[]
-    | Signet[];
+    | Signet[]
+    | null;
   type: CardTypeEnum;
   setAlertText: (arg: string) => void;
   setAlertType: (arg: AlertTypes) => void;
@@ -51,6 +52,10 @@ export const HomeList: React.FC<HomeListProps> = ({
     return "/mediacentre";
   };
 
+  if (!resources) {
+    return <LoadingScreen />;
+  }
+
   return (
     <ListCard
       scrollable={false}
@@ -68,7 +73,7 @@ export const HomeList: React.FC<HomeListProps> = ({
             id={resource?.id ?? ""}
             key={resource.id}
             image={resource?.image ?? "/mediacentre/public/img/no-avatar.svg"}
-            title={resource.title}
+            title={resource?.title}
             subtitle={
               type === CardTypeEnum.favorites
                 ? (resource as Favorite).description
@@ -84,7 +89,7 @@ export const HomeList: React.FC<HomeListProps> = ({
                 : type
             }
             favorite={resource.favorite}
-            link={resource.link ?? resource.url ?? "/"}
+            link={resource?.link ?? resource?.url ?? "/"}
             setAlertText={(arg: string, type: AlertTypes) => {
               setAlertText(arg);
               setAlertType(type);

@@ -8,12 +8,12 @@ import { ExternalResource } from "~/model/ExternalResource.model";
 import { SearchResultData } from "~/model/SearchResultData.model";
 
 interface FilterResourceLayoutProps {
-  resources: ExternalResource[];
+  resources: ExternalResource[] | null;
   disciplines: string[];
   levels: string[];
   types: string[];
   setAllResourcesDisplayed: React.Dispatch<
-    React.SetStateAction<SearchResultData>
+    React.SetStateAction<SearchResultData | null>
   >;
 }
 
@@ -53,6 +53,9 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
   };
 
   const fetchFilters = useCallback(() => {
+    if (!resources) {
+      return;
+    }
     const filteredResources: SearchResultData = {
       signets: [],
       externals_resources: resources,
@@ -103,6 +106,9 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
   const countType = selectedCheckboxesTypes.length;
 
   useEffect(() => {
+    if (!resources) {
+      return;
+    }
     setSelectedCheckboxesDiscipline(disciplines);
     setSelectedCheckboxesLevels(levels);
     setSelectedCheckboxesTypes(types);
@@ -110,7 +116,7 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
 
   useEffect(() => {
     fetchFilters();
-  }, [fetchFilters]);
+  }, [fetchFilters, resources]);
 
   return (
     <>

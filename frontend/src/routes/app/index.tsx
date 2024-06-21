@@ -3,6 +3,7 @@ import { useState, useEffect, useReducer, useCallback } from "react";
 import { Alert, AlertTypes, useUser } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
@@ -17,7 +18,6 @@ import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { useLocation } from "react-router-dom";
 
 export interface AppProps {
   _id: string;
@@ -44,9 +44,9 @@ export const App = () => {
   const { externalResources, setExternalResources } = useExternalResource();
   const { globals } = useGlobal();
   const [externalsResourcesData, setExternalResourcesData] = useState<
-    (ExternalResource | GlobalResource)[]
-  >([]);
-  const [textbooksData, setTextbooksData] = useState<Textbook[]>([]);
+    (ExternalResource | GlobalResource)[] | null
+  >(null);
+  const [textbooksData, setTextbooksData] = useState<Textbook[] | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -54,9 +54,15 @@ export const App = () => {
     if (user?.type.length === 1 && user.type.includes("Relative")) {
       if (globals) {
         newExternalResourcesData = globals;
+      } else {
+        return;
       }
     } else {
-      newExternalResourcesData = externalResources;
+      if (externalResources) {
+        newExternalResourcesData = externalResources;
+      } else {
+        return;
+      }
     }
 
     // Avoid unnecessary state update to prevent infinite loop
@@ -68,7 +74,7 @@ export const App = () => {
     }
   }, [user, externalResources, globals, externalsResourcesData]);
 
-  const fetchFavoriteTextbook = useCallback(() => {
+  const fetchFavoriteTextbook: () => Textbook[] | null = useCallback(() => {
     if (textbooks && favorites) {
       return textbooks.map((textbook: Textbook) => {
         const favorite = favorites.find(
@@ -85,13 +91,18 @@ export const App = () => {
   }, [textbooks, favorites]);
 
   useEffect(() => {
-    const updated: Textbook[] = fetchFavoriteTextbook();
+    const updated: Textbook[] | null = fetchFavoriteTextbook();
     setTextbooksData(updated);
   }, [textbooks, fetchFavoriteTextbook]);
 
   const handleAddFavorite = (resource: any) => {
     resource.favorite = true;
-    setFavorites((prevFavorites: Favorite[]) => [...prevFavorites, resource]);
+    setFavorites((prevFavorites: Favorite[] | null) => {
+      if (!prevFavorites) {
+        return null;
+      }
+      return [...prevFavorites, resource];
+    });
     refetchAll();
   };
 
@@ -102,61 +113,65 @@ export const App = () => {
 
   useEffect(() => {
     refetchFavorite();
-  }, [location]);
+  }, [location, refetchFavorite]);
 
   const handleRemoveFavorite = (id: string | number) => {
-    setFavorites((prevFavorites: Favorite[]) =>
-      prevFavorites.filter((fav) => fav.id != id),
-    );
+    setFavorites((prevFavorites: Favorite[] | null) => {
+      if (!prevFavorites) {
+        return null;
+      }
+      return prevFavorites.filter((fav) => fav.id != id);
+    });
     updateFavoriteStatus(id, false);
   };
 
   const updateFavoriteStatus = (id: string | number, isFavorite: boolean) => {
-    let newSignets: Signet[] = [...homeSignets];
-    newSignets = newSignets.map((signet: Signet) =>
-      signet?.id?.toString() == id.toString()
-        ? { ...signet, favorite: isFavorite }
-        : signet,
-    );
-    setHomeSignets(newSignets);
-    let newTextbooks: Textbook[] = [...textbooks];
-    newTextbooks = newTextbooks.map((textbook: Textbook) =>
-      textbook?.id?.toString() == id.toString()
-        ? { ...textbook, favorite: isFavorite }
-        : textbook,
-    );
-    setTextbooks(newTextbooks);
-    let newExternalResources: ExternalResource[] | GlobalResource[] = [
-      ...externalsResourcesData,
-    ];
-    newExternalResources = newExternalResources.map(
-      (externalResource: ExternalResource | GlobalResource) =>
-        externalResource?.id?.toString() == id.toString()
-          ? { ...externalResource, favorite: isFavorite }
-          : externalResource,
-    );
-    setExternalResources(newExternalResources);
+    if (homeSignets) {
+      let newSignets: Signet[] = [...homeSignets];
+      newSignets = newSignets.map((signet: Signet) =>
+        signet?.id?.toString() == id.toString()
+          ? { ...signet, favorite: isFavorite }
+          : signet,
+      );
+      setHomeSignets(newSignets);
+    }
+    if (textbooks) {
+      let newTextbooks: Textbook[] = [...textbooks];
+      newTextbooks = newTextbooks.map((textbook: Textbook) =>
+        textbook?.id?.toString() == id.toString()
+          ? { ...textbook, favorite: isFavorite }
+          : textbook,
+      );
+      setTextbooks(newTextbooks);
+    }
+    if (externalsResourcesData) {
+      let newExternalResources: ExternalResource[] | GlobalResource[] = [
+        ...externalsResourcesData,
+      ];
+      newExternalResources = newExternalResources.map(
+        (externalResource: ExternalResource | GlobalResource) =>
+          externalResource?.id?.toString() == id.toString()
+            ? { ...externalResource, favorite: isFavorite }
+            : externalResource,
+      );
+      setExternalResources(newExternalResources);
+    }
     forceUpdate(); // List are not re-rendering without this
   };
 
-  const isTextbooksEmpty = () => {
-    return textbooksData.length === 0;
-  };
+  const isTextbooksEmpty = () => textbooksData?.length === 0 ?? 0;
 
-  const isExternalResourcesEmpty = () => {
-    return externalsResourcesData.length === 0;
-  };
+  const isExternalResourcesEmpty = () =>
+    externalsResourcesData?.length === 0 ?? 0;
 
-  const isHomeSignetsEmpty = () => {
-    return homeSignets.length === 0;
-  };
+  const isHomeSignetsEmpty = () => homeSignets?.length === 0 ?? 0;
 
   // return the type and the resource of the first non favorite list of resources
   const firstNonFav = () => {
     if (!isTextbooksEmpty()) {
       return {
-        type: CardTypeEnum.manuals, 
-        resource: textbooksData
+        type: CardTypeEnum.manuals,
+        resource: textbooksData,
       };
     }
     if (!isExternalResourcesEmpty()) {
@@ -168,9 +183,9 @@ export const App = () => {
     }
     if (!isHomeSignetsEmpty()) {
       // textbooks and externalResources are empty
-      return { 
+      return {
         type: CardTypeEnum.book_mark,
-        resource: homeSignets
+        resource: homeSignets,
       };
     }
     return null;
@@ -239,7 +254,7 @@ export const App = () => {
             </div>
           ) : secondNonFav() === null ? ( // firstNonFavType() !== null
             <HomeList
-              resources={firstNonFav()?.resource ?? []} // firstNonFav() is not null involve resource can't be null
+              resources={firstNonFav()?.resource ?? null} // firstNonFav() is not null involve resource can't be null
               type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
               setAlertText={setAlertText}
               setAlertType={setAlertType}
@@ -252,7 +267,7 @@ export const App = () => {
             <>
               <div className="med-first-non-fav-container">
                 <HomeList
-                  resources={firstNonFav()?.resource ?? []} // firstNonFav() is not null involve resource can't be null
+                  resources={firstNonFav()?.resource ?? null} // firstNonFav() is not null involve resource can't be null
                   type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
@@ -263,7 +278,7 @@ export const App = () => {
               </div>
               <div className="med-second-non-fav-container">
                 <HomeList
-                  resources={secondNonFav()?.resource ?? []} // secondNonFav() is not null involve resource can't be null
+                  resources={secondNonFav()?.resource ?? null} // secondNonFav() is not null involve resource can't be null
                   type={secondNonFav()?.type ?? CardTypeEnum.manuals} // secondNonFav() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
