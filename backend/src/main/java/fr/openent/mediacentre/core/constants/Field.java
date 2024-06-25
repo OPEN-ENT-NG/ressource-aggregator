@@ -47,6 +47,7 @@ public class Field {
     public static final String RESOURCES = "resources";
     public static final String MESSAGE = "message";
     public static final String GLOBAL_COLLECTION = "mediacentre.global";
+    public static final String PINNED_COLLECTION = "mediacentre.pinned";
     public static final String TITLE = "title";
     public static final String PLAIN_TEXT = "plain_text";
     public static final String DATE = "date";
@@ -57,11 +58,16 @@ public class Field {
     public static final String LEVELS = "levels";
     public static final String DOCUMENT_TYPES = "document_types";
     public static final String DESCRIPTION = "description";
+    public static final String STRUCTURE_OWNER = "structure_owner";
+    public static final String STRUCTURES_CHILDREN = "structures_children";
     public static final String DOCUMENT_TYPES_GLOBAL = "Global";
     public static final String PROFILES = "profiles";
     public static final String GLOBAL_RESULT = "global_Result";
+    public static final String PINNED_RESULT = "pinned_result";
     public static final String GET = "get";
+    public static final String POST = "post";
     public static final String GLOBAL = "global";
+    public static final String PINNED = "pinned";
     public static final String PREPARED = "prepared";
     public static final String ACTION = "action";
     public static final String STATEMENT = "statement";

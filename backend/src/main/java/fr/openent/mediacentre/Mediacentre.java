@@ -91,6 +91,7 @@ public class Mediacentre extends BaseServer {
         addController(new SearchController(eb, sources));
         addController(new TextBooksController(eb, sources));
         addController(new GlobalResourceController(eb));
+        addController(new PinnedController(eb));
         addController(signetController);
 
         if (this.config.getBoolean("elasticsearch", false)) {
