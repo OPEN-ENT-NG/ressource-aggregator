@@ -1,7 +1,4 @@
 import { Resource } from "./Resource.model";
-import { Textbook } from "./Textbook.model";
-
-export interface ExternalResourceD extends Textbook {}
 
 export interface ExternalResource extends Resource {
   date: number;

@@ -1,14 +1,5 @@
 import { Resource } from "./Resource.model";
 
-export interface FavoriteD extends Resource {
-  description: string;
-  date: number;
-  user?: string;
-  _id?: string;
-  hash?: number;
-  url?: string;
-}
-
 export interface Favorite extends Resource {
   link?: string;
   id?: string | number;

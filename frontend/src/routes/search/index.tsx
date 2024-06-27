@@ -52,6 +52,7 @@ export const Search: React.FC = () => {
     useState<SearchResultData | null>(null); // resources visible (load more with infinite scroll)
 
   const [isLoading, setIsLoading] = useState(true);
+  const [limit, setLimit] = useState(0);
   const loaderRef = useRef(null);
   const navigate = useNavigate();
 
@@ -100,7 +101,6 @@ export const Search: React.FC = () => {
     if (!allResourcesDisplayed) {
       return;
     }
-    const limit = 10; // items to load per scroll
     setVisibleResources((prevVisibleResources) => {
       if (!prevVisibleResources) {
         prevVisibleResources = {
@@ -109,6 +109,7 @@ export const Search: React.FC = () => {
           moodle: [],
         };
       }
+      setLimit((prevLimit) => prevLimit + 10); // add 10 items each scroll
       const prevItems = flattenResources(prevVisibleResources);
       const allItems = flattenResources(allResourcesDisplayed);
 
@@ -128,7 +129,7 @@ export const Search: React.FC = () => {
       return redistributeResources(newItems, allResourcesDisplayed);
     });
     setIsLoading(false);
-  }, [allResourcesDisplayed]);
+  }, [allResourcesDisplayed, limit]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -156,15 +157,8 @@ export const Search: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    if (visibleResources != null) {
-      setVisibleResources({
-        externals_resources: [],
-        signets: [],
-        moodle: [],
-      }); // reset visible resources when use filters
-    }
     loadMoreResources();
-  }, [allResourcesDisplayed, loadMoreResources, visibleResources]);
+  }, [allResourcesDisplayed, loadMoreResources]);
 
   return (
     <>
@@ -207,7 +201,7 @@ export const Search: React.FC = () => {
               refetchSearch={refetchSearch}
             />
             {isLoading ? (
-              <LoadingScreen />
+              <LoadingScreen position={false} />
             ) : (
               <>
                 {visibleResources &&
