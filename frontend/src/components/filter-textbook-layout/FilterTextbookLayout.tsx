@@ -110,17 +110,6 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
     fetchFilters();
   }, [fetchFilters, resources]);
 
-  // useEffect(() => {
-  //   if (!resources) {
-  //     return;
-  //   }
-  //   setAllResourcesDisplayed({
-  //     signets: [],
-  //     moodle: [],
-  //     externals_resources: resources,
-  //   });
-  // }, [resources, setAllResourcesDisplayed]);
-
   return (
     <>
       <div className="med-filters">
