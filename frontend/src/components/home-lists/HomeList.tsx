@@ -56,72 +56,76 @@ export const HomeList: React.FC<HomeListProps> = ({
 
   if (!resources) {
     return (
-      <div className={type===CardTypeEnum.favorites ? "" : "med-double-list"}>
+      <div className={type === CardTypeEnum.favorites ? "" : "med-double-list"}>
         <LoadingScreen />
       </div>
-  );
+    );
   }
 
   return (
-    <div className={double || type===CardTypeEnum.favorites ? "" : "med-double-list"}>
-    <ListCard
-      scrollable={false}
-      type={type}
-      components={resources.map(
-        (
-          resource:
-            | Textbook
-            | ExternalResource
-            | GlobalResource
-            | Favorite
-            | Signet,
-        ) => (
-          <Resource
-            id={resource?.id ?? ""}
-            key={resource.id}
-            image={resource?.image ?? "/mediacentre/public/img/no-avatar.svg"}
-            title={resource?.title}
-            subtitle={
-              type === CardTypeEnum.favorites
-                ? (resource as Favorite).description
-                : type === CardTypeEnum.book_mark
-                ? (resource as Signet).orientation
-                  ? t("mediacentre.signet.orientation")
-                  : ""
-                : resource?.editors?.join(", ") ?? ""
-            }
-            type={
-              type === CardTypeEnum.external_resources
-                ? CardTypeEnum.manuals
-                : type
-            }
-            favorite={resource.favorite}
-            link={resource?.link ?? resource?.url ?? "/"}
-            setAlertText={(arg: string, type: AlertTypes) => {
-              setAlertText(arg);
-              setAlertType(type);
-            }}
-            {...(type === CardTypeEnum.book_mark && {
-              shared: (resource as Signet).shared ?? false,
-              footerImage: (resource as Signet).owner_id
-                ? `/userbook/avatar/${
-                    (resource as Signet).owner_id
-                  }?thumbnail=48x48`
-                : `/mediacentre/public/img/no-avatar.svg`,
-              footerText:
-                (resource as Signet).owner_name ??
-                (resource?.authors ? resource?.authors[0] : " ") ??
-                "",
-            })}
-            resource={resource}
-            handleAddFavorite={handleAddFavorite}
-            handleRemoveFavorite={handleRemoveFavorite}
-          />
-        ),
-      )}
-      redirectLink={redirectLink()}
-      homeDouble={double}
-    />
+    <div
+      className={
+        double || type === CardTypeEnum.favorites ? "" : "med-double-list"
+      }
+    >
+      <ListCard
+        scrollable={false}
+        type={type}
+        components={resources.map(
+          (
+            resource:
+              | Textbook
+              | ExternalResource
+              | GlobalResource
+              | Favorite
+              | Signet,
+          ) => (
+            <Resource
+              id={resource?.id ?? ""}
+              key={resource.id}
+              image={resource?.image ?? "/mediacentre/public/img/no-avatar.svg"}
+              title={resource?.title}
+              subtitle={
+                type === CardTypeEnum.favorites
+                  ? (resource as Favorite).description
+                  : type === CardTypeEnum.book_mark
+                  ? (resource as Signet).orientation
+                    ? t("mediacentre.signet.orientation")
+                    : ""
+                  : resource?.editors?.join(", ") ?? ""
+              }
+              type={
+                type === CardTypeEnum.external_resources
+                  ? CardTypeEnum.manuals
+                  : type
+              }
+              favorite={resource.favorite}
+              link={resource?.link ?? resource?.url ?? "/"}
+              setAlertText={(arg: string, type: AlertTypes) => {
+                setAlertText(arg);
+                setAlertType(type);
+              }}
+              {...(type === CardTypeEnum.book_mark && {
+                shared: (resource as Signet).shared ?? false,
+                footerImage: (resource as Signet).owner_id
+                  ? `/userbook/avatar/${
+                      (resource as Signet).owner_id
+                    }?thumbnail=48x48`
+                  : `/mediacentre/public/img/no-avatar.svg`,
+                footerText:
+                  (resource as Signet).owner_name ??
+                  (resource?.authors ? resource?.authors[0] : " ") ??
+                  "",
+              })}
+              resource={resource}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+            />
+          ),
+        )}
+        redirectLink={redirectLink()}
+        homeDouble={double}
+      />
     </div>
   );
 };

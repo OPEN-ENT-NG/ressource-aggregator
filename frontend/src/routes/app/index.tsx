@@ -165,7 +165,7 @@ export const App = () => {
     externalResourcesData?.length === 0 ?? 0;
 
   const isHomeSignetsEmpty = () => homeSignets?.length === 0 ?? 0;
- 
+
   /*
     return the type and the resource of resources to displayed 
     examples:
@@ -176,28 +176,47 @@ export const App = () => {
   const resourcesList = () => {
     const listToReturn = [];
     // particular case of all lists are not empty
-    if(!isTextbooksEmpty() && !isExternalResourcesEmpty() && !isHomeSignetsEmpty()) {
-      listToReturn.push({ type: CardTypeEnum.manuals, resource: textbooksData });
-      listToReturn.push({ type: CardTypeEnum.book_mark, resource: homeSignets });
+    if (
+      !isTextbooksEmpty() &&
+      !isExternalResourcesEmpty() &&
+      !isHomeSignetsEmpty()
+    ) {
+      listToReturn.push({
+        type: CardTypeEnum.manuals,
+        resource: textbooksData,
+      });
+      listToReturn.push({
+        type: CardTypeEnum.book_mark,
+        resource: homeSignets,
+      });
       return listToReturn;
     }
     // global case follow the logic of priority of lists (1:textbooks, 2:externalResources, 3:homeSignets)
     // one list is empty
     if (!isTextbooksEmpty()) {
-      listToReturn.push({ type: CardTypeEnum.manuals, resource: textbooksData });
+      listToReturn.push({
+        type: CardTypeEnum.manuals,
+        resource: textbooksData,
+      });
     }
     if (!isExternalResourcesEmpty()) {
-      listToReturn.push({ type: CardTypeEnum.external_resources, resource: externalResourcesData });
+      listToReturn.push({
+        type: CardTypeEnum.external_resources,
+        resource: externalResourcesData,
+      });
     }
     if (!isHomeSignetsEmpty()) {
-      listToReturn.push({ type: CardTypeEnum.book_mark, resource: homeSignets });
+      listToReturn.push({
+        type: CardTypeEnum.book_mark,
+        resource: homeSignets,
+      });
     }
     return listToReturn;
-  }
+  };
 
   const double = () => {
     return resourcesList().length === 1;
-  }
+  };
 
   return (
     <>
