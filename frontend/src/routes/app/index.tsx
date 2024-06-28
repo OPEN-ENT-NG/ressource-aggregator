@@ -165,52 +165,39 @@ export const App = () => {
     externalResourcesData?.length === 0 ?? 0;
 
   const isHomeSignetsEmpty = () => homeSignets?.length === 0 ?? 0;
-
-  // return the type and the resource of the first non favorite list of resources
-  const firstResources = () => {
+ 
+  /*
+    return the type and the resource of resources to displayed 
+    examples:
+    - [] -> case of all lists are empty
+    - [{CardTypeEnum.manuals, textbooksData}] -> case of just one list is not empty
+    - [{CardTypeEnum.manuals, textbooksData}, {CardTypeEnum.book_mark, homeSignets}] -> case of at least two lists are not empty
+  */
+  const resourcesList = () => {
+    const listToReturn = [];
+    // particular case of all lists are not empty
+    if(!isTextbooksEmpty() && !isExternalResourcesEmpty() && !isHomeSignetsEmpty()) {
+      listToReturn.push({ type: CardTypeEnum.manuals, resource: textbooksData });
+      listToReturn.push({ type: CardTypeEnum.book_mark, resource: homeSignets });
+      return listToReturn;
+    }
+    // global case follow the logic of priority of lists (1:textbooks, 2:externalResources, 3:homeSignets)
+    // one list is empty
     if (!isTextbooksEmpty()) {
-      return {
-        type: CardTypeEnum.manuals,
-        resource: textbooksData,
-      };
+      listToReturn.push({ type: CardTypeEnum.manuals, resource: textbooksData });
     }
     if (!isExternalResourcesEmpty()) {
-      // textbooks is empty
-      return {
-        type: CardTypeEnum.external_resources,
-        resource: externalResourcesData,
-      };
+      listToReturn.push({ type: CardTypeEnum.external_resources, resource: externalResourcesData });
     }
     if (!isHomeSignetsEmpty()) {
-      // textbooks and externalResources are empty
-      return {
-        type: CardTypeEnum.book_mark,
-        resource: homeSignets,
-      };
+      listToReturn.push({ type: CardTypeEnum.book_mark, resource: homeSignets });
     }
-    return null;
-  };
+    return listToReturn;
+  }
 
-  // return the type and the resource of the second non favorite list of resources
-  const secondResources = () => {
-    if (
-      !isHomeSignetsEmpty() &&
-      (!isTextbooksEmpty() || !isExternalResourcesEmpty())
-    ) {
-      return { type: CardTypeEnum.book_mark, resource: homeSignets };
-    }
-    if (
-      isHomeSignetsEmpty() &&
-      !isTextbooksEmpty() &&
-      !isExternalResourcesEmpty()
-    ) {
-      return {
-        type: CardTypeEnum.external_resources,
-        resource: externalResourcesData,
-      };
-    }
-    return null;
-  };
+  const double = () => {
+    return resourcesList().length === 1;
+  }
 
   return (
     <>
@@ -241,7 +228,8 @@ export const App = () => {
           />
         </div>
         <div className="med-resources-container">
-          {firstResources() === null ? ( // involve secondResourcesType() === null
+          {resourcesList().length === 0 ? (
+            // empty state
             <div className="empty-state">
               <img
                 src="/mediacentre/public/img/empty-state.png"
@@ -252,42 +240,18 @@ export const App = () => {
                 {t("mediacentre.ressources.empty")}
               </span>
             </div>
-          ) : secondResources() === null ? ( // firstResourcesType() !== null
-            <HomeList
-              resources={firstResources()?.resource ?? null} // firstResources() is not null involve resource can't be null
-              type={firstResources()?.type ?? CardTypeEnum.manuals} // firstResources() is not null
-              setAlertText={setAlertText}
-              setAlertType={setAlertType}
-              handleAddFavorite={handleAddFavorite}
-              handleRemoveFavorite={handleRemoveFavorite}
-              double={true} // we double the number of cards to display because we have only one list
-            />
           ) : (
-            // both not empty
-            <>
-              <div className="med-first-resources-container">
-                <HomeList
-                  resources={firstResources()?.resource ?? null} // firstResources() is not null involve resource can't be null
-                  type={firstResources()?.type ?? CardTypeEnum.manuals} // firstResources() is not null
-                  setAlertText={setAlertText}
-                  setAlertType={setAlertType}
-                  handleAddFavorite={handleAddFavorite}
-                  handleRemoveFavorite={handleRemoveFavorite}
-                  double={false} // we don't double the number of cards to display because we have two lists
-                />
-              </div>
-              <div className="med-second-resources-container">
-                <HomeList
-                  resources={secondResources()?.resource ?? null} // secondResources() is not null involve resource can't be null
-                  type={secondResources()?.type ?? CardTypeEnum.manuals} // secondResources() is not null
-                  setAlertText={setAlertText}
-                  setAlertType={setAlertType}
-                  handleAddFavorite={handleAddFavorite}
-                  handleRemoveFavorite={handleRemoveFavorite}
-                  double={false} // we don't double the number of cards to display because we have two lists
-                />
-              </div>
-            </>
+            resourcesList().map((resource) => (
+              <HomeList
+                resources={resource.resource}
+                type={resource.type}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+                double={double()}
+              />
+            ))
           )}
         </div>
       </div>

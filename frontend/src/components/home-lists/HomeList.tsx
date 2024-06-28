@@ -10,6 +10,8 @@ import { GlobalResource } from "~/model/GlobalResource";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
 
+import "./HomeList.scss";
+
 interface HomeListProps {
   resources:
     | Textbook[]
@@ -53,10 +55,15 @@ export const HomeList: React.FC<HomeListProps> = ({
   };
 
   if (!resources) {
-    return <LoadingScreen />;
+    return (
+      <div className={type===CardTypeEnum.favorites ? "" : "med-double-list"}>
+        <LoadingScreen />
+      </div>
+  );
   }
 
   return (
+    <div className={double || type===CardTypeEnum.favorites ? "" : "med-double-list"}>
     <ListCard
       scrollable={false}
       type={type}
@@ -115,5 +122,6 @@ export const HomeList: React.FC<HomeListProps> = ({
       redirectLink={redirectLink()}
       homeDouble={double}
     />
+    </div>
   );
 };

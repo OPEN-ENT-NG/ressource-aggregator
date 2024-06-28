@@ -45,20 +45,6 @@ main {
       flex-direction: column;
     }
 
-    .med-first-resources-container {
-      width: 50%;
-      @media (max-width: $lg) {
-        width: 100%;
-      }
-    }
-
-    .med-second-resources-container {
-      width: 50%;
-      @media (max-width: $lg) {
-        width: 100%;
-      }
-    }
-
     .empty-state {
       display: flex;
       flex-direction: column;
