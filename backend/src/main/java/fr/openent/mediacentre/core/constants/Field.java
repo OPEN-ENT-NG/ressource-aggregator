@@ -15,6 +15,7 @@ public class Field {
 
     // Mongo fields
     public static final String MONGO_SET = "$set";
+    public static final String MONGO_IN = "$in";
     public static final String MONGO_MATCH = "$match";
     public static final String MONGO_GROUP = "$group";
     public static final String MONGO_MAX = "$max";
@@ -41,13 +42,16 @@ public class Field {
     public static final String TEXTBOOKS_RESULT = "textbooks_Result";
     public static final String STRUCTURE_UAI = "structure_uai";
     public static final String STRUCTURE_NAME = "structure_name";
+    public static final String STRUCTUREIDS = "structureIds";
     public static final String LINK = "link";
     public static final String FAVORITE = "favorite";
     public static final String FAVORITEID = "favoriteId";
     public static final String RESOURCES = "resources";
     public static final String MESSAGE = "message";
     public static final String GLOBAL_COLLECTION = "mediacentre.global";
-    public static final String PINNED_COLLECTION = "mediacentre.pinned";
+    public static final String PINS_COLLECTION = "mediacentre.pins";
+    public static final String IDSTRUCTURE = "idStructure";
+    public static final String IDPIN = "idPin";
     public static final String TITLE = "title";
     public static final String PLAIN_TEXT = "plain_text";
     public static final String DATE = "date";
