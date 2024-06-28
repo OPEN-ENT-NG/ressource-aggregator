@@ -34,7 +34,7 @@ main {
     }
   }
 
-  .med-non-fav-container {
+  .med-resources-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -45,14 +45,14 @@ main {
       flex-direction: column;
     }
 
-    .med-first-non-fav-container {
+    .med-first-resources-container {
       width: 50%;
       @media (max-width: $lg) {
         width: 100%;
       }
     }
 
-    .med-second-non-fav-container {
+    .med-second-resources-container {
       width: 50%;
       @media (max-width: $lg) {
         width: 100%;

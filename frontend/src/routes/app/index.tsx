@@ -167,7 +167,7 @@ export const App = () => {
   const isHomeSignetsEmpty = () => homeSignets?.length === 0 ?? 0;
 
   // return the type and the resource of the first non favorite list of resources
-  const firstNonFav = () => {
+  const firstResources = () => {
     if (!isTextbooksEmpty()) {
       return {
         type: CardTypeEnum.manuals,
@@ -192,7 +192,7 @@ export const App = () => {
   };
 
   // return the type and the resource of the second non favorite list of resources
-  const secondNonFav = () => {
+  const secondResources = () => {
     if (
       !isHomeSignetsEmpty() &&
       (!isTextbooksEmpty() || !isExternalResourcesEmpty())
@@ -240,8 +240,8 @@ export const App = () => {
             handleRemoveFavorite={handleRemoveFavorite}
           />
         </div>
-        <div className="med-non-fav-container">
-          {firstNonFav() === null ? ( // involve secondNonFavType() === null
+        <div className="med-resources-container">
+          {firstResources() === null ? ( // involve secondResourcesType() === null
             <div className="empty-state">
               <img
                 src="/mediacentre/public/img/empty-state.png"
@@ -252,10 +252,10 @@ export const App = () => {
                 {t("mediacentre.ressources.empty")}
               </span>
             </div>
-          ) : secondNonFav() === null ? ( // firstNonFavType() !== null
+          ) : secondResources() === null ? ( // firstResourcesType() !== null
             <HomeList
-              resources={firstNonFav()?.resource ?? null} // firstNonFav() is not null involve resource can't be null
-              type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
+              resources={firstResources()?.resource ?? null} // firstResources() is not null involve resource can't be null
+              type={firstResources()?.type ?? CardTypeEnum.manuals} // firstResources() is not null
               setAlertText={setAlertText}
               setAlertType={setAlertType}
               handleAddFavorite={handleAddFavorite}
@@ -265,10 +265,10 @@ export const App = () => {
           ) : (
             // both not empty
             <>
-              <div className="med-first-non-fav-container">
+              <div className="med-first-resources-container">
                 <HomeList
-                  resources={firstNonFav()?.resource ?? null} // firstNonFav() is not null involve resource can't be null
-                  type={firstNonFav()?.type ?? CardTypeEnum.manuals} // firstNonFav() is not null
+                  resources={firstResources()?.resource ?? null} // firstResources() is not null involve resource can't be null
+                  type={firstResources()?.type ?? CardTypeEnum.manuals} // firstResources() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
                   handleAddFavorite={handleAddFavorite}
@@ -276,10 +276,10 @@ export const App = () => {
                   double={false} // we don't double the number of cards to display because we have two lists
                 />
               </div>
-              <div className="med-second-non-fav-container">
+              <div className="med-second-resources-container">
                 <HomeList
-                  resources={secondNonFav()?.resource ?? null} // secondNonFav() is not null involve resource can't be null
-                  type={secondNonFav()?.type ?? CardTypeEnum.manuals} // secondNonFav() is not null
+                  resources={secondResources()?.resource ?? null} // secondResources() is not null involve resource can't be null
+                  type={secondResources()?.type ?? CardTypeEnum.manuals} // secondResources() is not null
                   setAlertText={setAlertText}
                   setAlertType={setAlertType}
                   handleAddFavorite={handleAddFavorite}
