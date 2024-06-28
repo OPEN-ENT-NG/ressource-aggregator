@@ -43,7 +43,7 @@ export const App = () => {
   const { textbooks, setTextbooks, refetchTextbooks } = useTextbook();
   const { externalResources, setExternalResources } = useExternalResource();
   const { globals } = useGlobal();
-  const [externalsResourcesData, setExternalResourcesData] = useState<
+  const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
   const [textbooksData, setTextbooksData] = useState<Textbook[] | null>(null);
@@ -68,11 +68,11 @@ export const App = () => {
     // Avoid unnecessary state update to prevent infinite loop
     if (
       JSON.stringify(newExternalResourcesData) !==
-      JSON.stringify(externalsResourcesData)
+      JSON.stringify(externalResourcesData)
     ) {
       setExternalResourcesData(newExternalResourcesData);
     }
-  }, [user, externalResources, globals, externalsResourcesData]);
+  }, [user, externalResources, globals, externalResourcesData]);
 
   const fetchFavoriteTextbook: () => Textbook[] | null = useCallback(() => {
     if (textbooks && favorites) {
@@ -144,9 +144,9 @@ export const App = () => {
       );
       setTextbooks(newTextbooks);
     }
-    if (externalsResourcesData) {
+    if (externalResourcesData) {
       let newExternalResources: ExternalResource[] | GlobalResource[] = [
-        ...externalsResourcesData,
+        ...externalResourcesData,
       ];
       newExternalResources = newExternalResources.map(
         (externalResource: ExternalResource | GlobalResource) =>
@@ -162,7 +162,7 @@ export const App = () => {
   const isTextbooksEmpty = () => textbooksData?.length === 0 ?? 0;
 
   const isExternalResourcesEmpty = () =>
-    externalsResourcesData?.length === 0 ?? 0;
+    externalResourcesData?.length === 0 ?? 0;
 
   const isHomeSignetsEmpty = () => homeSignets?.length === 0 ?? 0;
 
@@ -178,7 +178,7 @@ export const App = () => {
       // textbooks is empty
       return {
         type: CardTypeEnum.external_resources,
-        resource: externalsResourcesData,
+        resource: externalResourcesData,
       };
     }
     if (!isHomeSignetsEmpty()) {
@@ -206,7 +206,7 @@ export const App = () => {
     ) {
       return {
         type: CardTypeEnum.external_resources,
-        resource: externalsResourcesData,
+        resource: externalResourcesData,
       };
     }
     return null;

@@ -38,7 +38,7 @@ export const TextbookPage: React.FC = () => {
   const navigate = useNavigate();
 
   const flattenResources = (resources: SearchResultData) => [
-    ...resources.externals_resources,
+    ...resources.external_resources,
   ];
 
   const redistributeResources = (
@@ -46,18 +46,18 @@ export const TextbookPage: React.FC = () => {
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
-      externals_resources: [],
+      external_resources: [],
       signets: [],
       moodle: [],
     };
 
     items.forEach((item) => {
       if (
-        allResourcesDisplayed.externals_resources.some(
+        allResourcesDisplayed.external_resources.some(
           (resource: Textbook | ExternalResource) => resource.id === item.id,
         )
       ) {
-        newVisibleResources.externals_resources.push(item as Textbook);
+        newVisibleResources.external_resources.push(item as Textbook);
       }
     });
 
@@ -71,7 +71,7 @@ export const TextbookPage: React.FC = () => {
     setVisibleResources((prevVisibleResources) => {
       if (!prevVisibleResources) {
         prevVisibleResources = {
-          externals_resources: [],
+          external_resources: [],
           signets: [],
           moodle: [],
         };
@@ -201,11 +201,11 @@ export const TextbookPage: React.FC = () => {
             ) : (
               <>
                 {visibleResources &&
-                visibleResources.externals_resources.length !== 0 ? (
+                visibleResources.external_resources.length !== 0 ? (
                   <ListCard
                     scrollable={false}
                     type={CardTypeEnum.search}
-                    components={[...visibleResources.externals_resources].map(
+                    components={[...visibleResources.external_resources].map(
                       (searchResource: any) => (
                         <SearchCard
                           searchResource={searchResource}

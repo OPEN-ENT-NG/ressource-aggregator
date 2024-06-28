@@ -6,5 +6,5 @@ import { Textbook } from "./Textbook.model";
 export interface SearchResultData {
   signets: Signet[];
   moodle: Moodle[];
-  externals_resources: ExternalResource[] | Textbook[];
+  external_resources: ExternalResource[] | Textbook[];
 }

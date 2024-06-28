@@ -41,7 +41,7 @@ export const ResourcePage: React.FC = () => {
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
-  const [externalsResourcesData, setExternalResourcesData] = useState<
+  const [externalResourcesData, setExternalResourcesData] = useState<
     ExternalResource[] | GlobalResource[] | null
   >(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
@@ -89,7 +89,7 @@ export const ResourcePage: React.FC = () => {
   ]);
 
   const flattenResources = (resources: SearchResultData) => [
-    ...resources.externals_resources,
+    ...resources.external_resources,
   ];
 
   const redistributeResources = (
@@ -97,18 +97,18 @@ export const ResourcePage: React.FC = () => {
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
-      externals_resources: [],
+      external_resources: [],
       signets: [],
       moodle: [],
     };
 
     items.forEach((item) => {
       if (
-        allResourcesDisplayed.externals_resources.some(
+        allResourcesDisplayed.external_resources.some(
           (resource: ExternalResource) => resource.id === item.id,
         )
       ) {
-        newVisibleResources.externals_resources.push(item as ExternalResource);
+        newVisibleResources.external_resources.push(item as ExternalResource);
       }
     });
 
@@ -122,7 +122,7 @@ export const ResourcePage: React.FC = () => {
     setVisibleResources((prevVisibleResources) => {
       if (!prevVisibleResources) {
         prevVisibleResources = {
-          externals_resources: [],
+          external_resources: [],
           signets: [],
           moodle: [],
         };
@@ -179,14 +179,14 @@ export const ResourcePage: React.FC = () => {
   }, [allResourcesDisplayed, loadMoreResources]);
 
   useEffect(() => {
-    if (externalsResourcesData) {
+    if (externalResourcesData) {
       setAllResourcesDisplayed({
         signets: [],
         moodle: [],
-        externals_resources: externalsResourcesData,
+        external_resources: externalResourcesData,
       });
     }
-  }, [externalsResourcesData]);
+  }, [externalResourcesData]);
 
   return (
     <>
@@ -220,7 +220,7 @@ export const ResourcePage: React.FC = () => {
           </div>
           <div className="med-search-page-content-body">
             <FilterResourceLayout
-              resources={externalsResourcesData}
+              resources={externalResourcesData}
               disciplines={disciplines}
               levels={levels}
               setAllResourcesDisplayed={setAllResourcesDisplayed}
@@ -231,11 +231,11 @@ export const ResourcePage: React.FC = () => {
             ) : (
               <>
                 {visibleResources &&
-                visibleResources.externals_resources.length !== 0 ? (
+                visibleResources.external_resources.length !== 0 ? (
                   <ListCard
                     scrollable={false}
                     type={CardTypeEnum.search}
-                    components={[...visibleResources.externals_resources].map(
+                    components={[...visibleResources.external_resources].map(
                       (searchResource: any) => (
                         <SearchCard
                           searchResource={searchResource}

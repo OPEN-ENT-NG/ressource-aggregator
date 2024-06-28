@@ -98,7 +98,7 @@ export const useSearch = (query: any) => {
       const searchResult: SearchResultCategory[] = data;
       const searchResultData: SearchResultData = {
         signets: [],
-        externals_resources: [],
+        external_resources: [],
         moodle: [],
       };
       const signets = searchResult?.find(
@@ -114,7 +114,7 @@ export const useSearch = (query: any) => {
       );
       searchResultData.signets = signets?.data?.resources ?? [];
       searchResultData.moodle = moodle?.data?.resources ?? [];
-      searchResultData.externals_resources = gar?.data?.resources ?? [];
+      searchResultData.external_resources = gar?.data?.resources ?? [];
       selectDisciplines(
         searchResultData.signets,
         searchResultData.moodle,

@@ -58,7 +58,7 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
     }
     const filteredResources: SearchResultData = {
       signets: [],
-      externals_resources: resources,
+      external_resources: resources,
       moodle: [],
     };
     const filterByCriteria = (
@@ -82,8 +82,8 @@ export const FilterResourceLayout: React.FC<FilterResourceLayoutProps> = ({
         return matchesDiscipline || matchesLevel || matchesType;
       });
     };
-    filteredResources.externals_resources = filterByCriteria(
-      filteredResources.externals_resources,
+    filteredResources.external_resources = filterByCriteria(
+      filteredResources.external_resources,
       selectedCheckboxesDiscipline,
       selectedCheckboxesLevels,
       selectedCheckboxesTypes,

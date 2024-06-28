@@ -54,7 +54,7 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
     }
     const filteredResources: SearchResultData = {
       signets: [],
-      externals_resources: resources,
+      external_resources: resources,
       moodle: [],
     };
     const filterByCriteria = (
@@ -74,8 +74,8 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
         return matchesDiscipline || matchesLevel;
       });
     };
-    filteredResources.externals_resources = filterByCriteria(
-      filteredResources.externals_resources,
+    filteredResources.external_resources = filterByCriteria(
+      filteredResources.external_resources,
       selectedCheckboxesDiscipline,
       selectedCheckboxesLevels,
     );
@@ -102,7 +102,7 @@ export const FilterTextbookLayout: React.FC<FilterTextbookLayoutProps> = ({
     setAllResourcesDisplayed({
       signets: [],
       moodle: [],
-      externals_resources: resources,
+      external_resources: resources,
     });
   }, [resources, disciplines, levels, setAllResourcesDisplayed]);
 

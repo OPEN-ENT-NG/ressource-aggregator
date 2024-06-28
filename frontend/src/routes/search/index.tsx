@@ -57,7 +57,7 @@ export const Search: React.FC = () => {
   const navigate = useNavigate();
 
   const flattenResources = (resources: SearchResultData) => [
-    ...resources.externals_resources,
+    ...resources.external_resources,
     ...resources.signets,
     ...resources.moodle,
   ];
@@ -67,18 +67,18 @@ export const Search: React.FC = () => {
     allResourcesDisplayed: SearchResultData,
   ): SearchResultData => {
     const newVisibleResources: SearchResultData = {
-      externals_resources: [],
+      external_resources: [],
       signets: [],
       moodle: [],
     };
 
     items.forEach((item) => {
       if (
-        allResourcesDisplayed.externals_resources.some(
+        allResourcesDisplayed.external_resources.some(
           (resource: ExternalResource) => resource.id === item.id,
         )
       ) {
-        newVisibleResources.externals_resources.push(item as ExternalResource);
+        newVisibleResources.external_resources.push(item as ExternalResource);
       } else if (
         allResourcesDisplayed.signets.some(
           (resource: Signet) => resource.id === item.id,
@@ -104,7 +104,7 @@ export const Search: React.FC = () => {
     setVisibleResources((prevVisibleResources) => {
       if (!prevVisibleResources) {
         prevVisibleResources = {
-          externals_resources: [],
+          external_resources: [],
           signets: [],
           moodle: [],
         };
@@ -205,7 +205,7 @@ export const Search: React.FC = () => {
             ) : (
               <>
                 {visibleResources &&
-                (visibleResources.externals_resources.length !== 0 ||
+                (visibleResources.external_resources.length !== 0 ||
                   visibleResources.signets.length !== 0 ||
                   visibleResources.moodle.length !== 0) ? (
                   <>
@@ -213,7 +213,7 @@ export const Search: React.FC = () => {
                       scrollable={false}
                       type={CardTypeEnum.search}
                       components={[
-                        ...visibleResources.externals_resources,
+                        ...visibleResources.external_resources,
                         ...visibleResources.signets,
                         ...visibleResources.moodle,
                       ].map((searchResource: any) => (

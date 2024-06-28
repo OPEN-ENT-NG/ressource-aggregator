@@ -26,7 +26,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
 }) => {
   const { t } = useTranslation();
   const [checkboxResource, setCheckboxResource] = useState<boolean>(
-    resources ? resources?.externals_resources?.length > 0 ?? false : false,
+    resources ? resources?.external_resources?.length > 0 ?? false : false,
   );
   const [checkboxSignet, setCheckboxSignet] = useState<boolean>(
     resources ? resources?.signets?.length > 0 ?? false : false,
@@ -71,11 +71,11 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     }
     const filteredResources: SearchResultData = {
       signets: [],
-      externals_resources: [],
+      external_resources: [],
       moodle: [],
     };
     if (checkboxResource) {
-      filteredResources.externals_resources = resources?.externals_resources;
+      filteredResources.external_resources = resources?.external_resources;
     }
     if (checkboxSignet) {
       filteredResources.signets = resources?.signets;
@@ -106,8 +106,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       });
     };
     if (isGarSelected()) {
-      filteredResources.externals_resources = filterByCriteria(
-        filteredResources.externals_resources,
+      filteredResources.external_resources = filterByCriteria(
+        filteredResources.external_resources,
         selectedCheckboxesDiscipline,
         selectedCheckboxesLevels,
         selectedCheckboxesTypes,
@@ -149,7 +149,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   const resourcesNotEmpty = useCallback(() => {
     return (
       resources &&
-      (resources?.externals_resources?.length > 0 ||
+      (resources?.external_resources?.length > 0 ||
         resources?.signets?.length > 0 ||
         resources?.moodle?.length > 0)
     );
@@ -159,7 +159,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     if (!resources) {
       return;
     }
-    if (resources?.externals_resources?.length > 0) {
+    if (resources?.external_resources?.length > 0) {
       setCheckboxResource(true);
     } else {
       setCheckboxResource(false);
