@@ -1,30 +1,48 @@
 package fr.openent.mediacentre.service.impl;
 
 import fr.openent.mediacentre.core.constants.Field;
-import fr.openent.mediacentre.helper.FutureHelper;
-import fr.openent.mediacentre.helper.IModelHelper;
+import fr.openent.mediacentre.helper.*;
+import fr.openent.mediacentre.model.GarResource;
+import fr.openent.mediacentre.model.IModel;
 import fr.openent.mediacentre.model.PinResource;
+import fr.openent.mediacentre.model.SignetResource;
 import fr.openent.mediacentre.service.PinsService;
+import fr.openent.mediacentre.service.SignetService;
+import fr.openent.mediacentre.source.Source;
 import fr.wseduc.mongodb.MongoDb;
+import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Promise;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.mongodb.MongoDbResult;
+import org.entcore.common.user.UserInfos;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 
 public class DefaultPinsService implements PinsService {
     private final String collection;
     private final MongoDb mongo;
     private static final Logger log = LoggerFactory.getLogger(DefaultPinsService.class);
+    private final SignetService signetService;
 
+    private final TextBookHelper textBookHelper = new TextBookHelper();
+    private final SearchHelper searchHelper = new SearchHelper();
+    private final SignetHelper signetHelper = new SignetHelper();
 
     public DefaultPinsService(String collection) {
         this.collection = collection;
+        this.signetService = new DefaultSignetService();
         this.mongo = MongoDb.getInstance();
     }
 
@@ -131,13 +149,72 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
-    public Future<JsonArray> getData(List<PinResource> resources) {
+    public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources) {
         Promise<JsonArray> promise = Promise.promise();
         JsonArray data = new JsonArray();
-        for (PinResource resource: resources) {
-            data.add(resource.toJson()); // transform pinned to real resource
-        }
-        promise.complete(data);
+        JsonArray searchSources = new JsonArray().add("fr.openent.mediacentre.source.Moodle");
+        JsonObject searchQuery = new JsonObject().put("query", ".*");
+        textBookHelper.getTextBooks(user.getUserId())
+            .compose(resourcesGar -> {
+                data.addAll(resourcesGar);  // get GAR
+                return Future.succeededFuture();
+            })
+            .compose(resourcesGar -> searchHelper.search("PLAIN_TEXT", sources, searchSources, searchQuery, user))
+            .compose(resourcesSearch -> {
+                data.addAll(resourcesSearch); // get Moodle
+                return Future.succeededFuture();
+            })
+            .compose(resourcesSearch -> signetHelper.signetRetrieve(user))
+            .compose(resourcesSignet -> {
+                data.addAll(resourcesSignet); // get Public signet
+                return Future.succeededFuture();
+            })
+            .compose(resourcesSignet -> {
+                final List<String> groupsAndUserIds = new ArrayList<>();
+                groupsAndUserIds.add(user.getUserId());
+                if (user.getGroupsIds() != null) {
+                    groupsAndUserIds.addAll(user.getGroupsIds());
+                }
+                Promise<JsonArray> promiseResponse = Promise.promise();
+                Handler<Either<String, JsonArray>> handler = event -> {
+                    if (event.isLeft()) {
+                        log.error("[Mediacentre@DefaultPinnedService::getData] Failed to retrieve signet resources : ", event.left().getValue());
+                        promiseResponse.fail(event.left().getValue());
+                        return;
+                    }
+                    data.addAll(event.right().getValue()); // get my signet
+                    promiseResponse.complete(event.right().getValue());
+                };
+                signetService.list(groupsAndUserIds, user, handler);
+                return promiseResponse.future();
+            })
+            .compose(resourcesMySignets -> {
+                List<JsonObject> enrichedResources = resources.stream()
+                    .map(resource -> {
+                        JsonObject enrichedResource = IModelHelper.toJson(resource, false, true);
+
+                        return data.stream()
+                            .map(JsonObject.class::cast) // Convert Object to JsonObject
+                            .filter(dataItem -> dataItem.getString("id").equals(enrichedResource.getString("id")) && dataItem.getString("source").equals(enrichedResource.getString("source")))
+                            .findFirst()
+                            .map(dataItem -> {
+                                dataItem.fieldNames().forEach(fieldName -> {
+                                    enrichedResource.put(fieldName, dataItem.getValue(fieldName));
+                                });
+                                return enrichedResource;
+                            })
+                            .orElse(null);
+                    })
+                    .filter(Objects::nonNull) // Remove null entries
+                    .collect(Collectors.toList());
+
+                return Future.succeededFuture(new JsonArray(enrichedResources));
+            })
+            .onSuccess(promise::complete)
+            .onFailure(error -> {
+                log.error("[Mediacentre@DefaultPinnedService::getData] Failed to retrieve signet resources : ", error.getMessage());
+                promise.fail(error.getMessage());
+            });
         return promise.future();
     }
 }

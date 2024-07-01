@@ -1,9 +1,13 @@
 package fr.openent.mediacentre.service;
 
 import fr.openent.mediacentre.model.PinResource;
+import fr.openent.mediacentre.source.Source;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.User;
+import org.entcore.common.user.UserInfos;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +44,6 @@ public interface PinsService {
     public Future<Void> checkPinDontExist(JsonObject resource, String idStructure);
     public Future<JsonObject> checkChildPin(List<String> structures, JsonObject resource);
     public Future<Void> checkParentPin(String idStructure, JsonObject resource);
-    public Future<JsonArray> getData(List<PinResource> resources);
+    public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources);
 
 }

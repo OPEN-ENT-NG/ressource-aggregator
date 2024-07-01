@@ -2,6 +2,9 @@ package fr.openent.mediacentre.helper;
 
 import fr.openent.mediacentre.service.SignetService;
 import fr.openent.mediacentre.service.impl.DefaultSignetService;
+import io.vertx.core.Future;
+import io.vertx.core.Promise;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -37,5 +40,23 @@ public class SignetHelper {
                     }
                 }
         );
+    }
+
+    public Future<JsonArray> signetRetrieve(UserInfos user) {
+        Promise<JsonArray> promise = Promise.promise();
+        signetService.getPublicSignet(user.getLastName() + " " + user.getFirstName(),
+                event -> {
+                    if (event.isLeft()) {
+                        log.error(  "[SignetHelper@signetRetrieve] Failed to retrieve source resources.",
+                                event.left().getValue()
+                        );
+                        promise.fail(event.left().getValue().toString());
+                    } else {
+                        promise.complete(new JsonArray().add(event.right().getValue()));
+                    }
+                    promise.complete();
+                }
+        );
+        return promise.future();
     }
 }

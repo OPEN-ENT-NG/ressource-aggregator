@@ -3,8 +3,9 @@ package fr.openent.mediacentre.helper;
 import fr.openent.mediacentre.enums.SearchState;
 import fr.openent.mediacentre.source.Source;
 import fr.wseduc.webutils.Either;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
@@ -66,5 +67,28 @@ public class SearchHelper extends ControllerHelper {
         }
         else
             answer.answerFailure(new JsonObject().put("error", "Unknown search type").put("status", "ko").encode());
+    }
+
+    public Future<JsonArray> search(String state,
+                                    List<Source> sources,
+                                    JsonArray expectedSources,
+                                    JsonObject data,
+                                    UserInfos user
+    ) {
+        Promise<JsonArray> promise = Promise.promise();
+        Handler<Either<JsonObject, JsonObject>> handler = event -> {
+            if (event.isLeft()) {
+                log.error("[SearchController@search] Failed to retrieve source resources.", event.left().getValue());
+                promise.fail(event.left().getValue().toString());
+            } else {
+                promise.complete(new JsonArray().add(event.right().getValue()));
+            }
+            promise.complete();
+        };
+        if (SearchState.PLAIN_TEXT.toString().equals(state) || SearchState.ADVANCED.toString().equals(state)){
+            searchRetrieve(user, expectedSources, sources, data, state, handler);
+        }
+
+        return promise.future();
     }
 }
