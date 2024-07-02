@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { Checkbox, Dropdown } from "@edifice-ui/react";
+import { Checkbox } from "@edifice-ui/react";
 import "./FilterLayout.scss";
-import { useTranslation } from "react-i18next";
 
-import { SearchResultData } from "~/model/SearchResultData.model";
+import { Resource } from "~/model/Resource.model";
+import { useResourceListInfo } from "~/hooks/useResourceListInfo";
+import { MutliCheckbox } from "../multi-checkbox/MultiCheckbox";
 
 interface FilterLayoutProps {
-  resources: SearchResultData | null;
+  resources: Resource[];
   disciplines: string[];
   levels: string[];
   types: string[];
   setAllResourcesDisplayed: React.Dispatch<
-    React.SetStateAction<SearchResultData | null>
+    React.SetStateAction<Resource[]>
   >;
-  refetchSearch: () => void;
 }
 
 export const FilterLayout: React.FC<FilterLayoutProps> = ({
@@ -24,16 +24,22 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   types,
   setAllResourcesDisplayed,
 }) => {
-  const { t } = useTranslation();
-  const [checkboxResource, setCheckboxResource] = useState<boolean>(
-    resources ? resources?.external_resources?.length > 0 ?? false : false,
-  );
-  const [checkboxSignet, setCheckboxSignet] = useState<boolean>(
-    resources ? resources?.signets?.length > 0 ?? false : false,
-  );
-  const [checkboxMoodle, setCheckboxMoodle] = useState<boolean>(
-    resources ? resources?.moodle?.length > 0 ?? false : false,
-  );
+  const {
+    textbooks,
+    externalResources,
+    signets,
+    moodle,
+    containTextbook,
+    containExternalResource,
+    containSignet,
+    containMoodle,
+  } = useResourceListInfo(resources);
+
+  // these useStates are used to store the state of the checkboxes
+  const [checkboxTextbook, setCheckboxTextbook] = useState<boolean>(containTextbook);
+  const [checkboxExternalResource, setCheckboxExternalResource] = useState<boolean>(containExternalResource);
+  const [checkboxSignet, setCheckboxSignet] = useState<boolean>(containSignet);
+  const [checkboxMoodle, setCheckboxMoodle] = useState<boolean>(containMoodle);
   const [selectedCheckboxesLevels, setSelectedCheckboxesLevels] =
     useState<string[]>(levels);
   const [selectedCheckboxesTypes, setSelectedCheckboxesTypes] =
@@ -41,57 +47,29 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   const [selectedCheckboxesDiscipline, setSelectedCheckboxesDiscipline] =
     useState<string[]>(disciplines);
 
-  const handleMultiCheckbox = (
-    selectedCheckboxes: string[],
-    setSelectedCheckboxes: React.Dispatch<React.SetStateAction<string[]>>,
-    value: string,
-  ) => {
-    let checked = [...selectedCheckboxes];
-    const findIndex = checked.findIndex(
-      (item: string): boolean => item === value,
-    );
-
-    if (!selectedCheckboxes.includes(value)) {
-      checked = [...selectedCheckboxes, value];
-    } else {
-      checked = selectedCheckboxes.filter(
-        (_, index: number) => index !== findIndex,
-      );
-    }
-    setSelectedCheckboxes(checked);
-  };
-
-  const isGarSelected = useCallback(() => {
-    return checkboxResource;
-  }, [checkboxResource]);
 
   const fetchFilters = useCallback(() => {
     if (!resources) {
       return;
     }
-    const filteredResources: SearchResultData = {
-      signets: [],
-      external_resources: [],
-      moodle: [],
-    };
-    if (checkboxResource) {
-      filteredResources.external_resources = resources?.external_resources;
+
+    let filteredResources = []
+    // first part we filter by single check (textbook, external resource, signet, moodle)
+    if (checkboxTextbook) {
+      filteredResources.push(...textbooks);
+    }
+    if (checkboxExternalResource) {
+      filteredResources.push(...externalResources);
     }
     if (checkboxSignet) {
-      filteredResources.signets = resources?.signets;
+      filteredResources.push(...signets);
     }
     if (checkboxMoodle) {
-      filteredResources.moodle = resources?.moodle;
+      filteredResources.push(...moodle);
     }
-
-    const filterByCriteria = (
-      resourceArray: any[],
-      disciplines: string[],
-      levels: string[],
-      types: string[],
-    ) => {
-      return resourceArray.filter((resource) => {
-        const matchesDiscipline =
+    // second part we filter by multiple check (discipline, level, type)
+    filteredResources = filteredResources.filter((resource) => {
+      const matchesDiscipline =
           resource?.disciplines &&
           disciplines.some((discipline) =>
             resource.disciplines.includes(discipline),
@@ -103,81 +81,45 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
           resource?.document_types &&
           types.some((type) => resource.document_types.includes(type));
         return matchesDiscipline || matchesLevel || matchesType;
-      });
-    };
-    if (isGarSelected()) {
-      filteredResources.external_resources = filterByCriteria(
-        filteredResources.external_resources,
-        selectedCheckboxesDiscipline,
-        selectedCheckboxesLevels,
-        selectedCheckboxesTypes,
-      );
-      filteredResources.signets = filterByCriteria(
-        filteredResources.signets,
-        selectedCheckboxesDiscipline,
-        selectedCheckboxesLevels,
-        selectedCheckboxesTypes,
-      );
-      filteredResources.moodle = filterByCriteria(
-        filteredResources.moodle,
-        selectedCheckboxesDiscipline,
-        selectedCheckboxesLevels,
-        selectedCheckboxesTypes,
-      );
-    }
+    })
+
     setAllResourcesDisplayed(filteredResources);
   }, [
     checkboxSignet,
     checkboxMoodle,
-    checkboxResource,
+    checkboxExternalResource,
+    checkboxTextbook,
     selectedCheckboxesDiscipline,
     selectedCheckboxesLevels,
     selectedCheckboxesTypes,
-    isGarSelected,
     resources,
     setAllResourcesDisplayed,
   ]);
 
-  const checkboxOptionsDiscipline = disciplines ?? [];
-  const checkboxOptionsLevels = levels ?? [];
-  const checkboxOptionsType = types ?? [];
-
-  const countLevels = selectedCheckboxesLevels.length;
-  const countDisciplines = selectedCheckboxesDiscipline.length;
-  const countType = selectedCheckboxesTypes.length;
-
-  const resourcesNotEmpty = useCallback(() => {
-    return (
-      resources &&
-      (resources?.external_resources?.length > 0 ||
-        resources?.signets?.length > 0 ||
-        resources?.moodle?.length > 0)
-    );
-  }, [resources]);
-
-  useEffect(() => {
-    if (!resources) {
-      return;
-    }
-    if (resources?.external_resources?.length > 0) {
-      setCheckboxResource(true);
-    } else {
-      setCheckboxResource(false);
-    }
-    if (resources?.signets?.length > 0) {
-      setCheckboxSignet(true);
-    } else {
-      setCheckboxSignet(false);
-    }
-    if (resources?.moodle?.length > 0) {
-      setCheckboxMoodle(true);
-    } else {
-      setCheckboxMoodle(false);
-    }
-    setSelectedCheckboxesDiscipline(disciplines);
-    setSelectedCheckboxesLevels(levels);
-    setSelectedCheckboxesTypes(types);
-  }, [resources, disciplines, levels, types, resourcesNotEmpty]);
+  // useEffect(() => {
+  //   if (!resources) {
+  //     return;
+  //   }
+  //   setCheckboxExternalResource()
+  //   if (resources?.external_resources?.length > 0) {
+  //     setCheckboxResource(true);
+  //   } else {
+  //     setCheckboxResource(false);
+  //   }
+  //   if (resources?.signets?.length > 0) {
+  //     setCheckboxSignet(true);
+  //   } else {
+  //     setCheckboxSignet(false);
+  //   }
+  //   if (resources?.moodle?.length > 0) {
+  //     setCheckboxMoodle(true);
+  //   } else {
+  //     setCheckboxMoodle(false);
+  //   }
+  //   setSelectedCheckboxesDiscipline(disciplines);
+  //   setSelectedCheckboxesLevels(levels);
+  //   setSelectedCheckboxesTypes(types);
+  // }, [resources, disciplines, levels, types, resourcesNotEmpty]);
 
   useEffect(() => {
     fetchFilters();
@@ -186,130 +128,36 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   return (
     <>
       <div className="med-filters">
-        <Checkbox
-          checked={checkboxResource}
-          label="Ressources"
-          onChange={() => setCheckboxResource((isChecked) => !isChecked)}
+      <Checkbox
+          checked={checkboxTextbook}
+          label="Manuels"
+          onChange={() => setCheckboxTextbook((isChecked) => !isChecked)}
         />
-        {isGarSelected() && (
-          <>
-            <Dropdown>
-              <Dropdown.Trigger label="Type" badgeContent={countType || 0} />
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  key={"all-selected-type"}
-                  onClick={() =>
-                    selectedCheckboxesTypes.length ===
-                    checkboxOptionsType.length
-                      ? setSelectedCheckboxesTypes([])
-                      : setSelectedCheckboxesTypes(checkboxOptionsType)
-                  }
-                >
-                  {selectedCheckboxesTypes.length === checkboxOptionsType.length
-                    ? t("mediacentre.combo.deselectAll")
-                    : t("mediacentre.combo.selectAll")}
-                </Dropdown.Item>
-                <Dropdown.Separator />
-                {checkboxOptionsType.map((option, index) => (
-                  <Dropdown.CheckboxItem
-                    key={index}
-                    value={option}
-                    model={selectedCheckboxesTypes}
-                    onChange={() =>
-                      handleMultiCheckbox(
-                        selectedCheckboxesTypes,
-                        setSelectedCheckboxesTypes,
-                        option,
-                      )
-                    }
-                  >
-                    {option}
-                  </Dropdown.CheckboxItem>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown>
-              <Dropdown.Trigger
-                label="Niveaux"
-                badgeContent={countLevels || 0}
-              />
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  key={"all-selected-levels"}
-                  onClick={() =>
-                    selectedCheckboxesLevels.length ===
-                    checkboxOptionsLevels.length
-                      ? setSelectedCheckboxesLevels([])
-                      : setSelectedCheckboxesLevels(checkboxOptionsLevels)
-                  }
-                >
-                  {selectedCheckboxesLevels.length ===
-                  checkboxOptionsLevels.length
-                    ? t("mediacentre.combo.deselectAll")
-                    : t("mediacentre.combo.selectAll")}
-                </Dropdown.Item>
-                <Dropdown.Separator />
-                {checkboxOptionsLevels.map((option, index) => (
-                  <Dropdown.CheckboxItem
-                    key={index}
-                    value={option}
-                    model={selectedCheckboxesLevels}
-                    onChange={() =>
-                      handleMultiCheckbox(
-                        selectedCheckboxesLevels,
-                        setSelectedCheckboxesLevels,
-                        option,
-                      )
-                    }
-                  >
-                    {option}
-                  </Dropdown.CheckboxItem>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown>
-              <Dropdown.Trigger
-                label="Disciplines"
-                badgeContent={countDisciplines || 0}
-              />
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  key={"all-selected-disciplines"}
-                  onClick={() =>
-                    selectedCheckboxesDiscipline.length ===
-                    checkboxOptionsDiscipline.length
-                      ? setSelectedCheckboxesDiscipline([])
-                      : setSelectedCheckboxesDiscipline(
-                          checkboxOptionsDiscipline,
-                        )
-                  }
-                >
-                  {selectedCheckboxesDiscipline.length ===
-                  checkboxOptionsDiscipline.length
-                    ? t("mediacentre.combo.deselectAll")
-                    : t("mediacentre.combo.selectAll")}
-                </Dropdown.Item>
-                <Dropdown.Separator />
-                {checkboxOptionsDiscipline.map((option, index) => (
-                  <Dropdown.CheckboxItem
-                    key={index}
-                    value={option}
-                    model={selectedCheckboxesDiscipline}
-                    onChange={() =>
-                      handleMultiCheckbox(
-                        selectedCheckboxesDiscipline,
-                        setSelectedCheckboxesDiscipline,
-                        option,
-                      )
-                    }
-                  >
-                    {option}
-                  </Dropdown.CheckboxItem>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </>
+        <Checkbox
+          checked={checkboxExternalResource}
+          label="Ressources"
+          onChange={() => setCheckboxExternalResource((isChecked) => !isChecked)}
+        />
+        {checkboxExternalResource && (
+          <MutliCheckbox
+            selectedCheckboxes={selectedCheckboxesTypes}
+            setSelectedCheckboxes={setSelectedCheckboxesTypes}
+            checkboxOptions={types ?? []}
+            label="Type"
+          />
         )}
+        <MutliCheckbox
+          selectedCheckboxes={selectedCheckboxesLevels}
+          setSelectedCheckboxes={setSelectedCheckboxesLevels}
+          checkboxOptions={levels ?? []}
+          label="Niveaux"
+        />
+        <MutliCheckbox
+          selectedCheckboxes={selectedCheckboxesDiscipline}
+          setSelectedCheckboxes={setSelectedCheckboxesDiscipline}
+          checkboxOptions={disciplines ?? []}
+          label="Disciplines"
+        />
         <Checkbox
           checked={checkboxSignet}
           label="Signets"

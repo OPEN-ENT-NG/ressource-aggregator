@@ -2,17 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useFavorite } from "./useFavorite";
 import { useSearchQuery } from "../services/api/search.service";
-import { ExternalResource } from "~/model/ExternalResource.model";
-import { Moodle } from "~/model/Moodle.model";
 import { SearchResultCategory } from "~/model/SearchResultCategory";
-import { SearchResultData } from "~/model/SearchResultData.model";
-import { Signet } from "~/model/Signet.model";
-import { Textbook } from "~/model/Textbook.model";
+import { Resource } from "~/model/Resource.model";
 
 export const useSearch = (query: any) => {
-  const [allResources, setAllResources] = useState<SearchResultData | null>(
-    null,
-  );
+  const [allResources, setAllResources] = useState<Resource[]>([]);
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
@@ -25,82 +19,57 @@ export const useSearch = (query: any) => {
   } = useSearchQuery(query);
 
   const selectDisciplines = (
-    signets: Signet[],
-    moodle: Moodle[],
-    gar: ExternalResource[],
+    resources: Resource[],
   ) => {
     const disciplines: string[] = [];
 
-    const addDisciplines = (items: { disciplines?: string[] }[]) => {
-      items.forEach((item) => {
-        item.disciplines?.forEach((discipline) => {
-          if (!disciplines.includes(discipline)) {
-            disciplines.push(discipline);
-          }
-        });
+    resources.forEach((item) => {
+      item.disciplines?.forEach((discipline) => {
+        if (!disciplines.includes(discipline)) {
+          disciplines.push(discipline);
+        }
       });
-    };
+    });
 
-    addDisciplines(signets);
-    addDisciplines(moodle);
-    addDisciplines(gar);
     setDisciplines(disciplines);
   };
 
   const selectLevels = (
-    signets: Signet[],
-    moodle: Moodle[],
-    gar: ExternalResource[],
+    resources: Resource[],
   ) => {
     const levels: string[] = [];
 
-    const addLevels = (items: { levels?: string[] }[]) => {
-      items.forEach((item) => {
-        item.levels?.forEach((level) => {
-          if (!levels.includes(level)) {
-            levels.push(level);
-          }
-        });
+    resources.forEach((item) => {
+      item.levels?.forEach((level) => {
+        if (!levels.includes(level)) {
+          levels.push(level);
+        }
       });
-    };
-
-    addLevels(signets);
-    addLevels(moodle);
-    addLevels(gar);
+    }
+    );
     setLevels(levels);
   };
 
-  const selectTypes = (
-    signets: Signet[],
-    moodle: Moodle[],
-    gar: Textbook[],
-  ) => {
+  const selectTypes = (resources: Resource[]) => {
     const types: string[] = [];
 
-    const addTypes = (items: { document_types?: string[] }[]) => {
-      items.forEach((item) => {
+    
+    resources.forEach((item) => {
+      if (item.source === "fr.openent.mediacentre.source.GAR" && !item.is_textbook) {    // add only external resources types
         item.document_types?.forEach((type) => {
           if (!types.includes(type)) {
             types.push(type);
           }
-        });
-      });
-    };
+        }
+      );}});
 
-    addTypes(signets);
-    addTypes(moodle);
-    addTypes(gar);
     setTypes(types);
   };
 
   useEffect(() => {
     if (!isLoading) {
       const searchResult: SearchResultCategory[] = data;
-      const searchResultData: SearchResultData = {
-        signets: [],
-        external_resources: [],
-        moodle: [],
-      };
+
       const signets = searchResult?.find(
         (result) =>
           result?.data?.source == "fr.openent.mediacentre.source.Signet",
@@ -112,25 +81,11 @@ export const useSearch = (query: any) => {
       const gar = searchResult?.find(
         (result) => result?.data?.source == "fr.openent.mediacentre.source.GAR",
       );
-      searchResultData.signets = signets?.data?.resources ?? [];
-      searchResultData.moodle = moodle?.data?.resources ?? [];
-      searchResultData.external_resources = gar?.data?.resources ?? [];
-      selectDisciplines(
-        searchResultData.signets,
-        searchResultData.moodle,
-        gar?.data?.resources ?? [],
-      );
-      selectLevels(
-        searchResultData.signets,
-        searchResultData.moodle,
-        gar?.data?.resources ?? [],
-      );
-      selectTypes(
-        searchResultData.signets,
-        searchResultData.moodle,
-        gar?.data?.resources ?? [],
-      );
-      setAllResources(searchResultData);
+      setAllResources([...signets?.data?.resources, ...moodle?.data?.resources, ...gar?.data?.resources])
+      
+      selectDisciplines(allResources);
+      selectLevels(allResources);
+      selectTypes(allResources);
     }
   }, [data, isLoading, favorites]);
 

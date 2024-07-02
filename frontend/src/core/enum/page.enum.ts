@@ -1,0 +1,7 @@
+export enum PageEnum {
+    TEXTBOOK = "TEXTBOOK",
+    EXTERNAL_RESOURCE = "EXTERNAL_RESOURCE",
+    SIGNET = "SIGNET",
+    FAVORITE = "FAVORITE",
+    SEARCH = "SEARCH"
+}

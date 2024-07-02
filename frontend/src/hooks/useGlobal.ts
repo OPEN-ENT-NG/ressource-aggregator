@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { GlobalResource } from "./../model/GlobalResource.model";
+import { GlobalResource } from "~/model/GlobalResource.model";
 import { useGetGlobalQuery } from "./../services/api/global.service";
 import { useFavorite } from "./useFavorite";
 import { Favorite } from "~/model/Favorite.model";
@@ -11,7 +11,6 @@ export const useGlobal = () => {
   const { favorites } = useFavorite();
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [levels, setLevels] = useState<string[]>([]);
-  const [types, setTypes] = useState<string[]>([]);
 
   const selectDisciplines = (globalResources: GlobalResource[]) => {
     const disciplines: string[] = [];
@@ -45,22 +44,6 @@ export const useGlobal = () => {
     setLevels(levels);
   };
 
-  const selectTypes = (globalResources: GlobalResource[]) => {
-    const types: string[] = [];
-
-    globalResources?.forEach((globalResource: GlobalResource) => {
-      if (globalResource.document_types) {
-        globalResource.document_types.forEach((type: string) => {
-          if (!types.includes(type)) {
-            types.push(type);
-          }
-        });
-      }
-    });
-
-    setTypes(types);
-  };
-
   useEffect(() => {
     if (favorites && global) {
       let globalData: GlobalResource[] = global?.data?.global ?? [];
@@ -70,10 +53,9 @@ export const useGlobal = () => {
       }));
       selectDisciplines(globalData);
       selectLevels(globalData);
-      selectTypes(globalData);
       setGlobals(globalData);
     }
   }, [global, favorites]);
 
-  return { globals, setGlobals, disciplines, levels, types, error, isLoading };
+  return { globals, setGlobals, disciplines, levels, error, isLoading };
 };
