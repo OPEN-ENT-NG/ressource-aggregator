@@ -1,5 +1,6 @@
 package fr.openent.mediacentre.helper;
 
+import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.enums.SearchState;
 import fr.openent.mediacentre.source.Source;
 import fr.wseduc.webutils.Either;
@@ -84,7 +85,7 @@ public class SearchHelper extends ControllerHelper {
                 if (event.isLeft()) {
                     log.error("[SearchController@search] Failed to retrieve source resources :" + event.left().getValue());
                 } else {
-                    JsonArray resources = event.right().getValue().getJsonArray("resources");
+                    JsonArray resources = event.right().getValue().getJsonArray(Field.RESOURCES);
                     if (resources != null && !resources.isEmpty())
                         combinedResults.addAll(resources);
                 }

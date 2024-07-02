@@ -1,5 +1,6 @@
 package fr.openent.mediacentre.helper;
 
+import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.service.SignetService;
 import fr.openent.mediacentre.service.impl.DefaultSignetService;
 import io.vertx.core.Future;
@@ -52,7 +53,7 @@ public class SignetHelper {
                         );
                         promise.fail(event.left().getValue().toString());
                     } else {
-                        promise.complete(event.right().getValue().getJsonArray("resources"));
+                        promise.complete(event.right().getValue().getJsonArray(Field.RESOURCES));
                     }
                 }
         );

@@ -67,7 +67,7 @@ public class DefaultPinsService implements PinsService {
     public Future<List<PinResource>> list(String idStructure) {
         Promise<List<PinResource>> promise = Promise.promise();
         JsonObject query = new JsonObject()
-            .put("$or", new JsonArray()
+            .put(Field.MONGO_OR, new JsonArray()
                 .add(new JsonObject().put(Field.STRUCTURE_OWNER, idStructure))
                 .add(new JsonObject().put(Field.STRUCTURES_CHILDREN, idStructure))
             );
