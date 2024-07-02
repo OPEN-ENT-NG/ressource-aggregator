@@ -52,10 +52,14 @@ public class DefaultPinsService implements PinsService {
             promise.fail("Missing required fields id or source");
             return promise.future();
         }
+        if (!resource.containsKey(Field.PINNED_TITLE) || !resource.containsKey(Field.PINNED_DESCRIPTION)) {
+            promise.fail("Missing required fields pinned_title or pinned_description");
+            return promise.future();
+        }
         resource.put(Field.STRUCTURE_OWNER, idStructure);
         resource.put(Field.STRUCTURES_CHILDREN, new JsonArray(structures));
         PinResource pinned = new PinResource(resource);
-        String errorMessage = "[Mediacentre@DefaultPinnedService::create] Failed to create pinned resource : ";
+        String errorMessage = "[Mediacentre@DefaultPinsService::create] Failed to create pinned resource : ";
         mongo.insert(collection, pinned.toJson(), MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise, errorMessage)));
         return promise.future();
     }
@@ -69,7 +73,7 @@ public class DefaultPinsService implements PinsService {
             );
         mongo.find(collection, query, MongoDbResult.validResultsHandler(result -> {
             if (result.isLeft()) {
-                log.error("[Mediacentre@DefaultPinnedService::list] Can't find pinned resources : ", result.left().getValue());
+                log.error("[Mediacentre@DefaultPinsService::list] Can't find pinned resources : ", result.left().getValue());
                 promise.fail(result.left().getValue());
                 return;
             }
@@ -89,10 +93,10 @@ public class DefaultPinsService implements PinsService {
         Promise<Optional<PinResource>> promise = Promise.promise();
         JsonObject query = new JsonObject().put(Field._ID, idPin);
         JsonObject resourceUpdated = new JsonObject(); // update only title and description
-        if (resource.containsKey(Field.TITLE) && !resource.getString(Field.TITLE).isEmpty())
-            resourceUpdated.put(Field.TITLE, resource.getString(Field.TITLE));
-        if (resource.containsKey(Field.DESCRIPTION) && !resource.getString(Field.DESCRIPTION).isEmpty())
-            resourceUpdated.put(Field.DESCRIPTION, resource.getString(Field.DESCRIPTION));
+        if (resource.containsKey(Field.PINNED_TITLE) && !resource.getString(Field.PINNED_TITLE).isEmpty())
+            resourceUpdated.put(Field.PINNED_TITLE, resource.getString(Field.PINNED_TITLE));
+        if (resource.containsKey(Field.PINNED_DESCRIPTION) && !resource.getString(Field.PINNED_DESCRIPTION).isEmpty())
+            resourceUpdated.put(Field.PINNED_DESCRIPTION, resource.getString(Field.PINNED_DESCRIPTION));
         JsonObject update = new JsonObject().put(Field.MONGO_SET, resourceUpdated);
         mongo.update(collection, query, update, MongoDbResult.validResultHandler(IModelHelper.uniqueResultToIModel(promise, PinResource.class)));
         return promise.future();
@@ -135,7 +139,7 @@ public class DefaultPinsService implements PinsService {
         JsonObject query = new JsonObject()
             .put(Field.ID, resource.getString(Field.ID))
             .put(Field.SOURCE, resource.getString(Field.SOURCE))
-            .put(Field.STRUCTURES_CHILDREN, new JsonObject().put("$in", new JsonArray().add(idStructure)));
+            .put(Field.STRUCTURES_CHILDREN, new JsonObject().put(Field.MONGO_IN, new JsonArray().add(idStructure)));
         mongo.findOne(collection, query, MongoDbResult.validResultHandler(event -> {
             if (event.isRight() && !event.right().getValue().isEmpty()) {
                 promise.fail("Parent have already pinned this resource");
@@ -152,69 +156,93 @@ public class DefaultPinsService implements PinsService {
     public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources) {
         Promise<JsonArray> promise = Promise.promise();
         JsonArray data = new JsonArray();
-        JsonArray searchSources = new JsonArray().add("fr.openent.mediacentre.source.Moodle");
-        JsonObject searchQuery = new JsonObject().put("query", ".*");
+        JsonArray searchSources = new JsonArray().add(Field.SOURCE_MOODLE).add(Field.SOURCE_GAR);
+        JsonObject searchQuery = new JsonObject().put(Field.QUERY, ".*");
         textBookHelper.getTextBooks(user.getUserId())
+            .recover(error -> {
+                log.error("Error while retrieving GAR resources: " + error.getMessage());
+                return Future.succeededFuture(new JsonArray());
+            })
             .compose(resourcesGar -> {
-                data.addAll(resourcesGar);  // get GAR
-                return Future.succeededFuture();
-            })
-            .compose(resourcesGar -> searchHelper.search("PLAIN_TEXT", sources, searchSources, searchQuery, user))
-            .compose(resourcesSearch -> {
-                data.addAll(resourcesSearch); // get Moodle
-                return Future.succeededFuture();
-            })
-            .compose(resourcesSearch -> signetHelper.signetRetrieve(user))
-            .compose(resourcesSignet -> {
-                data.addAll(resourcesSignet); // get Public signet
-                return Future.succeededFuture();
-            })
-            .compose(resourcesSignet -> {
-                final List<String> groupsAndUserIds = new ArrayList<>();
-                groupsAndUserIds.add(user.getUserId());
-                if (user.getGroupsIds() != null) {
-                    groupsAndUserIds.addAll(user.getGroupsIds());
+                if (resourcesGar != null && !resourcesGar.isEmpty()) {
+                    data.addAll(resourcesGar);  // get GAR
                 }
-                Promise<JsonArray> promiseResponse = Promise.promise();
-                Handler<Either<String, JsonArray>> handler = event -> {
-                    if (event.isLeft()) {
-                        log.error("[Mediacentre@DefaultPinnedService::getData] Failed to retrieve signet resources : ", event.left().getValue());
-                        promiseResponse.fail(event.left().getValue());
-                        return;
-                    }
-                    data.addAll(event.right().getValue()); // get my signet
-                    promiseResponse.complete(event.right().getValue());
-                };
-                signetService.list(groupsAndUserIds, user, handler);
-                return promiseResponse.future();
+                return searchHelper.search("PLAIN_TEXT", sources, searchSources, searchQuery, user);
+            })
+            .recover(error -> {
+                log.error("Error while retrieving search resources: " + error.getMessage());
+                return Future.succeededFuture(new JsonArray());
+            })
+            .compose(resourcesSearch -> {
+                if (resourcesSearch != null && !resourcesSearch.isEmpty()) {
+                    data.addAll(resourcesSearch); // get Moodle
+                }
+                return signetHelper.signetRetrieve(user);
+            })
+            .recover(error -> {
+                log.error("Error while retrieving public signet resources: " + error.getMessage());
+                return Future.succeededFuture(new JsonArray());
+            })
+            .compose(resourcesSignet -> {
+                if (resourcesSignet != null && !resourcesSignet.isEmpty()) {
+                    data.addAll(resourcesSignet); // get Public signet
+                }
+                return retrieveMySignets(user);
+            })
+            .recover(error -> {
+                log.error("Error while retrieving my signets resources: " + error.getMessage());
+                return Future.succeededFuture(new JsonArray());
             })
             .compose(resourcesMySignets -> {
-                List<JsonObject> enrichedResources = resources.stream()
-                    .map(resource -> {
-                        JsonObject enrichedResource = IModelHelper.toJson(resource, false, true);
+                if (resourcesMySignets != null && !resourcesMySignets.isEmpty()) {
+                    data.addAll(resourcesMySignets); // get my signet
+                }
+                return enrichResources(resources, data);
+            })
+            .onSuccess(promise::complete)
+            .onFailure(error -> promise.fail(error.getMessage()));
+        return promise.future();
+    }
 
-                        return data.stream()
-                            .map(JsonObject.class::cast) // Convert Object to JsonObject
-                            .filter(dataItem -> dataItem.getString("id").equals(enrichedResource.getString("id")) && dataItem.getString("source").equals(enrichedResource.getString("source")))
+    private Future<JsonArray> retrieveMySignets(UserInfos user) {
+        Promise<JsonArray> promiseResponse = Promise.promise();
+        final List<String> groupsAndUserIds = new ArrayList<>();
+        groupsAndUserIds.add(user.getUserId());
+        if (user.getGroupsIds() != null) {
+            groupsAndUserIds.addAll(user.getGroupsIds());
+        }
+        Handler<Either<String, JsonArray>> handler = event -> {
+            if (event.isLeft()) {
+                log.error("[Mediacentre@DefaultPinsService::retrieveMySignets] Failed to retrieve signet resources : ", event.left().getValue());
+                promiseResponse.fail(event.left().getValue());
+            } else {
+                promiseResponse.complete(event.right().getValue());
+            }
+        };
+        signetService.list(groupsAndUserIds, user, handler);
+        return promiseResponse.future();
+    }
+
+    private Future<JsonArray> enrichResources(List<PinResource> resources, JsonArray data) {
+        Promise<JsonArray> promise = Promise.promise();
+        List<JsonObject> enrichedResources = resources.stream()
+                .map(resource -> {
+                    JsonObject enrichedResource = IModelHelper.toJson(resource, false, true);
+
+                    return data.stream()
+                            .map(JsonObject.class::cast)
+                            .filter(dataItem -> Objects.equals(dataItem.getValue(Field.ID), enrichedResource.getValue(Field.ID)) && Objects.equals(dataItem.getValue(Field.SOURCE), enrichedResource.getValue(Field.SOURCE)))
                             .findFirst()
                             .map(dataItem -> {
-                                dataItem.fieldNames().forEach(fieldName -> {
-                                    enrichedResource.put(fieldName, dataItem.getValue(fieldName));
-                                });
+                                dataItem.fieldNames().forEach(fieldName -> enrichedResource.put(fieldName, dataItem.getValue(fieldName)));
                                 return enrichedResource;
                             })
                             .orElse(null);
-                    })
-                    .filter(Objects::nonNull) // Remove null entries
-                    .collect(Collectors.toList());
+                })
+                .filter(Objects::nonNull) // Remove null entries
+                .collect(Collectors.toList());
 
-                return Future.succeededFuture(new JsonArray(enrichedResources));
-            })
-            .onSuccess(promise::complete)
-            .onFailure(error -> {
-                log.error("[Mediacentre@DefaultPinnedService::getData] Failed to retrieve signet resources : ", error.getMessage());
-                promise.fail(error.getMessage());
-            });
+        promise.complete(new JsonArray(enrichedResources));
         return promise.future();
     }
 }

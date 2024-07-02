@@ -30,6 +30,11 @@ public class Field {
     public static final String USER_ID = "user_id";
     public static final String SOURCE = "source";
     public static final String SOURCES = "sources";
+    public static final String SOURCE_MOODLE = "fr.openent.mediacentre.source.Moodle";
+    public static final String SOURCE_GLOBAL = "fr.openent.mediacentre.source.Global";
+    public static final String SOURCE_GAR = "fr.openent.mediacentre.source.GAR";
+    public static final String SOURCE_SIGNET = "fr.openent.mediacentre.source.Signet";
+    public static final String QUERY = "query";
     public static final String JSONDATA = "jsondata";
     public static final String DATA = "data";
     public static final String STATE = "state";
@@ -64,6 +69,8 @@ public class Field {
     public static final String DESCRIPTION = "description";
     public static final String STRUCTURE_OWNER = "structure_owner";
     public static final String STRUCTURES_CHILDREN = "structures_children";
+    public static final String PINNED_TITLE = "pinned_title";
+    public static final String PINNED_DESCRIPTION = "pinned_description";
     public static final String DOCUMENT_TYPES_GLOBAL = "Global";
     public static final String PROFILES = "profiles";
     public static final String GLOBAL_RESULT = "global_Result";

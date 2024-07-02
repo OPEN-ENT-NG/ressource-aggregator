@@ -12,6 +12,7 @@ import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.user.UserInfos;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SearchHelper extends ControllerHelper {
@@ -76,15 +77,23 @@ public class SearchHelper extends ControllerHelper {
                                     UserInfos user
     ) {
         Promise<JsonArray> promise = Promise.promise();
+        JsonArray combinedResults = new JsonArray();
+        AtomicInteger counter = new AtomicInteger(expectedSources.size());
         Handler<Either<JsonObject, JsonObject>> handler = event -> {
-            if (event.isLeft()) {
-                log.error("[SearchController@search] Failed to retrieve source resources.", event.left().getValue());
-                promise.fail(event.left().getValue().toString());
-            } else {
-                promise.complete(new JsonArray().add(event.right().getValue()));
+            synchronized (counter) {
+                if (event.isLeft()) {
+                    log.error("[SearchController@search] Failed to retrieve source resources :" + event.left().getValue());
+                } else {
+                    JsonArray resources = event.right().getValue().getJsonArray("resources");
+                    if (resources != null && !resources.isEmpty())
+                        combinedResults.addAll(resources);
+                }
+                if (counter.decrementAndGet() == 0) {
+                    promise.complete(combinedResults);
+                }
             }
-            promise.complete();
         };
+
         if (SearchState.PLAIN_TEXT.toString().equals(state) || SearchState.ADVANCED.toString().equals(state)){
             searchRetrieve(user, expectedSources, sources, data, state, handler);
         }

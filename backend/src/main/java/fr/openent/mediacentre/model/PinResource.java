@@ -13,8 +13,8 @@ public class PinResource implements IModel<PinResource> {
     private String source;
     private String structure_owner;
     private List<String> structures_children;
-    private String title;
-    private String description;
+    private String pinned_title;
+    private String pinned_description;
 
     public PinResource() {}
 
@@ -24,8 +24,8 @@ public class PinResource implements IModel<PinResource> {
         this.source = resource.getString(Field.SOURCE, null);
         this.structure_owner = resource.getString(Field.STRUCTURE_OWNER, null);
         this.structures_children = IModelHelper.toStringList(resource.getJsonArray(Field.STRUCTURES_CHILDREN, new JsonArray()));
-        this.title = resource.getString(Field.TITLE, null);
-        this.description = resource.getString(Field.DESCRIPTION, null);
+        this.pinned_title = resource.getString(Field.PINNED_TITLE, null);
+        this.pinned_description = resource.getString(Field.PINNED_DESCRIPTION, null);
     }
 
     public String get_id() {
@@ -73,21 +73,21 @@ public class PinResource implements IModel<PinResource> {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPinnedTitle() {
+        return pinned_title;
     }
 
-    public PinResource setTitle(String title) {
-        this.title = title;
+    public PinResource setPinnedTitle(String title) {
+        this.pinned_title = title;
         return this;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPinnedDescription() {
+        return pinned_description;
     }
 
-    public PinResource setDescription(String description) {
-        this.description = description;
+    public PinResource setPinnedDescription(String description) {
+        this.pinned_description = description;
         return this;
     }
 
@@ -98,7 +98,7 @@ public class PinResource implements IModel<PinResource> {
             .put(Field.SOURCE, this.source)
             .put(Field.STRUCTURE_OWNER, this.structure_owner)
             .put(Field.STRUCTURES_CHILDREN, new JsonArray(this.structures_children))
-            .put(Field.TITLE, this.title)
-            .put(Field.DESCRIPTION, this.description);
+            .put(Field.PINNED_TITLE, this.pinned_title)
+            .put(Field.PINNED_DESCRIPTION, this.pinned_description);
     }
 }

@@ -41,9 +41,33 @@ public interface PinsService {
      * @param resource   pinned resource to update
      */
     public Future<Optional<PinResource>> put(String idStructure, String idPin, JsonObject resource);
-    public Future<Void> checkPinDontExist(JsonObject resource, String idStructure);
-    public Future<JsonObject> checkChildPin(List<String> structures, JsonObject resource);
-    public Future<Void> checkParentPin(String idStructure, JsonObject resource);
-    public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources);
 
+    /**
+     * check if pin already exist
+     * @param resource   pinned resource
+     * @param idStructure structure id
+     */
+    public Future<Void> checkPinDontExist(JsonObject resource, String idStructure);
+
+    /**
+     * check if substructure have pin and delete them
+     * @param structures  list of substructures
+     * @param resource   pinned resource
+     */
+    public Future<JsonObject> checkChildPin(List<String> structures, JsonObject resource);
+
+    /**
+     * check if parent structure have pin
+     * @param idStructure structure id
+     * @param resource   pinned resource
+     */
+    public Future<Void> checkParentPin(String idStructure, JsonObject resource);
+
+    /**
+     * transform pins data to real resources
+     * @param resources list of pins resources
+     * @param user   user connected
+     * @param sources list of sources
+     */
+    public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources);
 }

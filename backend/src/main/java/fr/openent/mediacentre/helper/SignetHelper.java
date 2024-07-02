@@ -47,14 +47,13 @@ public class SignetHelper {
         signetService.getPublicSignet(user.getLastName() + " " + user.getFirstName(),
                 event -> {
                     if (event.isLeft()) {
-                        log.error(  "[SignetHelper@signetRetrieve] Failed to retrieve source resources.",
+                        log.error(  "[SignetHelper@signetRetrieve] Failed to retrieve source resources." +
                                 event.left().getValue()
                         );
                         promise.fail(event.left().getValue().toString());
                     } else {
-                        promise.complete(new JsonArray().add(event.right().getValue()));
+                        promise.complete(event.right().getValue().getJsonArray("resources"));
                     }
-                    promise.complete();
                 }
         );
         return promise.future();
