@@ -61,7 +61,7 @@ public class PinsController extends ControllerHelper {
         String idStructure = request.getParam(Field.IDSTRUCTURE);
         RequestUtils.bodyToJson(request, pinned -> pinsService.checkPinDontExist(pinned, idStructure)
             .compose(v -> pinsService.checkParentPin(idStructure, pinned))
-            .compose(v -> userService.getNSubstructureIds(idStructure))
+            .compose(v -> userService.getSubstructureIds(idStructure))
             .compose(structures -> pinsService.checkChildPin(structures, pinned)
                 .compose(v -> pinsService.create(pinned, idStructure, structures))
                     .onSuccess(result -> Renders.created(request))

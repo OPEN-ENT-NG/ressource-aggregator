@@ -25,16 +25,16 @@ public class DefaultUserService implements UserService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Future<List<String>> getNSubstructureIds(String idStructure) {
+    public Future<List<String>> getSubstructureIds(String idStructure) {
         Promise<List<String>> promise = Promise.promise();
-        getNSubstructureIdsRequest(idStructure)
+        getSubstructureIdsRequest(idStructure)
                 .onFailure(promise::fail)
                 .onSuccess(structureIds -> promise.complete(structureIds
                         .getJsonArray(Field.STRUCTUREIDS, new JsonArray()).getList()));
         return promise.future();
     }
 
-    private Future<JsonObject> getNSubstructureIdsRequest(String idStructure) {
+    private Future<JsonObject> getSubstructureIdsRequest(String idStructure) {
         Promise<JsonObject> promise = Promise.promise();
 
         String query = String.format("MATCH (struct:Structure)-[r:HAS_ATTACHMENT*1..]->(s:Structure)  " +

@@ -12,5 +12,5 @@ public interface UserService {
      * @param idStructure structure id
      * @return return future containing list of structures and substructures Ids
      */
-    Future<List<String>> getNSubstructureIds(String idStructure);
+    Future<List<String>> getSubstructureIds(String idStructure);
 }

@@ -1,6 +1,8 @@
 package fr.openent.mediacentre.service.impl;
 
 import fr.openent.mediacentre.core.constants.Field;
+import fr.openent.mediacentre.core.constants.MongoConstant;
+import fr.openent.mediacentre.core.constants.SourceConstant;
 import fr.openent.mediacentre.helper.*;
 import fr.openent.mediacentre.model.GarResource;
 import fr.openent.mediacentre.model.IModel;
@@ -67,7 +69,7 @@ public class DefaultPinsService implements PinsService {
     public Future<List<PinResource>> list(String idStructure) {
         Promise<List<PinResource>> promise = Promise.promise();
         JsonObject query = new JsonObject()
-            .put(Field.MONGO_OR, new JsonArray()
+            .put(MongoConstant.MONGO_OR, new JsonArray()
                 .add(new JsonObject().put(Field.STRUCTURE_OWNER, idStructure))
                 .add(new JsonObject().put(Field.STRUCTURES_CHILDREN, idStructure))
             );
@@ -97,7 +99,7 @@ public class DefaultPinsService implements PinsService {
             resourceUpdated.put(Field.PINNED_TITLE, resource.getString(Field.PINNED_TITLE));
         if (resource.containsKey(Field.PINNED_DESCRIPTION) && !resource.getString(Field.PINNED_DESCRIPTION).isEmpty())
             resourceUpdated.put(Field.PINNED_DESCRIPTION, resource.getString(Field.PINNED_DESCRIPTION));
-        JsonObject update = new JsonObject().put(Field.MONGO_SET, resourceUpdated);
+        JsonObject update = new JsonObject().put(MongoConstant.MONGO_SET, resourceUpdated);
         mongo.update(collection, query, update, MongoDbResult.validResultHandler(IModelHelper.uniqueResultToIModel(promise, PinResource.class)));
         return promise.future();
     }
@@ -127,7 +129,7 @@ public class DefaultPinsService implements PinsService {
         JsonObject query = new JsonObject()
                 .put(Field.ID, resource.getString(Field.ID))
                 .put(Field.SOURCE, resource.getString(Field.SOURCE))
-                .put(Field.STRUCTURE_OWNER, new JsonObject().put(Field.MONGO_IN, new JsonArray(structures)));
+                .put(Field.STRUCTURE_OWNER, new JsonObject().put(MongoConstant.MONGO_IN, new JsonArray(structures)));
 
         mongo.delete(collection, query, MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise)));
 
@@ -139,7 +141,7 @@ public class DefaultPinsService implements PinsService {
         JsonObject query = new JsonObject()
             .put(Field.ID, resource.getString(Field.ID))
             .put(Field.SOURCE, resource.getString(Field.SOURCE))
-            .put(Field.STRUCTURES_CHILDREN, new JsonObject().put(Field.MONGO_IN, new JsonArray().add(idStructure)));
+            .put(Field.STRUCTURES_CHILDREN, new JsonObject().put(MongoConstant.MONGO_IN, new JsonArray().add(idStructure)));
         mongo.findOne(collection, query, MongoDbResult.validResultHandler(event -> {
             if (event.isRight() && !event.right().getValue().isEmpty()) {
                 promise.fail("Parent have already pinned this resource");
@@ -156,7 +158,7 @@ public class DefaultPinsService implements PinsService {
     public Future<JsonArray> getData(List<PinResource> resources, UserInfos user, List<Source> sources) {
         Promise<JsonArray> promise = Promise.promise();
         JsonArray data = new JsonArray();
-        JsonArray searchSources = new JsonArray().add(Field.SOURCE_MOODLE).add(Field.SOURCE_GAR);
+        JsonArray searchSources = new JsonArray().add(SourceConstant.MOODLE).add(SourceConstant.GAR);
         JsonObject searchQuery = new JsonObject().put(Field.QUERY, ".*");
         textBookHelper.getTextBooks(user.getUserId())
             .recover(error -> {

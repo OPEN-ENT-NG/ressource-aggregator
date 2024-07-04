@@ -13,15 +13,6 @@ public class Field {
     public static final String MEDIACENTRE_URL = "/mediacentre";
     public static final String UNIVERSALIS_ARK = "ark:/34885/wr0000001";
 
-    // Mongo fields
-    public static final String MONGO_SET = "$set";
-    public static final String MONGO_IN = "$in";
-    public static final String MONGO_OR = "$or";
-    public static final String MONGO_MATCH = "$match";
-    public static final String MONGO_GROUP = "$group";
-    public static final String MONGO_MAX = "$max";
-    public static final String MONGO_ID = "$id";
-
     // Other fields
     public static final String URL = "url";
     public static final String MEDIACENTREUPDATEFREQUENCY = "mediacentreUpdateFrequency";
@@ -31,10 +22,6 @@ public class Field {
     public static final String USER_ID = "user_id";
     public static final String SOURCE = "source";
     public static final String SOURCES = "sources";
-    public static final String SOURCE_MOODLE = "fr.openent.mediacentre.source.Moodle";
-    public static final String SOURCE_GLOBAL = "fr.openent.mediacentre.source.Global";
-    public static final String SOURCE_GAR = "fr.openent.mediacentre.source.GAR";
-    public static final String SOURCE_SIGNET = "fr.openent.mediacentre.source.Signet";
     public static final String QUERY = "query";
     public static final String JSONDATA = "jsondata";
     public static final String DATA = "data";
