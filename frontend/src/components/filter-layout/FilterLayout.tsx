@@ -50,19 +50,20 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     if (!resources) {
       return;
     }
-    let filteredResources = [];
+    
+    let filteredResources: Resource[] = [];
     // first part we filter by single check (textbook, external resource, signet, moodle)
     if (checkboxTextbook) {
-      filteredResources.push(...textbooks);
+      filteredResources = [...filteredResources, ...textbooks];
     }
     if (checkboxExternalResource) {
-      filteredResources.push(...externalResources);
+      filteredResources = [...filteredResources, ...externalResources]
     }
     if (checkboxSignet) {
-      filteredResources.push(...signets);
+      filteredResources = [...filteredResources, ...signets];
     }
     if (checkboxMoodle) {
-      filteredResources.push(...moodle);
+      filteredResources = [...filteredResources, ...moodle]
     }
     // second part we filter by multiple check (discipline, level, type)
     filteredResources = filteredResources.filter((resource) => {
@@ -128,7 +129,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     levels,
     types,
   ]);
-
+  
   return (
     <>
       <div className="med-filters">

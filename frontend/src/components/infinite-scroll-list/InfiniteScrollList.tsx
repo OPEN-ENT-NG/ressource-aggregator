@@ -32,7 +32,6 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
       allResourcesDisplayed &&
       JSON.stringify(visibleResources) !== JSON.stringify(allResourcesDisplayed)
     ) {
-      console.log(visibleResources);
       const nbVisibleResources = visibleResources.length;
       setVisibleResources((prevVisibleResources) => {
         let previtems = prevVisibleResources;

@@ -32,7 +32,7 @@ export const useExternalResource = () => {
       const garResult = searchResult?.find(
         (result) => result?.data?.source == "fr.openent.mediacentre.source.GAR",
       );
-      const garResources: Resource[] = garResult?.data?.resources;
+      const garResources: Resource[] = garResult?.data?.resources ?? [];
       const externalResourcesData = garResources.filter(
         (resource) => !resource?.is_textbook ?? true,
       ) as ExternalResource[];
