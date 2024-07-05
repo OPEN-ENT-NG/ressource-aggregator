@@ -34,13 +34,16 @@ main {
     }
   }
 
+  .med-resources-container-all {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
   .med-resources-container {
     width: 100%;
     display: flex;
     justify-content: center;
-    @media (min-width: $xl) {
-      width: 70%;
-    }
     @media (max-width: $lg) {
       flex-direction: column;
     }

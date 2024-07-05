@@ -5,6 +5,7 @@ import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
+import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalExplorer } from "~/components/modal-explorer/ModalExplorer";
@@ -267,32 +268,35 @@ export const App = () => {
             handleRemoveFavorite={handleRemoveFavorite}
           />
         </div>
-        <div className="med-resources-container">
-          {resourcesList().length === 0 ? (
-            // empty state
-            <div className="empty-state">
-              <img
-                src="/mediacentre/public/img/empty-state.png"
-                alt="empty-state"
-                className="empty-state-img"
-              />
-              <span className="empty-state-text">
-                {t("mediacentre.ressources.empty")}
-              </span>
-            </div>
-          ) : (
-            resourcesList().map((resource) => (
-              <HomeList
-                resources={resource.resource}
-                type={resource.type}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
-                handleAddFavorite={handleAddFavorite}
-                handleRemoveFavorite={handleRemoveFavorite}
-                double={double()}
-              />
-            ))
-          )}
+        <div className="med-resources-container-all">
+          <PinsCarousel />
+          <div className="med-resources-container">
+            {resourcesList().length === 0 ? (
+              // empty state
+              <div className="empty-state">
+                <img
+                  src="/mediacentre/public/img/empty-state.png"
+                  alt="empty-state"
+                  className="empty-state-img"
+                />
+                <span className="empty-state-text">
+                  {t("mediacentre.ressources.empty")}
+                </span>
+              </div>
+            ) : (
+              resourcesList().map((resource) => (
+                <HomeList
+                  resources={resource.resource}
+                  type={resource.type}
+                  setAlertText={setAlertText}
+                  setAlertType={setAlertType}
+                  handleAddFavorite={handleAddFavorite}
+                  handleRemoveFavorite={handleRemoveFavorite}
+                  double={double()}
+                />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </>
