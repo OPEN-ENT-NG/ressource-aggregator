@@ -42,9 +42,7 @@ export const Search: React.FC = () => {
   );
   const [allResourcesDisplayed, setAllResourcesDisplayed] =
     useState<Resource[]>(allResources); // all resources after the filters
-  const [searchResourcesData, setSearchResourcesData] = useState<Resource[]>(
-    [],
-  );
+  const [searchResourcesData, setSearchResourcesData] = useState<Resource[]>(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   useEffect(() => {

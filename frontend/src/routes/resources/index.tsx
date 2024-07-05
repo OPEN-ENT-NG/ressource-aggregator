@@ -22,12 +22,12 @@ export const ResourcePage: React.FC = () => {
 
   const [externalResourcesData, setExternalResourcesData] = useState<
     Resource[]
-  >([]);
+  >(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[]
-  >([]); // all resources after the filters
+  >(null); // all resources after the filters
 
   useEffect(() => {
     if (!initialLoadDone) {
