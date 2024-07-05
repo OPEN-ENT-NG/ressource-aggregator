@@ -1,7 +1,19 @@
 import React from "react";
 
-interface PinsCarouselCardProps {}
+import { PinResource } from "~/model/PinResource.model";
 
-export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = () => {
-  return <div style={{ backgroundColor: "lightgrey", height: "100%" }} />;
+interface PinsCarouselCardProps {
+  pin: PinResource;
+}
+
+export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({ pin }) => {
+  return (
+    <div
+      style={{
+        backgroundColor: "lightgrey",
+        height: "100%",
+        backgroundImage: pin?.image,
+      }}
+    />
+  );
 };

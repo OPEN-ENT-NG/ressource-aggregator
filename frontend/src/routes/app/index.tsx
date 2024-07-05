@@ -13,6 +13,7 @@ import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useGlobal } from "~/hooks/useGlobal";
+import { usePins } from "~/hooks/usePins";
 import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
 import { ExternalResource } from "~/model/ExternalResource.model";
@@ -46,6 +47,11 @@ export const App = () => {
   const { externalResources, setExternalResources, refetchSearch } =
     useExternalResource();
   const { globals } = useGlobal();
+  const { pins } = usePins(
+    (user?.structures && user.structures.length > 0
+      ? user?.structures[0]
+      : "") ?? "",
+  ); // first structure
   const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
@@ -269,7 +275,7 @@ export const App = () => {
           />
         </div>
         <div className="med-resources-container-all">
-          <PinsCarousel />
+          <PinsCarousel pins={pins} />
           <div className="med-resources-container">
             {resourcesList().length === 0 ? (
               // empty state
