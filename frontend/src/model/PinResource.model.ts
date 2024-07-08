@@ -6,4 +6,5 @@ export interface PinResource {
   source: string;
   structure_owner: string;
   structure_children: string[];
+  image: string;
 } // minimal model for PinResource

@@ -19,9 +19,10 @@ import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
+import { PinResource } from "~/model/PinResource.model";
 
 interface ResourceProps {
-  resource: Signet | Favorite | Textbook | ExternalResource | GlobalResource;
+  resource: Signet | Favorite | Textbook | ExternalResource | GlobalResource | PinResource;
   id: string | number;
   image: string;
   title: string;

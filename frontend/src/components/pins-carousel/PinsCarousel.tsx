@@ -34,7 +34,6 @@ export const PinsCarousel: React.FC<PinsCarouselProps> = ({ pins }) => {
           perPage: 4,
           arrows: pins.length > 4,
           gap: "20px",
-          height: "250px",
           breakpoints: {
             768: {
               perPage: 3,
@@ -53,7 +52,7 @@ export const PinsCarousel: React.FC<PinsCarouselProps> = ({ pins }) => {
       >
         <SplideTrack className="med-splide-track">
           {pins.map((pin, index) => (
-            <SplideSlide key={index}>
+            <SplideSlide key={index} className="">
               <PinsCarouselCard pin={pin} />
             </SplideSlide>
           ))}

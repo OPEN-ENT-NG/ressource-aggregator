@@ -19,6 +19,10 @@
     @media (max-width: $md) {
       padding-bottom: 5rem;
     }
+
+    .splide__slide {
+      padding: 5px; // to see shadow
+    }
   }
 
   .med-carousel-arrow {
