@@ -89,6 +89,8 @@
   "mediacentre.delete": "Supprimer",
   "mediacentre.confirm": "Confirmer",
   "mediacentre.cancel": "Annuler",
+  "mediacentre.pin": "Epingler",
+  "mediacentre.save": "Enregistrer",
   "mediacentre.table.author": "Auteur",
   "mediacentre.table.modified": "Dernière modification",
   "mediacentre.signet.create.button": "Créer un signet",
@@ -185,5 +187,10 @@
 
   "mediacentre.modal.explorer.screen3.alt": "Image écran 3",
   "mediacentre.modal.explorer.screen3.text": "Retrouvez les ressources mises en avant par les documentalistes de votre établissement et votre collectivité !",
+  "mediacentre.pins.modal.create.title": "Epingler une ressource",
+  "mediacentre.pins.modal.edit.title": "Modifier l'épingle",
+  "mediacentre.pins.modal.subtitle": "Veuillez remplir les informations de la ressource à épingler.",
+  "mediacentre.pins.modal.optional": "Optionnel",
+  "mediacentre.pins.modal.remove.pin": "Supprimer l'épingle"
   "mediacentre.pins.carousel.title": "Découvrez ces ressources !"
 }

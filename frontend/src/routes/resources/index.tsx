@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { FilterLayout } from "~/components/filter-layout/FilterLayout";
 import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteScrollList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
+import { EditPins } from "~/components/modals/edit-pins/EditPins";
 import "~/styles/page/search.scss";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useGlobal } from "~/hooks/useGlobal";
@@ -69,6 +70,7 @@ export const ResourcePage: React.FC = () => {
           {alertText}
         </Alert>
       )}
+      <EditPins resource={null} isOpen={true} setIsOpen={() => {}} />
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">
