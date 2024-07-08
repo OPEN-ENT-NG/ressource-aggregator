@@ -11,7 +11,7 @@ import { Resource } from "~/model/Resource.model";
 
 interface InfiniteScrollListProps {
   redirectLink: string;
-  allResourcesDisplayed: Resource[];
+  allResourcesDisplayed: Resource[] | null;
   setAlertText: (alertText: string) => void;
   refetchSearch: () => void;
 }
@@ -25,14 +25,17 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   const loaderRef = useRef(null);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [visibleResources, setVisibleResources] = useState<Resource[]>([]); // resources visible (load more with infinite scroll)
+  const [visibleResources, setVisibleResources] = useState<Resource[] | null>(
+    null,
+  ); // resources visible (load more with infinite scroll)
 
   const loadMoreResources = useCallback(() => {
+    if (!allResourcesDisplayed) return;
     if (
       allResourcesDisplayed &&
       JSON.stringify(visibleResources) !== JSON.stringify(allResourcesDisplayed)
     ) {
-      const nbVisibleResources = visibleResources.length;
+      const nbVisibleResources = visibleResources?.length ?? 0;
       setVisibleResources((prevVisibleResources) => {
         let previtems = prevVisibleResources;
         if (

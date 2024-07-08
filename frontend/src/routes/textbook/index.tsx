@@ -19,10 +19,10 @@ export const TextbookPage: React.FC = () => {
   const [alertText, setAlertText] = useState<string>("");
   const [alertType, setAlertType] = useState<AlertTypes>("success");
   const { textbooks, refetchTextbooks } = useTextbook();
-  const [textbooksData, setTextbooksData] = useState<Resource[]>(null);
+  const [textbooksData, setTextbooksData] = useState<Resource[] | null>(null);
   const { favorites, refetchFavorite } = useFavorite();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
-    Resource[]
+    Resource[] | null
   >(null); // all resources after the filters
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 

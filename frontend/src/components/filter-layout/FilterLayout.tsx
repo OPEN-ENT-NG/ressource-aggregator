@@ -9,8 +9,10 @@ import { Resource } from "~/model/Resource.model";
 import "./FilterLayout.scss";
 
 interface FilterLayoutProps {
-  resources: Resource[];
-  setAllResourcesDisplayed: React.Dispatch<React.SetStateAction<Resource[]>>;
+  resources: Resource[] | null;
+  setAllResourcesDisplayed: React.Dispatch<
+    React.SetStateAction<Resource[] | null>
+  >;
 }
 
 export const FilterLayout: React.FC<FilterLayoutProps> = ({
@@ -50,20 +52,20 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     if (!resources) {
       return;
     }
-    
+
     let filteredResources: Resource[] = [];
     // first part we filter by single check (textbook, external resource, signet, moodle)
     if (checkboxTextbook) {
       filteredResources = [...filteredResources, ...textbooks];
     }
     if (checkboxExternalResource) {
-      filteredResources = [...filteredResources, ...externalResources]
+      filteredResources = [...filteredResources, ...externalResources];
     }
     if (checkboxSignet) {
       filteredResources = [...filteredResources, ...signets];
     }
     if (checkboxMoodle) {
-      filteredResources = [...filteredResources, ...moodle]
+      filteredResources = [...filteredResources, ...moodle];
     }
     // second part we filter by multiple check (discipline, level, type)
     filteredResources = filteredResources.filter((resource) => {
@@ -129,7 +131,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     levels,
     types,
   ]);
-  
+
   return (
     <>
       <div className="med-filters">

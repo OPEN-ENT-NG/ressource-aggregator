@@ -21,12 +21,12 @@ export const ResourcePage: React.FC = () => {
   const { externalResources, refetchSearch } = useExternalResource();
 
   const [externalResourcesData, setExternalResourcesData] = useState<
-    Resource[]
+    Resource[] | null
   >(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
-    Resource[]
+    Resource[] | null
   >(null); // all resources after the filters
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export const ResourcePage: React.FC = () => {
               setAllResourcesDisplayed={setAllResourcesDisplayed}
             />
             <InfiniteScrollList
-              redirectLink="/resource"
+              redirectLink="/resources"
               allResourcesDisplayed={allResourcesDisplayed}
               setAlertText={setAlertText}
               refetchSearch={refetchSearch}

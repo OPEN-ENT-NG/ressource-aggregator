@@ -6,7 +6,7 @@ import { Resource } from "~/model/Resource.model";
 import { SearchResultCategory } from "~/model/SearchResultCategory";
 
 export const useSearch = (query: any) => {
-  const [allResources, setAllResources] = useState<Resource[]>([]);
+  const [allResources, setAllResources] = useState<Resource[] | null>(null);
   const { favorites } = useFavorite();
   const {
     data,

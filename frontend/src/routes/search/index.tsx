@@ -40,12 +40,16 @@ export const Search: React.FC = () => {
   const { allResources, refetchSearch } = useSearch(
     createSearchBody(searchQuery),
   );
-  const [allResourcesDisplayed, setAllResourcesDisplayed] =
-    useState<Resource[]>(allResources); // all resources after the filters
-  const [searchResourcesData, setSearchResourcesData] = useState<Resource[]>(null);
+  const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
+    Resource[] | null
+  >(null); // all resources after the filters
+  const [searchResourcesData, setSearchResourcesData] = useState<
+    Resource[] | null
+  >(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   useEffect(() => {
+    if (!allResources) return;
     if (!initialLoadDone) {
       refetchSearch();
       setInitialLoadDone(true);

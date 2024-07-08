@@ -23,8 +23,8 @@ export const useExternalResource = () => {
   } = useSearchQuery(query);
 
   const [externalResources, setExternalResources] = useState<
-    ExternalResource[]
-  >([]);
+    ExternalResource[] | null
+  >(null);
 
   useEffect(() => {
     if (data) {

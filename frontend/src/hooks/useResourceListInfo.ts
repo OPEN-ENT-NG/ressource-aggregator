@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Resource } from "~/model/Resource.model";
 
 // this kook get all information about a list of resources and it's used in the FilterLayout component
-export const useResourceListInfo = (resources: Resource[]) => {
+export const useResourceListInfo = (resources: Resource[] | null) => {
   const [textbooks, setTextbooks] = useState<Resource[]>([]);
   const [externalResources, setExternalResources] = useState<Resource[]>([]);
   const [moodle, setMoodle] = useState<Resource[]>([]);
@@ -20,6 +20,7 @@ export const useResourceListInfo = (resources: Resource[]) => {
   const [containSignet, setContainSignet] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!resources) return;
     const textbooksTemp: Resource[] = [];
     const externalResourcesTemp: Resource[] = [];
     const moodleTemp: Resource[] = [];
