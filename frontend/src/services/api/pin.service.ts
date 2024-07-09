@@ -23,7 +23,7 @@ export const pinApi = emptySplitApi.injectEndpoints({
       }),
     }),
     getPins: builder.query({
-        query: (idStructure: string) => `structures/${idStructure}/pins`,
+      query: (idStructure: string) => `structures/${idStructure}/pins`,
     }),
   }),
 });
@@ -32,5 +32,5 @@ export const {
   useCreatePinMutation,
   useDeletePinMutation,
   useUpdatePinMutation,
-  useGetPinsQuery,
+  useGetPinsQuery
 } = pinApi;
