@@ -6,6 +6,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import PinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
@@ -15,6 +16,8 @@ import { SearchCardDetails } from "./search-card-details/SearchCardDetails";
 import { SearchCardType } from "./search-card-type/SearchCardType";
 import { SearchCardTypeEnum } from "~/core/enum/search-card-type.enum";
 import { SearchResource } from "~/model/SearchResource.model";
+import { useAlertProvider } from "~/providers/AlertProvider";
+import { useModalProvider } from "~/providers/ModalsProvider";
 import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
@@ -23,21 +26,21 @@ import {
 interface SearchResourceProps {
   searchResource: SearchResource;
   link: string;
-  setAlertText: (arg: string, type: AlertTypes) => void;
-  refetchData: () => void;
+  refetchSearch: () => void;
 }
 
 export const SearchCard: React.FC<SearchResourceProps> = ({
   searchResource,
   link,
-  setAlertText,
-  refetchData,
+  refetchSearch,
 }) => {
   const [newLink, setNewLink] = useState<string>("");
   const { t } = useTranslation();
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const { setModalResource, setIsCreatedOpen } = useModalProvider();
+  const { setAlertText, setAlertType } = useAlertProvider();
 
   const type = (): SearchCardTypeEnum => {
     if (searchResource?.source) {
@@ -61,12 +64,17 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
     }
   };
 
+  const notify = (message: string, type: AlertTypes) => {
+    setAlertText(message);
+    setAlertType(type);
+  };
+
   const copy = () => {
     if (navigator?.clipboard) {
       navigator.clipboard.writeText(
         searchResource?.link ?? searchResource?.url ?? "",
       );
-      setAlertText(t("mediacentre.notification.copy"), "success");
+      notify(t("mediacentre.notification.copy"), "success");
     } else {
       console.error("Clipboard not available");
     }
@@ -95,8 +103,8 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
           resource: searchResource,
         });
       }
-      setAlertText(t("mediacentre.notification.addFavorite"), "success");
-      refetchData();
+      notify(t("mediacentre.notification.addFavorite"), "success");
+      refetchSearch();
     } catch (e) {
       console.error(e);
     }
@@ -121,11 +129,16 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
           source: searchResource?.source,
         });
       }
-      setAlertText(t("mediacentre.notification.removeFavorite"), "success");
-      refetchData();
+      notify(t("mediacentre.notification.removeFavorite"), "success");
+      refetchSearch();
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const pin = () => {
+    setModalResource(searchResource);
+    setIsCreatedOpen(true);
   };
 
   const toggleExpand = () => {
@@ -196,6 +209,9 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
               )}
             </div>
             <div className="med-footer-svg">
+              <Tooltip message={t("mediacentre.card.pin")} placement="top">
+                <PinIcon className="med-pin" onClick={() => pin()} />
+              </Tooltip>
               <Tooltip message={t("mediacentre.card.copy")} placement="top">
                 <ContentCopyIcon className="med-link" onClick={() => copy()} />
               </Tooltip>

@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 
-import { Alert, AlertTypes, useUser } from "@edifice-ui/react";
+import { Alert, useUser } from "@edifice-ui/react";
 import LaptopIcon from "@mui/icons-material/Laptop";
 import { useTranslation } from "react-i18next";
 
 import { FilterLayout } from "~/components/filter-layout/FilterLayout";
 import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteScrollList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
-import { EditPins } from "~/components/modals/edit-pins/EditPins";
 import "~/styles/page/search.scss";
+import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useGlobal } from "~/hooks/useGlobal";
 import { Resource } from "~/model/Resource.model";
+import { useAlertProvider } from "~/providers/AlertProvider";
 
 export const ResourcePage: React.FC = () => {
   const { user } = useUser();
   const { t } = useTranslation();
-  const [alertText, setAlertText] = useState<string>("");
-  const [alertType, setAlertType] = useState<AlertTypes>("success");
+  const { alertType, alertText, setAlertText } = useAlertProvider();
+
   const { globals } = useGlobal();
   const { externalResources, refetchSearch } = useExternalResource();
 
@@ -59,10 +60,7 @@ export const ResourcePage: React.FC = () => {
           autoCloseDelay={3000}
           isDismissible
           isToast
-          onClose={() => {
-            setAlertText("");
-            setAlertType("success");
-          }}
+          onClose={() => setAlertText("")}
           position="top-right"
           type={alertType}
           className="med-alert"
@@ -70,7 +68,7 @@ export const ResourcePage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <EditPins resource={null} isOpen={true} setIsOpen={() => {}} />
+      <CreatePins />
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">
@@ -89,8 +87,7 @@ export const ResourcePage: React.FC = () => {
             <InfiniteScrollList
               redirectLink="/resources"
               allResourcesDisplayed={allResourcesDisplayed}
-              setAlertText={setAlertText}
-              refetchData={refetchSearch}
+              refetchSearch={refetchSearch}
             />
           </div>
         </div>

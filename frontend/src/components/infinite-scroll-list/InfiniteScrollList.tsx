@@ -12,15 +12,13 @@ import { Resource } from "~/model/Resource.model";
 interface InfiniteScrollListProps {
   redirectLink: string;
   allResourcesDisplayed: Resource[] | null;
-  setAlertText: (alertText: string) => void;
-  refetchData: () => void;
+  refetchSearch: () => void;
 }
 
 export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   redirectLink,
   allResourcesDisplayed,
-  setAlertText,
-  refetchData,
+  refetchSearch,
 }) => {
   const loaderRef = useRef(null);
   const navigate = useNavigate();
@@ -37,7 +35,7 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
     ) {
       const nbVisibleResources = visibleResources?.length ?? 0;
       setVisibleResources((prevVisibleResources) => {
-        let previtems = prevVisibleResources;
+        let previtems = prevVisibleResources ?? [];
         if (
           JSON.stringify(prevVisibleResources) !==
           JSON.stringify(allResourcesDisplayed.slice(0, nbVisibleResources))
@@ -102,8 +100,7 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
                   <SearchCard
                     searchResource={searchResource}
                     link={searchResource.link ?? searchResource.url ?? "/"}
-                    setAlertText={setAlertText}
-                    refetchData={refetchData}
+                    refetchSearch={refetchSearch}
                   />
                 ))}
                 redirectLink={() => navigate(redirectLink)}

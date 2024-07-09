@@ -124,6 +124,9 @@
   "mediacentre.error.textbook.retrieval": "Erreur lors de la mise à jour des manuels.",
   "mediacentre.error.signet.retrieval": "Erreur lors de la mise à jour des signets.",
   "mediacentre.error.search.retrieval": "Erreur lors de la mise à jour de la recherche.",
+  "mediacentre.error.pin": "Une erreur est survenue lors de la création de l'épingle",
+  "mediacentre.error.pin.delete": "Une erreur est survenue lors de la supression de l'épingle",
+  "mediacentre.error.pin.edit": "Une erreur est survenue lors de l'édition de l'épingle",
 
   "mediacentre.success.signet.create": "Votre signet a bien été créé !",
   "mediacentre.success.signet.save": "Votre signet a bien été sauvegardé !",
@@ -192,6 +195,10 @@
   "mediacentre.pins.modal.edit.title": "Modifier l'épingle",
   "mediacentre.pins.modal.subtitle": "Veuillez remplir les informations de la ressource à épingler.",
   "mediacentre.pins.modal.optional": "Optionnel",
-  "mediacentre.pins.modal.remove.pin": "Supprimer l'épingle"
+  "mediacentre.pins.modal.remove.pin": "Supprimer l'épingle",
+  "mediacentre.pins.success": "La ressource a bien été épinglée",
+  "mediacentre.pin.delete.success": "La ressource a bien été supprimée",
+  "mediacentre.pin.edit.success": "La ressource a bien été mise à jour",
+  "mediacentre.signets.platform": "Signet de la plateforme",
   "mediacentre.pins.carousel.title": "Découvrez ces ressources !"
 }

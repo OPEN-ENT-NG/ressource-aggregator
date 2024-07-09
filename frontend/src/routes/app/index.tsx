@@ -1,6 +1,6 @@
 import { useState, useEffect, useReducer, useCallback } from "react";
 
-import { Alert, AlertTypes, useUser } from "@edifice-ui/react";
+import { Alert, useUser } from "@edifice-ui/react";
 import { ID } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
@@ -9,6 +9,8 @@ import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalExplorer } from "~/components/modal-explorer/ModalExplorer";
+import { CreatePins } from "~/components/modals/create-pins/CreatePins";
+import { EditPins } from "~/components/modals/edit-pins/EditPins";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
@@ -21,6 +23,7 @@ import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { useAlertProvider } from "~/providers/AlertProvider";
 
 export interface AppProps {
   _id: string;
@@ -37,8 +40,7 @@ export interface AppProps {
 export const App = () => {
   const location = useLocation();
   const { user } = useUser();
-  const [alertText, setAlertText] = useState<string>("");
-  const [alertType, setAlertType] = useState<AlertTypes>("success");
+  const { alertType, alertText, setAlertText } = useAlertProvider();
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const { favorites, setFavorites, refetchFavorite } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
@@ -50,7 +52,7 @@ export const App = () => {
   const { pins } = usePin(
     (user?.structures.length ? user?.structures[0] : "") ?? "",
   ); // first structure
-  const [pinsEmpty, setPinsEmpty] = useState<boolean>(true);
+  const [ pinsEmpty, setPinsEmpty ] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
@@ -266,14 +268,14 @@ export const App = () => {
           {alertText}
         </Alert>
       )}
+      <CreatePins />
+      <EditPins />
       <div className="med-container">
         <div id="pinId">{!pinsEmpty && <PinsCarousel pins={pins} />}</div>
         <div id="favoriteId">
           <HomeList
             resources={favorites}
             type={CardTypeEnum.favorites}
-            setAlertText={setAlertText}
-            setAlertType={setAlertType}
             handleAddFavorite={handleAddFavorite}
             handleRemoveFavorite={handleRemoveFavorite}
             isPinsEmpty={true}
