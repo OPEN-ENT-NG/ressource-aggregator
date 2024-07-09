@@ -32,5 +32,5 @@ export const {
   useCreatePinMutation,
   useDeletePinMutation,
   useUpdatePinMutation,
-  useGetPinsQuery
+  useGetPinsQuery,
 } = pinApi;
