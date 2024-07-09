@@ -1,6 +1,8 @@
-import { Card } from "@edifice-ui/react";
+import { Card, Tooltip } from "@edifice-ui/react";
 import React from "react";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import PushPinIcon from '@mui/icons-material/PushPin';
 
 import { PinResource } from "~/model/PinResource.model";
 import "./PinsCarouselCard.scss";
@@ -24,8 +26,20 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({ pin }) => {
       <img src={pin.image} alt={pin.pinned_title} className="med-pin-image" />
     </Card.Body>
     <Card.Footer>
+      <div className="med-left-footer">
       <AutoAwesomeIcon />
+      <span className="med-text-footer">
       {t("mediacentre.card.offered.by.the.region")}
+      </span>
+      </div>
+      <div className="med-footer-svg">
+        <Tooltip message={t("mediacentre.card.copy")} placement="top">
+          <PushPinIcon className="med-pin" onClick={() => {}} />
+        </Tooltip>
+        <Tooltip message={t("mediacentre.card.copy")} placement="top">
+          <ContentCopyIcon className="med-link" onClick={() => {}} />
+        </Tooltip>
+      </div>
     </Card.Footer>
   </Card>
   );

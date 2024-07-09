@@ -26,6 +26,7 @@ interface HomeListProps {
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string | number) => void;
   double?: boolean;
+  pinsEmpty: boolean;
 }
 
 export const HomeList: React.FC<HomeListProps> = ({
@@ -36,6 +37,7 @@ export const HomeList: React.FC<HomeListProps> = ({
   handleAddFavorite,
   handleRemoveFavorite,
   double,
+  pinsEmpty,
 }) => {
   const { t } = useTranslation();
   const redirectLink = () => {
@@ -125,6 +127,7 @@ export const HomeList: React.FC<HomeListProps> = ({
         )}
         redirectLink={redirectLink()}
         homeDouble={double}
+        pinsEmpty={pinsEmpty && (type===CardTypeEnum.manuals || type===CardTypeEnum.external_resources || type===CardTypeEnum.book_mark)} // we remove 2 components if pins are not empty only for manuals, external resources and bookmarks
       />
     </div>
   );

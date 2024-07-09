@@ -13,7 +13,7 @@
   }
 
   .med-splide-track {
-    margin: 0 6rem;
+    margin: 0 4rem;
     padding-bottom: 3rem;
 
     @media (max-width: $md) {
@@ -30,11 +30,18 @@
     width: 3.5rem;
     color: $med-blue;
     background: none;
-
+    
     &:hover {
       background: $med-light-gray;
     }
   }
+  .splide__arrow--prev {
+    left: 0px;
+  }
+
+  .splide__arrow--next {
+    right: 0px;
+}
 
   .med-pagination {
     margin: 2rem 0 0 0;

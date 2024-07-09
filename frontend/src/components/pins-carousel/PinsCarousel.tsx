@@ -56,57 +56,6 @@ export const PinsCarousel: React.FC<PinsCarouselProps> = ({ pins }) => {
               <PinsCarouselCard pin={pin} />
             </SplideSlide>
           ))}
-          {/* <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide>
-          <SplideSlide>
-            <PinsCarouselCard />
-          </SplideSlide> */}
         </SplideTrack>
 
         <div className="splide__arrows">

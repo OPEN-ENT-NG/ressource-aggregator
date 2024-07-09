@@ -52,11 +52,16 @@ export const App = () => {
       ? user?.structures[0]
       : "") ?? "",
   ); // first structure
+  const [ pinsEmpty, setPinsEmpty ] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
   const [textbooksData, setTextbooksData] = useState<Textbook[] | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setPinsEmpty(!pins || pins.length === 0);
+  }, [pins]);
 
   useEffect(() => {
     let newExternalResourcesData: ExternalResource[] = [];
@@ -275,7 +280,9 @@ export const App = () => {
           />
         </div>
         <div className="med-resources-container-all">
-          <PinsCarousel pins={pins} />
+          {!pinsEmpty && (
+            <PinsCarousel pins={pins} />
+          )}
           <div className="med-resources-container">
             {resourcesList().length === 0 ? (
               // empty state
@@ -299,6 +306,7 @@ export const App = () => {
                   handleAddFavorite={handleAddFavorite}
                   handleRemoveFavorite={handleRemoveFavorite}
                   double={double()}
+                  pinsEmpty={pinsEmpty}
                 />
               ))
             )}
