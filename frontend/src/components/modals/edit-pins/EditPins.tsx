@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   AlertTypes,
@@ -12,25 +12,28 @@ import {
 import { useTranslation } from "react-i18next";
 
 import "../Modal.scss";
-import { PinResource } from "~/model/Pin.model";
+import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
-import {
-  useDeletePinMutation,
-  useUpdatePinMutation,
-} from "~/services/api/pin.service";
+import { useUpdatePinMutation } from "~/services/api/pin.service";
 
-interface EditPinsProps {}
+interface EditPinsProps {
+  refetch: () => void;
+}
 
-export const EditPins: React.FC<EditPinsProps> = () => {
+export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   const { user } = useUser();
   const { t } = useTranslation();
-  const { modalResource, isEditOpen, setIsEditOpen } = useModalProvider();
+  const { modalResource, isEditOpen, setIsEditOpen, setIsDeleteOpen } =
+    useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
-  const [deletePin] = useDeletePinMutation();
   const [updatePin] = useUpdatePinMutation();
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [title, setTitle] = useState<string>(
+    (modalResource as Pin)?.pinned_title ?? "",
+  );
+  const [description, setDescription] = useState<string>(
+    (modalResource as Pin)?.pinned_description ?? "",
+  );
 
   const handleCloseModal = () => {
     setIsEditOpen(false);
@@ -47,26 +50,13 @@ export const EditPins: React.FC<EditPinsProps> = () => {
   };
 
   const onSubmitDelete = async () => {
-    try {
-      const idResource = (modalResource as PinResource)?._id;
-      const idStructure =
-        (user?.structures && user.structures.length > 0
-          ? user?.structures[0]
-          : "") ?? "";
-      await deletePin({ idStructure, idResource });
-      handleCloseModal();
-      resetFields();
-      notify(t("mediacentre.pin.delete.sucess"), "success");
-      // refetch pins
-    } catch (e) {
-      console.error(e);
-      notify(t("mediacentre.error.pin.delete"), "danger");
-    }
+    setIsDeleteOpen(true);
+    handleCloseModal();
   };
 
   const onSubmit = async () => {
     try {
-      const idResource = (modalResource as PinResource)?._id;
+      const idResource = (modalResource as Pin)?._id;
       const idStructure =
         (user?.structures && user.structures.length > 0
           ? user?.structures[0]
@@ -75,15 +65,26 @@ export const EditPins: React.FC<EditPinsProps> = () => {
         pinned_title: title,
         pinned_description: description,
       };
-      await updatePin({ idStructure, idResource, payload });
+      const response = await updatePin({ idStructure, idResource, payload });
+
+      if (response?.error) {
+        notify(t("mediacentre.error.pin"), "danger");
+      }
+
+      refetch();
       handleCloseModal();
       resetFields();
-      notify(t("mediacentre.pin.edit.sucess"), "success");
+      notify(t("mediacentre.pin.edit.success"), "success");
     } catch (e) {
       console.error(e);
       notify(t("mediacentre.error.pin.edit"), "danger");
     }
   };
+
+  useEffect(() => {
+    setTitle((modalResource as Pin)?.pinned_title ?? "");
+    setDescription((modalResource as Pin)?.pinned_description ?? "");
+  }, [modalResource]);
 
   if (!modalResource || !isEditOpen) {
     return null;

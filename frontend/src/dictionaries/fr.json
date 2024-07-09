@@ -155,6 +155,7 @@
   "mediacentre.card.favorite": "Ajouter aux favoris",
   "mediacentre.card.unfavorite": "Retirer des favoris",
   "mediacentre.card.pin": "Epingler",
+  "mediacentre.card.edit.pin": "Modifier",
   "mediacentre.card.copy": "Copier le lien",
   "mediacentre.card.offered.by.the.region": "Offert par la région",
   "mediacentre.sidebar.home": "Accueil",
@@ -196,9 +197,11 @@
   "mediacentre.pins.modal.subtitle": "Veuillez remplir les informations de la ressource à épingler.",
   "mediacentre.pins.modal.optional": "Optionnel",
   "mediacentre.pins.modal.remove.pin": "Supprimer l'épingle",
-  "mediacentre.pins.success": "La ressource a bien été épinglée",
+  "mediacentre.pin.success": "La ressource a bien été épinglée",
   "mediacentre.pin.delete.success": "La ressource a bien été supprimée",
   "mediacentre.pin.edit.success": "La ressource a bien été mise à jour",
   "mediacentre.signets.platform": "Signet de la plateforme",
-  "mediacentre.pins.carousel.title": "Découvrez ces ressources !"
+  "mediacentre.pins.carousel.title": "Découvrez ces ressources !",
+  "mediacentre.pins.modal.delete.title": "Suppression de l'épingle",
+  "mediacentre.pins.modal.delete.subtitle": "Attention, l'épingle sera supprimée définitivement, êtes-vous sûr ?"
 }

@@ -29,6 +29,8 @@ export type ModalProviderContextType = {
   setIsCreatedOpen: Dispatch<SetStateAction<boolean>>;
   isEditOpen: boolean;
   setIsEditOpen: Dispatch<SetStateAction<boolean>>;
+  isDeleteOpen: boolean;
+  setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export interface AlertProviderProviderProps {

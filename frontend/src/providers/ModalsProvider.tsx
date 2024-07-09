@@ -3,6 +3,7 @@ import { FC, createContext, useContext, useMemo, useState } from "react";
 import { ModalProviderContextType, ModalProviderProviderProps } from "./types";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
+import { Pin } from "~/model/Pin.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
@@ -23,10 +24,11 @@ export const useModalProvider = () => {
 
 export const ModalProvider: FC<ModalProviderProviderProps> = ({ children }) => {
   const [modalResource, setModalResource] = useState<
-    Textbook | Signet | ExternalResource | Moodle | SearchResource | null
+    Textbook | Signet | ExternalResource | Moodle | SearchResource | Pin | null
   >(null);
   const [isCreatedOpen, setIsCreatedOpen] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
 
   const value = useMemo<ModalProviderContextType>(
     () => ({
@@ -36,8 +38,10 @@ export const ModalProvider: FC<ModalProviderProviderProps> = ({ children }) => {
       setIsCreatedOpen,
       isEditOpen,
       setIsEditOpen,
+      isDeleteOpen,
+      setIsDeleteOpen,
     }),
-    [modalResource, isCreatedOpen, isEditOpen],
+    [modalResource, isCreatedOpen, isEditOpen, isDeleteOpen],
   );
 
   return (

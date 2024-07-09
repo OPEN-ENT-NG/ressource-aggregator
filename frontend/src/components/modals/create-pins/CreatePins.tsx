@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   AlertTypes,
@@ -16,16 +16,20 @@ import { useModalProvider } from "~/providers/ModalsProvider";
 import { useCreatePinMutation } from "~/services/api/pin.service";
 import "../Modal.scss";
 
-interface CreatePinsProps {}
+interface CreatePinsProps {
+  refetch: () => void;
+}
 
-export const CreatePins: React.FC<CreatePinsProps> = () => {
+export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
   const { user } = useUser();
   const { t } = useTranslation();
   const { modalResource, isCreatedOpen, setIsCreatedOpen } = useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
   const [createPin] = useCreatePinMutation();
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [title, setTitle] = useState<string>(modalResource?.title ?? "");
+  const [description, setDescription] = useState<string>(
+    (modalResource as any)?.description ?? "",
+  );
 
   const handleCloseModal = () => {
     setIsCreatedOpen(false);
@@ -53,16 +57,26 @@ export const CreatePins: React.FC<CreatePinsProps> = () => {
         (user?.structures && user.structures.length > 0
           ? user?.structures[0]
           : "") ?? "";
-      await createPin({ idStructure, payload });
+      const response = await createPin({ idStructure, payload });
+
+      if (response?.error) {
+        notify(t("mediacentre.error.pin"), "danger");
+      }
+
+      refetch();
       handleCloseModal();
       resetFields();
-      notify(t("mediacentre.pin.sucess"), "danger");
-      // refetch pins
+      notify(t("mediacentre.pin.success"), "success");
     } catch (error) {
       notify(t("mediacentre.error.pin"), "danger");
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setTitle(modalResource?.title ?? "");
+    setDescription((modalResource as any)?.description ?? "");
+  }, [modalResource]);
 
   if (!modalResource || !isCreatedOpen) {
     return null;
@@ -110,7 +124,7 @@ export const CreatePins: React.FC<CreatePinsProps> = () => {
                 </span>
               </Label>
               <Input
-                placeholder="Votre titre"
+                placeholder="Description"
                 size="md"
                 type="text"
                 value={description}

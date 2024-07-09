@@ -81,7 +81,7 @@ export const Search: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins />
+      <CreatePins refetch={() => {}} />
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

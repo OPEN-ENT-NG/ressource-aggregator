@@ -9,6 +9,7 @@ import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalExplorer } from "~/components/modal-explorer/ModalExplorer";
+import { ConfirmDelete } from "~/components/modals/confirm-delete/ConfirmDelete";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { EditPins } from "~/components/modals/edit-pins/EditPins";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
@@ -49,10 +50,10 @@ export const App = () => {
   const { externalResources, setExternalResources, refetchSearch } =
     useExternalResource();
   const { globals } = useGlobal();
-  const { pins } = usePin(
+  const { pins, refetchPins } = usePin(
     (user?.structures.length ? user?.structures[0] : "") ?? "",
   ); // first structure
-  const [ pinsEmpty, setPinsEmpty ] = useState<boolean>(true);
+  const [pinsEmpty, setPinsEmpty] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
@@ -268,8 +269,9 @@ export const App = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins />
-      <EditPins />
+      <CreatePins refetch={refetchPins} />
+      <EditPins refetch={refetchPins} />
+      <ConfirmDelete refetch={refetchPins} />
       <div className="med-container">
         <div id="pinId">{!pinsEmpty && <PinsCarousel pins={pins} />}</div>
         <div id="favoriteId">

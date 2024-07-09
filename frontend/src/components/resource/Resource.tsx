@@ -14,6 +14,7 @@ import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource.model";
+import { Pin } from "~/model/Pin.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
@@ -25,7 +26,13 @@ import {
 } from "~/services/api/favorite.service";
 
 interface ResourceProps {
-  resource: Signet | Favorite | Textbook | ExternalResource | GlobalResource;
+  resource:
+    | Signet
+    | Favorite
+    | Textbook
+    | ExternalResource
+    | GlobalResource
+    | Pin;
   id: string | number;
   image: string;
   title: string;
