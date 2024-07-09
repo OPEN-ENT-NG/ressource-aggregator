@@ -277,6 +277,7 @@ export const App = () => {
             setAlertType={setAlertType}
             handleAddFavorite={handleAddFavorite}
             handleRemoveFavorite={handleRemoveFavorite}
+            pinsEmpty={true}
           />
         </div>
         <div className="med-resources-container-all">

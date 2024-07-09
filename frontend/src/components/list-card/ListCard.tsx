@@ -58,7 +58,6 @@ export const ListCard: React.FC<ListCardProps> = ({
   }, []);
 
   const NbComponents = (windowWidth: number) => {
-    console.log(pinsEmpty);
     const nbComponent = NbComponentsListCard[type];
     const double = homeDouble ? 2 : 1;
     if (windowWidth < breakpoints.md) return nbComponent.sm * double;

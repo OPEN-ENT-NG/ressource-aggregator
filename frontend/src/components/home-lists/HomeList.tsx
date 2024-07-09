@@ -127,7 +127,7 @@ export const HomeList: React.FC<HomeListProps> = ({
         )}
         redirectLink={redirectLink()}
         homeDouble={double}
-        pinsEmpty={pinsEmpty && (type===CardTypeEnum.manuals || type===CardTypeEnum.external_resources || type===CardTypeEnum.book_mark)} // we remove 2 components if pins are not empty only for manuals, external resources and bookmarks
+        pinsEmpty={pinsEmpty}
       />
     </div>
   );
