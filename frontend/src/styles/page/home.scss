@@ -38,6 +38,11 @@ main {
     }
 
     #resourcesID {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    #resourcesWithPinsID {
       grid-row: 2;
       grid-column: 1;
     }

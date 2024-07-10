@@ -281,7 +281,10 @@ export const App = () => {
             pinsEmpty={true}
           />
         </div>
-        <div className="med-resources-container" id="resourcesID">
+        <div
+          className="med-resources-container"
+          id={pinsEmpty ? "resourcesID" : "resourcesWithPinsID"}
+        >
           {resourcesList().length === 0 ? (
             // empty state
             <div className="empty-state">
