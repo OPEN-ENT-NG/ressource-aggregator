@@ -87,7 +87,10 @@ export const HomeList: React.FC<HomeListProps> = ({
             <Resource
               id={resource?.id ?? ""}
               key={resource.id}
-              image={resource?.image ?? "/mediacentre/public/img/no-avatar.svg"}
+              image={
+                resource?.image ??
+                "/mediacentre/public/img/no-image-resource.png"
+              }
               title={resource?.title}
               subtitle={
                 type === CardTypeEnum.favorites

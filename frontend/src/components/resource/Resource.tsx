@@ -157,12 +157,13 @@ export const Resource: React.FC<ResourceProps> = ({
               className="med-resource-image"
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null;
-                currentTarget.src = "/mediacentre/public/img/no-avatar.svg";
+                currentTarget.src =
+                  "/mediacentre/public/img/no-image-resource.png";
               }}
             />
           ) : (
             <img
-              src="/mediacentre/public/img/no-avatar.svg"
+              src="/mediacentre/public/img/no-image-resource.png"
               alt="Resource"
               className="med-resource-image"
             />
