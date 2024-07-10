@@ -13,16 +13,22 @@ import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource.model";
+import { PinResource } from "~/model/PinResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
 import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
-import { PinResource } from "~/model/PinResource.model";
 
 interface ResourceProps {
-  resource: Signet | Favorite | Textbook | ExternalResource | GlobalResource | PinResource;
+  resource:
+    | Signet
+    | Favorite
+    | Textbook
+    | ExternalResource
+    | GlobalResource
+    | PinResource;
   id: string | number;
   image: string;
   title: string;

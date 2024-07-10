@@ -16,5 +16,5 @@ export const rights = {
 };
 
 export const hatStructures = {
-  crna : "8df49fdb-faf4-4f7f-8425-414a6d5f25ff",
+  crna: "8df49fdb-faf4-4f7f-8425-414a6d5f25ff",
 };

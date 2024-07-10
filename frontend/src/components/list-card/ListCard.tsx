@@ -38,7 +38,7 @@ export const ListCard: React.FC<ListCardProps> = ({
   components,
   redirectLink,
   homeDouble = false,
-  pinsEmpty=true,
+  pinsEmpty = true,
 }) => {
   const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -63,7 +63,7 @@ export const ListCard: React.FC<ListCardProps> = ({
     if (windowWidth < breakpoints.md) return nbComponent.sm * double;
     if (windowWidth < breakpoints.lg) return nbComponent.md * double;
     if (windowWidth < breakpoints.xl) return nbComponent.lg * double;
-    return (nbComponent.xl- (pinsEmpty ? 0 : 2)) * double; // we remove 2 components if pins are not empty
+    return (nbComponent.xl - (pinsEmpty ? 0 : 2)) * double; // we remove 2 components if pins are not empty
   };
 
   const NbColumns = (windowWidth: number) => {

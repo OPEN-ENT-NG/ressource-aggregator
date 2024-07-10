@@ -52,7 +52,7 @@ export const App = () => {
       ? user?.structures[0]
       : "") ?? "",
   ); // first structure
-  const [ pinsEmpty, setPinsEmpty ] = useState<boolean>(true);
+  const [pinsEmpty, setPinsEmpty] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<
     (ExternalResource | GlobalResource)[] | null
   >(null);
@@ -269,7 +269,8 @@ export const App = () => {
         </Alert>
       )}
       <div className="med-container">
-        <div className="med-fav-container">
+        <div id="pinID">{!pinsEmpty && <PinsCarousel pins={pins} />}</div>
+        <div id="favoriteID">
           <HomeList
             resources={favorites}
             type={CardTypeEnum.favorites}
@@ -280,38 +281,33 @@ export const App = () => {
             pinsEmpty={true}
           />
         </div>
-        <div className="med-resources-container-all">
-          {!pinsEmpty && (
-            <PinsCarousel pins={pins} />
+        <div className="med-resources-container" id="resourcesID">
+          {resourcesList().length === 0 ? (
+            // empty state
+            <div className="empty-state">
+              <img
+                src="/mediacentre/public/img/empty-state.png"
+                alt="empty-state"
+                className="empty-state-img"
+              />
+              <span className="empty-state-text">
+                {t("mediacentre.ressources.empty")}
+              </span>
+            </div>
+          ) : (
+            resourcesList().map((resource) => (
+              <HomeList
+                resources={resource.resource}
+                type={resource.type}
+                setAlertText={setAlertText}
+                setAlertType={setAlertType}
+                handleAddFavorite={handleAddFavorite}
+                handleRemoveFavorite={handleRemoveFavorite}
+                double={double()}
+                pinsEmpty={pinsEmpty}
+              />
+            ))
           )}
-          <div className="med-resources-container">
-            {resourcesList().length === 0 ? (
-              // empty state
-              <div className="empty-state">
-                <img
-                  src="/mediacentre/public/img/empty-state.png"
-                  alt="empty-state"
-                  className="empty-state-img"
-                />
-                <span className="empty-state-text">
-                  {t("mediacentre.ressources.empty")}
-                </span>
-              </div>
-            ) : (
-              resourcesList().map((resource) => (
-                <HomeList
-                  resources={resource.resource}
-                  type={resource.type}
-                  setAlertText={setAlertText}
-                  setAlertType={setAlertType}
-                  handleAddFavorite={handleAddFavorite}
-                  handleRemoveFavorite={handleRemoveFavorite}
-                  double={double()}
-                  pinsEmpty={pinsEmpty}
-                />
-              ))
-            )}
-          </div>
         </div>
       </div>
     </>
