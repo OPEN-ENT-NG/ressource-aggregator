@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
+import { EmptyState } from "~/components/empty-state/empty-state";
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalExplorer } from "~/components/modal-explorer/ModalExplorer";
@@ -288,24 +289,12 @@ export const App = () => {
           id={pinsEmpty ? "resourcesId" : "resourcesWithPinsId"}
         >
           {resourcesList().length === 0 ? (
-            // empty state
-            <div className="empty-state">
-              <img
-                src="/mediacentre/public/img/empty-state.png"
-                alt="empty-state"
-                className="empty-state-img"
-              />
-              <span className="empty-state-text">
-                {t("mediacentre.ressources.empty")}
-              </span>
-            </div>
+              <EmptyState title={t("mediacentre.ressources.empty")} />
           ) : (
             resourcesList().map((resource) => (
               <HomeList
                 resources={resource.resource}
                 type={resource.type}
-                setAlertText={setAlertText}
-                setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
                 handleRemoveFavorite={handleRemoveFavorite}
                 isDouble={double()}
