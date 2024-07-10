@@ -29,7 +29,7 @@ interface ListCardProps {
   components?: any[];
   redirectLink: string | NavigateFunction;
   homeDouble?: boolean;
-  pinsEmpty: boolean;
+  pinsEmpty?: boolean;
 }
 
 export const ListCard: React.FC<ListCardProps> = ({
@@ -38,7 +38,7 @@ export const ListCard: React.FC<ListCardProps> = ({
   components,
   redirectLink,
   homeDouble = false,
-  pinsEmpty,
+  pinsEmpty=true,
 }) => {
   const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);

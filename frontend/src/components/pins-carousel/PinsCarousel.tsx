@@ -11,6 +11,7 @@ import { PinsCarouselCard } from "./pins-carousel-card/PinsCarouselCard";
 import "@splidejs/react-splide/css";
 import "./PinsCarousel.scss";
 import { PinResource } from "~/model/PinResource.model";
+import { breakpoints } from "~/core/const/breakpoints.ts";
 
 interface PinsCarouselProps {
   pins: PinResource[];
@@ -34,18 +35,15 @@ export const PinsCarousel: React.FC<PinsCarouselProps> = ({ pins }) => {
           perPage: 4,
           arrows: pins.length > 4,
           gap: "20px",
+          // breakpoints are used for the responsive design of the carousel
           breakpoints: {
-            768: {
+            [breakpoints.lg]: {
               perPage: 3,
               arrows: pins.length > 3,
             },
-            576: {
+            [breakpoints.md]: {
               perPage: 2,
               arrows: pins.length > 2,
-            },
-            400: {
-              perPage: 1,
-              arrows: pins.length > 1,
             },
           },
         }}

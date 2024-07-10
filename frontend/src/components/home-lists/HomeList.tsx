@@ -67,7 +67,7 @@ export const HomeList: React.FC<HomeListProps> = ({
   return (
     <div
       className={
-        double || type === CardTypeEnum.favorites ? "" : "med-double-list"
+        (double || (type === CardTypeEnum.favorites)) ? "med-simple-list" : "med-double-list"
       }
     >
       <ListCard
