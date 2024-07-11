@@ -13,7 +13,7 @@ import { CardTypeEnum } from "~/core/enum/card-type.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useGlobal } from "~/hooks/useGlobal";
-import { usePins } from "~/hooks/usePins";
+import { usePin } from "~/hooks/usePin.ts";
 import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
 import { ExternalResource } from "~/model/ExternalResource.model";
@@ -47,10 +47,8 @@ export const App = () => {
   const { externalResources, setExternalResources, refetchSearch } =
     useExternalResource();
   const { globals } = useGlobal();
-  const { pins } = usePins(
-    (user?.structures && user.structures.length > 0
-      ? user?.structures[0]
-      : "") ?? "",
+  const { pins } = usePin(
+    (user?.structures.length ? user?.structures[0] : "") ?? "",
   ); // first structure
   const [pinsEmpty, setPinsEmpty] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<
@@ -269,8 +267,8 @@ export const App = () => {
         </Alert>
       )}
       <div className="med-container">
-        <div id="pinID">{!pinsEmpty && <PinsCarousel pins={pins} />}</div>
-        <div id="favoriteID">
+        <div id="pinId">{!pinsEmpty && <PinsCarousel pins={pins} />}</div>
+        <div id="favoriteId">
           <HomeList
             resources={favorites}
             type={CardTypeEnum.favorites}
@@ -283,7 +281,7 @@ export const App = () => {
         </div>
         <div
           className="med-resources-container"
-          id={pinsEmpty ? "resourcesID" : "resourcesWithPinsID"}
+          id={pinsEmpty ? "resourcesId" : "resourcesWithPinsId"}
         >
           {resourcesList().length === 0 ? (
             // empty state

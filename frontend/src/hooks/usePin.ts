@@ -1,6 +1,6 @@
-import { useGetPinsQuery } from "../services/api/pins.service";
+import { useGetPinsQuery } from "../services/api/pin.service.ts";
 
-export const usePins = (idStructure: string) => {
+export const usePin = (idStructure: string) => {
   const {
     data: pins,
     error,
