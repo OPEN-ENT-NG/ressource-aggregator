@@ -50,7 +50,7 @@ export const PinsCarousel: React.FC<PinsCarouselProps> = ({ pins }) => {
         <SplideTrack className="med-splide-track">
           {pins.map((pin, index) => (
             <SplideSlide key={index} className="">
-              <PinsCarouselCard pin={pin} link={pin?.link ?? pin?.url ?? ""}/>
+              <PinsCarouselCard pin={pin} link={pin?.link ?? pin?.url ?? ""} />
             </SplideSlide>
           ))}
         </SplideTrack>
