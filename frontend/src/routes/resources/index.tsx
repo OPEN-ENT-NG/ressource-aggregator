@@ -87,7 +87,7 @@ export const ResourcePage: React.FC = () => {
             <InfiniteScrollList
               redirectLink="/resources"
               allResourcesDisplayed={allResourcesDisplayed}
-              refetchSearch={refetchSearch}
+              refetchData={refetchSearch}
             />
           </div>
         </div>

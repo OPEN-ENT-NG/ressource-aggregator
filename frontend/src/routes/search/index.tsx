@@ -101,7 +101,7 @@ export const Search: React.FC = () => {
             <InfiniteScrollList
               redirectLink="/search"
               allResourcesDisplayed={allResourcesDisplayed}
-              refetchSearch={refetchSearch}
+              refetchData={refetchSearch}
             />
           </div>
         </div>

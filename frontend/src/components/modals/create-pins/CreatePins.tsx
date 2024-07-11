@@ -101,7 +101,8 @@ export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
               className="med-image"
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null;
-                currentTarget.src = "/mediacentre/public/img/no-avatar.svg";
+                currentTarget.src =
+                  "/mediacentre/public/img/no-image-resource.svg";
               }}
             />
           </div>

@@ -12,13 +12,13 @@ import { Resource } from "~/model/Resource.model";
 interface InfiniteScrollListProps {
   redirectLink: string;
   allResourcesDisplayed: Resource[] | null;
-  refetchSearch: () => void;
+  refetchData: () => void;
 }
 
 export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   redirectLink,
   allResourcesDisplayed,
-  refetchSearch,
+  refetchData,
 }) => {
   const loaderRef = useRef(null);
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
                   <SearchCard
                     searchResource={searchResource}
                     link={searchResource.link ?? searchResource.url ?? "/"}
-                    refetchSearch={refetchSearch}
+                    refetchData={refetchData}
                   />
                 ))}
                 redirectLink={() => navigate(redirectLink)}

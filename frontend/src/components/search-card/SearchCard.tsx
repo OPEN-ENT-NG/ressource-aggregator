@@ -26,13 +26,13 @@ import {
 interface SearchResourceProps {
   searchResource: SearchResource;
   link: string;
-  refetchSearch: () => void;
+  refetchData: () => void;
 }
 
 export const SearchCard: React.FC<SearchResourceProps> = ({
   searchResource,
   link,
-  refetchSearch,
+  refetchData,
 }) => {
   const [newLink, setNewLink] = useState<string>("");
   const { t } = useTranslation();
@@ -104,7 +104,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
         });
       }
       notify(t("mediacentre.notification.addFavorite"), "success");
-      refetchSearch();
+      refetchData();
     } catch (e) {
       console.error(e);
     }
@@ -130,7 +130,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
         });
       }
       notify(t("mediacentre.notification.removeFavorite"), "success");
-      refetchSearch();
+      refetchData();
     } catch (e) {
       console.error(e);
     }

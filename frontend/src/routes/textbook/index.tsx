@@ -101,7 +101,7 @@ export const TextbookPage: React.FC = () => {
             <InfiniteScrollList
               redirectLink="/textbook"
               allResourcesDisplayed={allResourcesDisplayed}
-              refetchSearch={() => {
+              refetchData={() => {
                 refetchFavorite();
                 refetchTextbooks();
               }}
