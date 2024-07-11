@@ -67,6 +67,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
         <Card.Title>{pin.pinned_title}</Card.Title>
         <Card.Text>{pin.pinned_description}</Card.Text>
         <Card.Body space={"0"}>
+        {pin.image ? (
           <img
             src={pin.image}
             alt={pin.pinned_title}
@@ -85,6 +86,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
           />
         )}
       </Card.Body>
+      </a>
       <Card.Footer>
         <div className="med-left-footer">
           <AutoAwesomeIcon />
