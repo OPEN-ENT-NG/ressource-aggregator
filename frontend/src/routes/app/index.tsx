@@ -276,7 +276,7 @@ export const App = () => {
             setAlertType={setAlertType}
             handleAddFavorite={handleAddFavorite}
             handleRemoveFavorite={handleRemoveFavorite}
-            pinsEmpty={true}
+            isPinsEmpty={true}
           />
         </div>
         <div
@@ -304,8 +304,8 @@ export const App = () => {
                 setAlertType={setAlertType}
                 handleAddFavorite={handleAddFavorite}
                 handleRemoveFavorite={handleRemoveFavorite}
-                double={double()}
-                pinsEmpty={pinsEmpty}
+                isDouble={double()}
+                isPinsEmpty={pinsEmpty}
               />
             ))
           )}

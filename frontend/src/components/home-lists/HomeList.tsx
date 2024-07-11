@@ -25,8 +25,8 @@ interface HomeListProps {
   setAlertType: (arg: AlertTypes) => void;
   handleAddFavorite: (resource: any) => void;
   handleRemoveFavorite: (id: string | number) => void;
-  double?: boolean;
-  pinsEmpty: boolean;
+  isDouble?: boolean;
+  isPinsEmpty: boolean;
 }
 
 export const HomeList: React.FC<HomeListProps> = ({
@@ -36,8 +36,8 @@ export const HomeList: React.FC<HomeListProps> = ({
   setAlertType,
   handleAddFavorite,
   handleRemoveFavorite,
-  double,
-  pinsEmpty,
+  isDouble,
+  isPinsEmpty,
 }) => {
   const { t } = useTranslation();
   const redirectLink = () => {
@@ -67,7 +67,7 @@ export const HomeList: React.FC<HomeListProps> = ({
   return (
     <div
       className={
-        double || type === CardTypeEnum.favorites
+        isDouble || type === CardTypeEnum.favorites
           ? "med-simple-list"
           : "med-double-list"
       }
@@ -131,8 +131,8 @@ export const HomeList: React.FC<HomeListProps> = ({
           ),
         )}
         redirectLink={redirectLink()}
-        homeDouble={double}
-        pinsEmpty={pinsEmpty}
+        homeDouble={isDouble}
+        isPinsEmpty={isPinsEmpty}
       />
     </div>
   );
