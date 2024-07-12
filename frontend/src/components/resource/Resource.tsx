@@ -5,6 +5,7 @@ import { AlertTypes, Card } from "@edifice-ui/react";
 import { Tooltip } from "@edifice-ui/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PinIcon from "@mui/icons-material/PushPin";
+import UnPinIcon from "@mui/icons-material/PushPinOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
@@ -138,6 +139,12 @@ export const Resource: React.FC<ResourceProps> = ({
     }
   };
 
+  const unpin = () => {
+    if (resource && type !== CardTypeEnum.favorites) {
+      setModalResource(resource as SearchResource);
+    }
+  };
+
   useEffect(() => {
     if (
       !link.startsWith("https://") &&
@@ -224,11 +231,16 @@ export const Resource: React.FC<ResourceProps> = ({
           )
         ) : null}
         <div className="med-footer-svg">
-          {type !== CardTypeEnum.favorites && (
-            <Tooltip message={t("mediacentre.card.pin")} placement="top">
-              <PinIcon className="med-pin" onClick={() => pin()} />
-            </Tooltip>
-          )}
+          {type !== CardTypeEnum.favorites &&
+            (resource?.is_pinned ? (
+              <Tooltip message={t("mediacentre.card.unpin")} placement="top">
+                <PinIcon className="med-pin" onClick={() => unpin()} />
+              </Tooltip>
+            ) : (
+              <Tooltip message={t("mediacentre.card.pin")} placement="top">
+                <UnPinIcon className="med-pin" onClick={() => pin()} />
+              </Tooltip>
+            ))}
           <Tooltip message={t("mediacentre.card.copy")} placement="top">
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
           </Tooltip>
