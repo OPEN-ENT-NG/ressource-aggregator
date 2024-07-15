@@ -106,7 +106,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null;
                 currentTarget.src =
-                  "/mediacentre/public/img/no-image-resource.svg";
+                  "/mediacentre/public/img/no-image-resource.png";
               }}
             />
           </div>
