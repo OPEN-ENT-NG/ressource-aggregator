@@ -133,15 +133,9 @@ export const Resource: React.FC<ResourceProps> = ({
   };
 
   const pin = () => {
-    if (resource && type !== CardTypeEnum.favorites) {
+    if (resource) {
       setModalResource(resource as SearchResource);
       setIsCreatedOpen(true);
-    }
-  };
-
-  const unpin = () => {
-    if (resource && type !== CardTypeEnum.favorites) {
-      setModalResource(resource as SearchResource);
     }
   };
 
@@ -231,16 +225,18 @@ export const Resource: React.FC<ResourceProps> = ({
           )
         ) : null}
         <div className="med-footer-svg">
-          {type !== CardTypeEnum.favorites &&
-            (resource?.is_pinned ? (
-              <Tooltip message={t("mediacentre.card.unpin")} placement="top">
-                <PinIcon className="med-pin" onClick={() => unpin()} />
-              </Tooltip>
-            ) : (
-              <Tooltip message={t("mediacentre.card.pin")} placement="top">
-                <UnPinIcon className="med-pin" onClick={() => pin()} />
-              </Tooltip>
-            ))}
+          {resource?.is_pinned ? (
+            <Tooltip
+              message={t("mediacentre.card.already.pinned")}
+              placement="top"
+            >
+              <PinIcon className="med-pin" />
+            </Tooltip>
+          ) : (
+            <Tooltip message={t("mediacentre.card.pin")} placement="top">
+              <UnPinIcon className="med-pin" onClick={() => pin()} />
+            </Tooltip>
+          )}
           <Tooltip message={t("mediacentre.card.copy")} placement="top">
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
           </Tooltip>
