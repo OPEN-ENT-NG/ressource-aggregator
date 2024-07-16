@@ -12,11 +12,11 @@ import {
 import { useTranslation } from "react-i18next";
 
 import "../Modal.scss";
+import { links } from "~/core/const/links.const";
 import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useUpdatePinMutation } from "~/services/api/pin.service";
-import { links } from "~/core/const/links.const";
 
 interface EditPinsProps {
   refetch: () => void;
