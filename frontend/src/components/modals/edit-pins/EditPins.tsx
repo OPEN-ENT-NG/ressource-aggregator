@@ -16,6 +16,7 @@ import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useUpdatePinMutation } from "~/services/api/pin.service";
+import { links } from "~/core/const/links.const";
 
 interface EditPinsProps {
   refetch: () => void;
@@ -105,8 +106,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
               className="med-image"
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null;
-                currentTarget.src =
-                  "/mediacentre/public/img/no-image-resource.png";
+                currentTarget.src = links.IMAGE_NO_RESOURCE;
               }}
             />
           </div>
