@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import "./Resource.scss";
-import { AlertTypes, Card } from "@edifice-ui/react";
+import { AlertTypes, Card, isActionAvailable } from "@edifice-ui/react";
 import { Tooltip } from "@edifice-ui/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PinIcon from "@mui/icons-material/PushPin";
@@ -25,6 +25,7 @@ import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
+import { useActions } from "~/services/queries";
 
 interface ResourceProps {
   resource:
@@ -69,6 +70,10 @@ export const Resource: React.FC<ResourceProps> = ({
   const { t } = useTranslation();
   const { setAlertText, setAlertType } = useAlertProvider();
   const { setModalResource, setIsCreatedOpen } = useModalProvider();
+
+  // used to check if the user has the right to pin a resource
+  const { data: actions } = useActions();
+  const hasPinRight = isActionAvailable("pins", actions);
 
   const notify = (message: string, type: AlertTypes) => {
     setAlertText(message);
@@ -225,18 +230,19 @@ export const Resource: React.FC<ResourceProps> = ({
           )
         ) : null}
         <div className="med-footer-svg">
-          {resource?.is_pinned ? (
-            <Tooltip
-              message={t("mediacentre.card.already.pinned")}
-              placement="top"
-            >
-              <PinIcon className="med-pin" />
-            </Tooltip>
-          ) : (
-            <Tooltip message={t("mediacentre.card.pin")} placement="top">
-              <UnPinIcon className="med-pin" onClick={() => pin()} />
-            </Tooltip>
-          )}
+          {hasPinRight &&
+            (resource?.is_pinned ? (
+              <Tooltip
+                message={t("mediacentre.card.already.pinned")}
+                placement="top"
+              >
+                <PinIcon className="med-pin" />
+              </Tooltip>
+            ) : (
+              <Tooltip message={t("mediacentre.card.pin")} placement="top">
+                <UnPinIcon className="med-pin" onClick={() => pin()} />
+              </Tooltip>
+            ))}
           <Tooltip message={t("mediacentre.card.copy")} placement="top">
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
           </Tooltip>
