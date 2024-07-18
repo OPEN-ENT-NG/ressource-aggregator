@@ -13,4 +13,4 @@ export const sortByAlphabet = (resources: Resource[]) => {
     }
     return 0;
   });
-}
+};

@@ -60,7 +60,10 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       filteredResources = [...filteredResources, ...sortByAlphabet(textbooks)];
     }
     if (checkboxExternalResource) {
-      filteredResources = [...filteredResources, ...sortByAlphabet(externalResources)];
+      filteredResources = [
+        ...filteredResources,
+        ...sortByAlphabet(externalResources),
+      ];
     }
     if (checkboxSignet) {
       filteredResources = [...filteredResources, ...sortByAlphabet(signets)];

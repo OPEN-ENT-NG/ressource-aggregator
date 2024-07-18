@@ -31,7 +31,8 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
     if (!allResourcesDisplayed) return;
     if (
       JSON.stringify(visibleResources) === JSON.stringify(allResourcesDisplayed)
-    ) return;
+    )
+      return;
     setIndexVisibleResources(indexVisibleResources + 1);
     if (redirectLink === "/favorites") {
       setVisibleResources(
@@ -39,13 +40,12 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
           .filter((resource) => resource.favorite)
           .slice(0, indexVisibleResources * 10),
       );
+    } else {
+      setVisibleResources(
+        allResourcesDisplayed.slice(0, indexVisibleResources * 10),
+      );
     }
-    else {
-    setVisibleResources(allResourcesDisplayed.slice(0, indexVisibleResources * 10));
-    }
-
   }, [visibleResources]);
-
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -73,11 +73,16 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
 
   useEffect(() => {
     if (allResourcesDisplayed) {
-      if(redirectLink === "/favorites") {
-        setVisibleResources(allResourcesDisplayed.filter((resource) => resource.favorite).slice(0, indexVisibleResources * 10));
-      }
-      else {
-        setVisibleResources(allResourcesDisplayed.slice(0, indexVisibleResources * 10));
+      if (redirectLink === "/favorites") {
+        setVisibleResources(
+          allResourcesDisplayed
+            .filter((resource) => resource.favorite)
+            .slice(0, indexVisibleResources * 10),
+        );
+      } else {
+        setVisibleResources(
+          allResourcesDisplayed.slice(0, indexVisibleResources * 10),
+        );
       }
       setIsLoading(false);
       setIsRemoveResource(false);
