@@ -26,61 +26,64 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
 
   const [resourcesInfosMap, setResourcesInfosMap] = useState(ResourceInfosMapInitialStates);
 
-  useEffect(() => {
-    if (!resources) return;
-
-    let textbooksTemp : Resource[] = [];
-    let externalResourcesTemp : Resource[] = [];
-    let moodleTemp : Resource[] = [];
-    let signetsTemp : Resource[] = [];
-
-    let disciplinesTemp : string[] = [];
-    let levelsTemp : string[] = [];
-    let typesTemp : string[] = [];
-
-
-    resources.forEach((resource) => {
-      // Case textbook
-      if (isTextbook(resource)) {
-        textbooksTemp = [...textbooksTemp, resource];
-      }
-      // Case external resource
-      else if (isExternalResource(resource)) {
-        externalResourcesTemp = [...externalResourcesTemp, resource];
-        resource.document_types.forEach((type) => {
-          if (!typesTemp.includes(type)) typesTemp = [...typesTemp, type]; // we want types only from external resources
-        });
-      }
-      // Case moodle
-      else if (isMoodle(resource)) {
-        moodleTemp = [...moodleTemp, resource];
-      }
-      // Case signet
-      else if (isSignet(resource)) {
-        signetsTemp = [...signetsTemp, resource];
-      }
-      resource.disciplines.forEach((discipline) => {
-        if (!disciplinesTemp.includes(discipline))
-          disciplinesTemp = [...disciplinesTemp, discipline]; // we want disciplines from all resources
+    useEffect(() => {
+      if (!resources) return;
+    
+      const result = resources.reduce((acc, resource) => {
+        // Case textbook
+        if (isTextbook(resource)) {
+          acc.textbooks = [...acc.textbooks, resource];
+        }  
+        // Case external resource
+        if (isExternalResource(resource)) {
+          acc.externalResources = [...acc.externalResources, resource];
+          acc.types = [
+            ...acc.types,
+            ...resource.document_types.filter(type => !acc.types.includes(type))
+          ];
+        } 
+        // Case moodle
+        if (isMoodle(resource)) {
+          acc.moodle = [...acc.moodle, resource];
+        } 
+        // Case signet
+        if (isSignet(resource)) {
+          acc.signets = [...acc.signets, resource];
+        }
+    
+        acc.disciplines = [
+          ...acc.disciplines,
+          ...resource.disciplines.filter(discipline => !acc.disciplines.includes(discipline))
+        ];
+        acc.levels = [
+          ...acc.levels,
+          ...resource.levels.filter(level => !acc.levels.includes(level))
+        ];
+    
+        return acc;
+      }, {
+        textbooks: [] as Resource[],
+        externalResources: [] as Resource[],
+        moodle: [] as Resource[],
+        signets: [] as Resource[],
+        disciplines: [] as string[],
+        levels: []  as string[],
+        types: [] as string[],
       });
-      resource.levels.forEach((level) => {
-        if (!levelsTemp.includes(level)) levelsTemp = [...levelsTemp, level]; // we want levels from all resources
+    
+      setResourcesMap({
+        textbooks: result.textbooks,
+        externalResources: result.externalResources,
+        moodle: result.moodle,
+        signets: result.signets,
       });
-    });
-
-    setResourcesMap({
-      textbooks: textbooksTemp,
-      externalResources: externalResourcesTemp,
-      moodle: moodleTemp,
-      signets: signetsTemp,
-    });
-
-    setResourcesInfosMap({
-      disciplines: disciplinesTemp,
-      levels: levelsTemp,
-      types: typesTemp,
-    });
-  }, [resources]);
+    
+      setResourcesInfosMap({
+        disciplines: result.disciplines,
+        levels: result.levels,
+        types: result.types,
+      });
+    }, [resources]);
 
   return {
     resourcesMap,
