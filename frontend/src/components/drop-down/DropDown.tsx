@@ -43,16 +43,10 @@ export const DropDown: React.FC<DropDownProps> = ({
       />
       <Dropdown.Menu>
         <Dropdown.Item
-          key={`all-selected-${label}`}
-          onClick={() =>
-            selectedCheckboxes.length === checkboxOptions.length
-              ? setSelectedCheckboxes([])
-              : setSelectedCheckboxes(checkboxOptions)
-          }
+          key={`reset-filter-${label}`}
+          onClick={() =>setSelectedCheckboxes([])}
         >
-          {selectedCheckboxes.length === checkboxOptions.length
-            ? t("mediacentre.combo.deselectAll")
-            : t("mediacentre.combo.selectAll")}
+          {t("mediacentre.filter.reset")}
         </Dropdown.Item>
         <Dropdown.Separator />
         {checkboxOptions.map((option, index) => (

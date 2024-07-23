@@ -207,5 +207,12 @@
   "mediacentre.pins.modal.delete.subtitle": "Attention, l'épingle sera supprimée définitivement, êtes-vous sûr ?",
 
   "mediacentre.signets.themes.orientation": "Orientation et décourvertes des métiers",
-  "mediacentre.signets.without.theme": "Sans thématique"
+  "mediacentre.signets.without.theme": "Sans thématique",
+
+  "mediacentre.filter.source": "Source",
+  "mediacentre.filter.type": "Type",
+  "mediacentre.filter.theme": "Thématique",
+  "mediacentre.filter.level": "Niveau",
+  "mediacentre.filter.discipline": "Discipline",
+  "mediacentre.filter.reset": "Réinitialiser les filtres"
 }
