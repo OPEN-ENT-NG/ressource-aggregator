@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 interface DropDownProps {
   checkboxOptions: string[];
   selectedCheckboxes: string[];
-  setSelectedCheckboxes: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedCheckboxes: (value: string[]) => void;
   label: string;
 }
 export const DropDown: React.FC<DropDownProps> = ({
@@ -17,7 +17,7 @@ export const DropDown: React.FC<DropDownProps> = ({
 
   const handleMultiCheckbox = (
     selectedCheckboxes: string[],
-    setSelectedCheckboxes: React.Dispatch<React.SetStateAction<string[]>>,
+    setSelectedCheckboxes: (value: string[]) => void,
     value: string,
   ) => {
     let checked = [...selectedCheckboxes];
@@ -44,7 +44,7 @@ export const DropDown: React.FC<DropDownProps> = ({
       <Dropdown.Menu>
         <Dropdown.Item
           key={`reset-filter-${label}`}
-          onClick={() =>setSelectedCheckboxes([])}
+          onClick={() => setSelectedCheckboxes([])}
         >
           {t("mediacentre.filter.reset")}
         </Dropdown.Item>

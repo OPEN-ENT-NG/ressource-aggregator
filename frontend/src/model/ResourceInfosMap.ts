@@ -1,5 +1,5 @@
 export interface ResourceInfosMap {
-    disciplines: string[];
-    levels: string[];
-    types: string[];
+  disciplines: string[];
+  levels: string[];
+  types: string[];
 }
