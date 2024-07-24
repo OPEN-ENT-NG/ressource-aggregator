@@ -1,4 +1,5 @@
 import { Dropdown } from "@edifice-ui/react";
+import "./DropDown.scss";
 import { useTranslation } from "react-i18next";
 
 interface DropDownProps {
@@ -42,12 +43,16 @@ export const DropDown: React.FC<DropDownProps> = ({
         badgeContent={selectedCheckboxes.length || 0}
       />
       <Dropdown.Menu>
-        <Dropdown.Item
-          key={`reset-filter-${label}`}
-          onClick={() => setSelectedCheckboxes([])}
+        <div
+          className={!selectedCheckboxes.length ? "dropdown-item-disabled" : ""}
         >
-          {t("mediacentre.filter.reset")}
-        </Dropdown.Item>
+          <Dropdown.Item
+            key={`reset-filter-${label}`}
+            onClick={() => setSelectedCheckboxes([])}
+          >
+            {t("mediacentre.filter.reset")}
+          </Dropdown.Item>
+        </div>
         <Dropdown.Separator />
         {checkboxOptions.map((option, index) => (
           <Dropdown.CheckboxItem
