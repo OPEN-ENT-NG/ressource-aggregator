@@ -17,6 +17,17 @@ const ResourceInfosMapInitialStates: ResourceInfosMap = {
   types: [],
 };
 
+// Normalize string to avoid accent and case issues
+const normalizeString = (str: string) =>
+  str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+// custom sort function for strings that normalizes the strings before comparing them
+const customStringSort = (a: string, b: string) =>
+  normalizeString(a).localeCompare(normalizeString(b));
+
 const isTextbook = (resource: Resource) =>
   resource.source === GAR && (resource?.is_textbook ?? false);
 const isExternalResource = (resource: Resource) =>
@@ -92,9 +103,10 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
     });
 
     setResourcesInfosMap({
-      disciplines: result.disciplines,
-      levels: result.levels,
-      types: result.types,
+      // sort disciplines, levels and types by custom string sort
+      disciplines: result.disciplines.sort(customStringSort),
+      levels: result.levels.sort(customStringSort),
+      types: result.types.sort(customStringSort),
     });
   }, [resources]);
 

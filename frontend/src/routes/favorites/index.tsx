@@ -79,6 +79,7 @@ export const FavoritePage: React.FC = () => {
           <div className="med-search-page-content-body">
             <FilterLayout
               resources={favoriteResourcesData}
+              allResourcesDisplayed={allResourcesDisplayed}
               setAllResourcesDisplayed={setAllResourcesDisplayed}
             />
             <InfiniteScrollList

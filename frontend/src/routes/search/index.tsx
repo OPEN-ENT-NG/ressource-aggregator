@@ -103,6 +103,7 @@ export const Search: React.FC = () => {
           <div className="med-search-page-content-body">
             <FilterLayout
               resources={searchResourcesData}
+              allResourcesDisplayed={allResourcesDisplayed}
               setAllResourcesDisplayed={setAllResourcesDisplayed}
             />
             <InfiniteScrollList

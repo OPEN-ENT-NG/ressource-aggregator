@@ -11,6 +11,7 @@ import "./FilterLayout.scss";
 
 interface FilterLayoutProps {
   resources: Resource[] | null;
+  allResourcesDisplayed: Resource[] | null;
   setAllResourcesDisplayed: React.Dispatch<
     React.SetStateAction<Resource[] | null>
   >;
@@ -18,9 +19,11 @@ interface FilterLayoutProps {
 
 export const FilterLayout: React.FC<FilterLayoutProps> = ({
   resources,
+  allResourcesDisplayed,
   setAllResourcesDisplayed,
 }) => {
-  const { resourcesMap, resourcesInfosMap } = useResourceListInfo(resources);
+  const { resourcesMap } = useResourceListInfo(resources);
+  const { resourcesInfosMap } = useResourceListInfo(allResourcesDisplayed);
 
   const page = useLocation().pathname;
   const { t } = useTranslation();
@@ -56,6 +59,21 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     WITHOUT_THEME: t("mediacentre.signets.without.theme"),
   };
 
+  // we show themes only if we have signets in displayed resources
+  const isShowingThemes =
+    selectedCheckboxes.sources.includes(SOURCES.SIGNETS) ||
+    page === "/signets" ||
+    (!selectedCheckboxes.sources.length && sources.includes(SOURCES.SIGNETS));
+
+  // we show types only if we have resources in displayed resources
+  const isShowingTypes =
+    selectedCheckboxes.sources.includes(SOURCES.RESOURCES) ||
+    page === "/resources" ||
+    (!selectedCheckboxes.sources.length && sources.includes(SOURCES.RESOURCES));
+
+  // we show sources only if we are on favorites or search page
+  const isShowingSources = page === "/favorites" || page === "/search";
+
   useEffect(() => {
     if (!resources) {
       return;
@@ -84,46 +102,64 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
 
   return (
     <>
-      <div className="med-filters">
-        {(page === "/favorites" || page === "/search") && (
+      {!!allResourcesDisplayed?.length && (
+        <div className="med-filters">
+          {isShowingSources && (
+            <DropDown
+              selectedCheckboxes={selectedCheckboxes.sources}
+              setSelectedCheckboxes={setSelectedCheckboxesItems("sources")}
+              checkboxOptions={sources ?? []}
+              label={t(
+                `mediacentre.filter.${
+                  sources.length > 1 ? "sources" : "source"
+                }`,
+              )}
+            />
+          )}
+          {isShowingTypes && (
+            <DropDown
+              selectedCheckboxes={selectedCheckboxes.types}
+              setSelectedCheckboxes={setSelectedCheckboxesItems("types")}
+              checkboxOptions={resourcesInfosMap.types ?? []}
+              label={t(
+                `mediacentre.filter.${
+                  resourcesInfosMap.types.length > 1 ? "types" : "type"
+                }`,
+              )}
+            />
+          )}
+          {isShowingThemes && (
+            <DropDown
+              selectedCheckboxes={selectedCheckboxes.themes}
+              setSelectedCheckboxes={setSelectedCheckboxesItems("themes")}
+              checkboxOptions={themes ?? []}
+              label={t("mediacentre.filter.themes")}
+            />
+          )}
           <DropDown
-            selectedCheckboxes={selectedCheckboxes.sources}
-            setSelectedCheckboxes={setSelectedCheckboxesItems("sources")}
-            checkboxOptions={sources ?? []}
-            label={t("mediacentre.filter.source")}
+            selectedCheckboxes={selectedCheckboxes.levels}
+            setSelectedCheckboxes={setSelectedCheckboxesItems("levels")}
+            checkboxOptions={resourcesInfosMap.levels ?? []}
+            label={t(
+              `mediacentre.filter.${
+                resourcesInfosMap.levels.length > 1 ? "levels" : "level"
+              }`,
+            )}
           />
-        )}
-        {(selectedCheckboxes.sources.includes(SOURCES.RESOURCES) ||
-          page === "/resources") && (
           <DropDown
-            selectedCheckboxes={selectedCheckboxes.types}
-            setSelectedCheckboxes={setSelectedCheckboxesItems("types")}
-            checkboxOptions={resourcesInfosMap.types ?? []}
-            label={t("mediacentre.filter.type")}
+            selectedCheckboxes={selectedCheckboxes.disciplines}
+            setSelectedCheckboxes={setSelectedCheckboxesItems("disciplines")}
+            checkboxOptions={resourcesInfosMap.disciplines ?? []}
+            label={t(
+              `mediacentre.filter.${
+                resourcesInfosMap.disciplines.length > 1
+                  ? "disciplines"
+                  : "discipline"
+              }`,
+            )}
           />
-        )}
-        {(selectedCheckboxes.sources.includes(SOURCES.SIGNETS) ||
-          page === "/signets") && (
-          <DropDown
-            selectedCheckboxes={selectedCheckboxes.themes}
-            setSelectedCheckboxes={setSelectedCheckboxesItems("themes")}
-            checkboxOptions={themes ?? []}
-            label={t("mediacentre.filter.theme")}
-          />
-        )}
-        <DropDown
-          selectedCheckboxes={selectedCheckboxes.levels}
-          setSelectedCheckboxes={setSelectedCheckboxesItems("levels")}
-          checkboxOptions={resourcesInfosMap.levels ?? []}
-          label={t("mediacentre.filter.level")}
-        />
-        <DropDown
-          selectedCheckboxes={selectedCheckboxes.disciplines}
-          setSelectedCheckboxes={setSelectedCheckboxesItems("disciplines")}
-          checkboxOptions={resourcesInfosMap.disciplines ?? []}
-          label={t("mediacentre.filter.discipline")}
-        />
-      </div>
+        </div>
+      )}
     </>
   );
 };
