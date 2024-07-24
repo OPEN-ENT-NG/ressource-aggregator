@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Breadcrumb, Dropdown, SearchBar, useUser } from "@edifice-ui/react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
 import "./Header.scss";
-import { PREF_STRUCTURE } from "~/core/const/preferences.const";
-import usePreferences from "~/hooks/usePreferences";
+import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -18,33 +17,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
   const search = () => {
     navigate("/search?query=" + searchValue);
-  };
-
-  const { getPreference, savePreference } = usePreferences(PREF_STRUCTURE);
+  }; 
 
   const { user } = useUser();
 
-  const [indexSelectedStructure, setIndexSelectedStructure] = useState<
-    number | undefined
-  >(undefined);
-
-  useEffect(() => {
-    (async () => {
-      const indexPrefStructure = await getPreference();
-
-      if (indexPrefStructure) {
-        setIndexSelectedStructure(indexPrefStructure);
-        return;
-      }
-      setIndexSelectedStructure(0);
-    })();
-  }, [PREF_STRUCTURE]);
-
-  const handleSavePreference = async (structureName: string) => {
-    const index = user?.structureNames.indexOf(structureName);
-    await savePreference(index);
-    setIndexSelectedStructure(index);
-  };
+  const { nameSelectedStructure, setNameSelectedStructure } = useSelectedStructureProvider();
 
   return (
     <div className="med-header">
@@ -65,27 +42,29 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             }}
           />
         </a>
-        {indexSelectedStructure !== undefined &&
-          user?.structureNames[indexSelectedStructure] &&
-          user.structureNames.length && (
-            <Dropdown>
-              <Dropdown.Trigger
-                label={user.structureNames[indexSelectedStructure]}
-              />
-              <Dropdown.Menu>
-                {[...user.structureNames].sort().map((structureName, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => {
-                      handleSavePreference(structureName);
-                    }}
-                  >
-                    {structureName}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          )}
+        {user && user.structures.length > 1 ? (
+        <Dropdown>
+          <Dropdown.Trigger
+            label={nameSelectedStructure}
+          />
+          <Dropdown.Menu>
+            {[...user.structureNames].sort().map((structureName, index) => (
+              <Dropdown.Item
+                key={index}
+                onClick={() => {
+                  setNameSelectedStructure(structureName);
+                }}
+              >
+                {structureName}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+        ) : 
+        <div>
+          {nameSelectedStructure}
+        </div>
+        }
       </div>
       <div
         role="button"

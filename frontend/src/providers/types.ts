@@ -76,3 +76,13 @@ export type PinProviderContextType = {
     >
   >;
 };
+
+export interface SelectedStructureProviderProviderProps {
+  children: ReactNode;
+}
+
+export type SelectedStructureProviderContextType = {
+  nameSelectedStructure: string | undefined;
+  setNameSelectedStructure: Dispatch<SetStateAction<string | undefined>>;
+  idSelectedStructure: string | undefined;
+};

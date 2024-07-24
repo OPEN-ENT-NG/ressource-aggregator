@@ -17,6 +17,7 @@ import { ModalProvider } from "./providers/ModalsProvider";
 import { PinProvider } from "./providers/PinProvider";
 import { router } from "./routes";
 import { setupStore } from "./store";
+import { SelectedStructureProvider } from "./providers/SelectedStructureProvider";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
@@ -54,11 +55,13 @@ root.render(
       >
         <ThemeProvider>
           <AlertProvider>
-            <PinProvider>
-              <ModalProvider>
-                <RouterProvider router={router} />
-              </ModalProvider>
-            </PinProvider>
+            <SelectedStructureProvider>
+              <PinProvider>
+                <ModalProvider>
+                  <RouterProvider router={router} />
+                </ModalProvider>
+              </PinProvider>
+            </SelectedStructureProvider>
           </AlertProvider>
         </ThemeProvider>
       </OdeClientProvider>
