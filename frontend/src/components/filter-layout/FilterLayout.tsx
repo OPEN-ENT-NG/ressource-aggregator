@@ -59,11 +59,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     WITHOUT_THEME: t("mediacentre.signets.without.theme"),
   };
 
-  // we show themes only if we have signets in displayed resources
-  const isShowingThemes =
-    selectedCheckboxes.sources.includes(SOURCES.SIGNETS) ||
-    page === "/signets" ||
-    (!selectedCheckboxes.sources.length && sources.includes(SOURCES.SIGNETS));
+  // we show themes only on signets page
+  const isShowingThemes = page === "/signets";
 
   // we show types only if we have resources in displayed resources
   const isShowingTypes =
