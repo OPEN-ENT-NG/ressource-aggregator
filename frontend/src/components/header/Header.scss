@@ -1,3 +1,5 @@
+@import "../../styles/_colors.scss";
+
 .med-header {
   display: flex;
   justify-content: space-between;
@@ -36,6 +38,12 @@
     .dropdown-toggle {
       background: none;
       border: none;
+    }
+
+    .med-header-structure {
+      color: $med-secondary-gray;
+      padding: 12px 16px;
+      font-family: Comfortaa;
     }
 
     .med-header-button {
