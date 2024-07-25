@@ -112,6 +112,8 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
       },
     );
 
+    console.log("listInfos result", result);
+
     setResourcesMap({
       textbooks: result.textbooks as Textbook[],
       externalResources: result.externalResources as ExternalResource[],
