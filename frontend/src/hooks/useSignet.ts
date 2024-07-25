@@ -12,6 +12,7 @@ import { SIGNET } from "~/core/const/sources.const";
 import { Favorite } from "~/model/Favorite.model";
 import { Pin } from "~/model/Pin.model";
 import { usePinProvider } from "~/providers/PinProvider";
+import { SIGNET } from "~/core/const/sources.const";
 import {
   convertDisciplines,
   convertKeyWords,
@@ -34,9 +35,17 @@ export const useSignet = () => {
     refetch: refetchMySignet,
   } = useGetMySignetsQuery(null);
   const [homeSignets, setHomeSignets] = useState<Signet[] | null>(null);
+  const [allSignets, setAllSignets] = useState<Signet[] | null>(null);
   const { favorites } = useFavorite();
 
   const getHomeSignets = useCallback(() => {
+    if (!allSignets) {
+      return null;
+    }
+    return allSignets.filter((signet: Signet) => signet.owner_id != user?.userId)
+  }, [allSignets]);
+
+  const getAllSignets = useCallback(() => {
     if (!publicSignets || !mySignets) {
       return null;
     }
@@ -62,6 +71,7 @@ export const useSignet = () => {
           type.toLowerCase().includes("orientation"),
         ),
         shared: true,
+        source: SIGNET
       }),
     );
     let signetsData: Signet[] = [
@@ -103,6 +113,38 @@ export const useSignet = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicSignets, mySignets, user?.userId, favorites, pins]);
+  }, [
+    allSignets
+  ]);
+
+  useEffect(() => {
+    if (favorites && pins) {
+      const signetsData = getAllSignets();
+      setAllSignets(signetsData);
+    }
+  }, [
+    publicSignets,
+    mySignets,
+    user?.userId,
+    favorites,
+    pins
+  ])
+
+  const mine = (signets: Signet[]) => {
+    return signets.filter((signet: Signet) => !signet.archived && signet.owner_id === user?.userId);
+  }
+
+  const shared = (signets: Signet[]) => {
+    return signets.filter((signet: Signet) => !signet.archived && signet.collab && signet.owner_id !== user?.userId);
+  }
+
+  const published = (signets: Signet[]) => {
+    return signets.filter((signet: Signet) => !signet.archived && signet.shared);
+  }
+
+  const archived = (signets: Signet[]) => {
+    return signets.filter((signet: Signet) => signet.archived);
+  }
 
   return {
     homeSignets,
@@ -113,5 +155,11 @@ export const useSignet = () => {
     mySignetError,
     mySignetIsLoading,
     refetchSignet,
+    allSignets,
+    setAllSignets,
+    mine,
+    shared,
+    published,
+    archived
   };
 };
