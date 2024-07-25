@@ -15,9 +15,9 @@ import { RouterProvider } from "react-router-dom";
 import { AlertProvider } from "./providers/AlertProvider";
 import { ModalProvider } from "./providers/ModalsProvider";
 import { PinProvider } from "./providers/PinProvider";
+import { SelectedStructureProvider } from "./providers/SelectedStructureProvider";
 import { router } from "./routes";
 import { setupStore } from "./store";
-import { SelectedStructureProvider } from "./providers/SelectedStructureProvider";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
