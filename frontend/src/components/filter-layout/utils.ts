@@ -64,10 +64,10 @@ const filterByThemes = (
         return true;
       } // we filter only signets
       if (themes[0] === THEMES.ORIENTATION) {
-        return resource.document_types.includes("Orientation");
+        return resource?.document_types?.includes("Orientation");
       }
       if (themes[0] === THEMES.WITHOUT_THEME) {
-        return !resource.document_types.includes("Orientation");
+        return !resource?.document_types?.includes("Orientation");
       }
     });
   }
@@ -110,6 +110,7 @@ export const filterByAllDropdowns = (
   SOURCES: any,
   THEMES: any,
 ) => {
+  console.log("resourceees", resources)
   let filteredResources: Resource[] = [];
   filteredResources = filterBySources(
     resources,

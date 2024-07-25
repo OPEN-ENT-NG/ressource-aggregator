@@ -21,6 +21,7 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
+import { Signet } from "~/model/Signet.model";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
@@ -32,30 +33,27 @@ export const SignetPage: React.FC = () => {
   const { data: actions } = useActions();
   const canAccessSignet = isActionAvailable("signets", actions);
 
-  const { homeSignets, refetchSignet } = useSignet();
+  const { allSignets, mine } = useSignet();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters
-  const [signetResourcesData, setSignetResourcesData] = useState<
-    Resource[] | null
-  >(null);
-  const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [signetsData, setSignetsData] = useState<Signet[] | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string>("mediacentre.signets.mine")
 
   const canAccess = () => (canAccessSignet ? "signets" : "search");
 
   useEffect(() => {
-    if (!homeSignets) return;
-    if (!initialLoadDone) {
-      setInitialLoadDone(true);
+    if (allSignets) {
+      // initialload ? a voir si besoin
+      setSignetsData(mine(allSignets));
     }
-    setSignetResourcesData(homeSignets);
-  }, [homeSignets, initialLoadDone]);
+  }, [allSignets]);
 
   useEffect(() => {
-    if (signetResourcesData) {
-      setAllResourcesDisplayed(sortByAlphabet(signetResourcesData));
+    if (signetsData) {
+      setAllResourcesDisplayed(sortByAlphabet(signetsData));
     }
-  }, [signetResourcesData]);
+  }, [signetsData]);
 
   const handleCreateSignet = () => {
     openSpecificModal(ModalEnum.CREATE_SIGNET);
@@ -63,7 +61,6 @@ export const SignetPage: React.FC = () => {
 
   return (
     <>
-      <>
         <MainLayout />
         {alertText !== "" && (
           <Alert
@@ -89,7 +86,12 @@ export const SignetPage: React.FC = () => {
           <div className={`med-${canAccess()}-container`}>
             {canAccessSignet && (
               <div className="med-signets-admin-container">
-                <AdminSignet />
+                  <AdminSignet
+                      setSelectedTab={setSelectedTab}
+                      signets={allSignets}
+                      setSignetsData={setSignetsData}
+                      setAllResourcesDisplayed={setAllResourcesDisplayed}
+                  />
               </div>
             )}
             <div className={`med-${canAccess()}-page-content`}>
@@ -99,6 +101,12 @@ export const SignetPage: React.FC = () => {
                   <h1 className={`med-${canAccess()}-title`}>
                     {t("mediacentre.sidebar.signets")}
                   </h1>
+                    {canAccessSignet && (
+                        <div className="med-signets-selected-tab">
+                            <span>{'>'}</span>
+                            <p>{t(selectedTab)}</p>
+                        </div>
+                    )}
                 </div>
                 {canAccessSignet && (
                   <Button
@@ -112,7 +120,7 @@ export const SignetPage: React.FC = () => {
                 )}
               </div>
               <div className={`med-${canAccess()}-page-content-body`}>
-                {signetResourcesData && !signetResourcesData.length ? (
+                {signetData && !signetData.length ? (
                   <EmptyState
                     imgSource="empty-state-signets.png"
                     title="mediacentre.empty.state.signets"
@@ -120,7 +128,7 @@ export const SignetPage: React.FC = () => {
                 ) : (
                   <>
                     <FilterLayout
-                      resources={signetResourcesData}
+                      resources={signetData}
                       allResourcesDisplayed={allResourcesDisplayed}
                       setAllResourcesDisplayed={setAllResourcesDisplayed}
                     />
