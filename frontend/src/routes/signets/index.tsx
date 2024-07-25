@@ -36,6 +36,8 @@ export const SignetPage: React.FC = () => {
   >(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
+  const canAccess = () => (canAccessSignet ? "signets" : "search");
+
   useEffect(() => {
     if (!homeSignets) return;
     if (!initialLoadDone) {
@@ -70,41 +72,17 @@ export const SignetPage: React.FC = () => {
         )}
         <CreatePins refetch={refetchPins} />
         <div className="med-root-container">
-          <div
-            className={`med-${
-              canAccessSignet ? "signets" : "search"
-            }-container`}
-          >
+          <div className={`med-${canAccess()}-container`}>
             {canAccessSignet && (
               <div className="med-signets-admin-container">
                 <AdminSignet />
               </div>
             )}
-            <div
-              className={`med-${
-                canAccessSignet ? "signets" : "search"
-              }-page-content`}
-            >
-              <div
-                className={`med-${
-                  canAccessSignet ? "signets" : "search"
-                }-page-header`}
-              >
-                <div
-                  className={`med-${
-                    canAccessSignet ? "signets" : "search"
-                  }-page-title`}
-                >
-                  <BookmarkIcon
-                    className={`med-${
-                      canAccessSignet ? "signets" : "search"
-                    }-icon`}
-                  />
-                  <h1
-                    className={`med-${
-                      canAccessSignet ? "signets" : "search"
-                    }-title`}
-                  >
+            <div className={`med-${canAccess()}-page-content`}>
+              <div className={`med-${canAccess()}-page-header`}>
+                <div className={`med-${canAccess()}-page-title`}>
+                  <BookmarkIcon className={`med-${canAccess()}-icon`} />
+                  <h1 className={`med-${canAccess()}-title`}>
                     {t("mediacentre.sidebar.signets")}
                   </h1>
                 </div>
@@ -118,11 +96,7 @@ export const SignetPage: React.FC = () => {
                   </Button>
                 )}
               </div>
-              <div
-                className={`med-${
-                  canAccessSignet ? "signets" : "search"
-                }-page-content-body`}
-              >
+              <div className={`med-${canAccess()}-page-content-body`}>
                 <FilterLayout
                   resources={signetResourcesData}
                   setAllResourcesDisplayed={setAllResourcesDisplayed}
