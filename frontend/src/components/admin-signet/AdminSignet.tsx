@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
@@ -9,8 +9,10 @@ import { useTranslation } from "react-i18next";
 import { Signet } from "~/model/Signet.model";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
+import { sortByAlphabet } from "~/utils/sortResources.util";
 
 interface AdminSignetProps {
+  selectedTab: string;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
   signets: Signet[] | null;
   setSignetsData: React.Dispatch<React.SetStateAction<Signet[] | null>>;
@@ -18,6 +20,7 @@ interface AdminSignetProps {
 }
 
 export const AdminSignet: React.FC<AdminSignetProps> = ({
+  selectedTab,
   setSelectedTab,
   signets,
   setSignetsData,
@@ -30,7 +33,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.mine");
     if (signets) {
-      setSignetsData(mine(signets));
+      setSignetsData(sortByAlphabet(mine(signets)) as Signet[]);
     }
   };
 
@@ -38,7 +41,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.shared");
     if (signets) {
-      setSignetsData(shared(signets));
+      setSignetsData(sortByAlphabet(shared(signets)) as Signet[]);
     }
   }
 
@@ -46,7 +49,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.published");
     if (signets) {
-      setSignetsData(published(signets));
+      setSignetsData(sortByAlphabet(published(signets)) as Signet[]);
     }
   }
 
@@ -54,31 +57,31 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.archived");
     if (signets) {
-      setSignetsData(archived(signets));
+      setSignetsData(sortByAlphabet(archived(signets)) as Signet[]);
     }
   }
 
   return (
     <div className="med-signets-admin-list">
-      <div className="med-signets-admin-box active" onClick={() => selectMine()}>
+      <div className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.mine" ? "active" : ""}`} onClick={() => selectMine()}>
         <FolderIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
           {t("mediacentre.signets.mine")}
         </p>
       </div>
-      <div className="med-signets-admin-box" onClick={() => selectShared()}>
+      <div className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.shared" ? "active" : ""}`} onClick={() => selectShared()}>
         <FolderSharedIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
           {t("mediacentre.signets.shared")}
         </p>
       </div>
-      <div className="med-signets-admin-box" onClick={() => selectPublished()}>
+      <div className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.published" ? "active" : ""}`} onClick={() => selectPublished()}>
         <PublicIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
           {t("mediacentre.signets.published")}
         </p>
       </div>
-      <div className="med-signets-admin-box" onClick={() => selectArchived()}>
+      <div className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.archived" ? "active" : ""}`} onClick={() => selectArchived()}>
         <DeleteForeverIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
           {t("mediacentre.signets.archived")}

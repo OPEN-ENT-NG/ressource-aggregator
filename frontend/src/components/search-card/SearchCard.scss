@@ -4,6 +4,7 @@
 .med-search-resource-card {
   overflow: hidden;
   transition: max-height 1s ease-in-out;
+  animation: fade 2s;
 
   &.not-expanded {
     max-height: 177px;
@@ -136,4 +137,9 @@
     height: auto;
     padding: 0px 15px 15px 15px;
   }
+}
+
+@keyframes fade {
+  from {opacity: 0}
+  to {opacity: 1}
 }

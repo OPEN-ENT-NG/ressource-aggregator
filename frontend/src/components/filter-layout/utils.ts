@@ -110,7 +110,6 @@ export const filterByAllDropdowns = (
   SOURCES: any,
   THEMES: any,
 ) => {
-  console.log("resourceees", resources)
   let filteredResources: Resource[] = [];
   filteredResources = filterBySources(
     resources,
