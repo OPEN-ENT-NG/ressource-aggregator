@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
@@ -66,11 +66,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
   return (
     <div className="med-signets-admin-list">
       <div
-        className={`med-signets-admin-box ${
-          selectedTab === "mediacentre.signets.mine" ? "active" : ""
-        }`}
-        onClick={() => selectMine()}
-        role="button"
+        className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.mine" ? "active" : ""}`} onClick={() => selectMine()}role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -85,9 +81,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         </p>
       </div>
       <div
-        className={`med-signets-admin-box ${
-          selectedTab === "mediacentre.signets.shared" ? "active" : ""
-        }`}
+        className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.shared" ? "active" : ""}`}
         onClick={() => selectShared()}
         role="button"
         tabIndex={0}
@@ -104,9 +98,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         </p>
       </div>
       <div
-        className={`med-signets-admin-box ${
-          selectedTab === "mediacentre.signets.published" ? "active" : ""
-        }`}
+        className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.published" ? "active" : ""}`}
         onClick={() => selectPublished()}
         role="button"
         tabIndex={0}
@@ -123,9 +115,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         </p>
       </div>
       <div
-        className={`med-signets-admin-box ${
-          selectedTab === "mediacentre.signets.archived" ? "active" : ""
-        }`}
+        className={`med-signets-admin-box ${selectedTab === "mediacentre.signets.archived" ? "active" : ""}`}
         onClick={() => selectArchived()}
         role="button"
         tabIndex={0}

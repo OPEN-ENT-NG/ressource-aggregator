@@ -3,7 +3,15 @@
 
 .med-search-resource-card {
   overflow: hidden;
-  height: 177px;
+  transition: max-height 1s ease-in-out;
+  animation: fade 2s;
+
+  &.not-expanded {
+    max-height: 177px;
+  }
+  &.expanded {
+    max-height: 1000px;
+  }
 
   .med-search-resource-top-container {
     height: 177px;
@@ -46,7 +54,6 @@
           justify-content: space-between;
           align-items: self-start;
           padding: 5px 0px !important;
-          display: flex;
           .card-title {
             width: 100%;
             font-family: Roboto;
@@ -129,4 +136,9 @@
     height: auto;
     padding: 0px 15px 15px 15px;
   }
+}
+
+@keyframes fade {
+  from {opacity: 0}
+  to {opacity: 1}
 }
