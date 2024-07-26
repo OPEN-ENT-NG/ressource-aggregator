@@ -91,9 +91,36 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
       }
       setIsLoading(false);
       setIsRemoveResource(false);
+    } else {
+      setIsLoading(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allResourcesDisplayed, isRemoveResource]);
+
+  useEffect(() => {
+    switch (selectedTab) {
+      case "mediacentre.signets.mine":
+        setEmptyText("mediacentre.empty.state.mine");
+        setEmptyImage("empty-state-mine.png")
+        break;
+      case "mediacentre.signets.shared":
+        setEmptyText("mediacentre.empty.state.shared");
+        setEmptyImage("empty-state-shared.png")
+        break;
+      case "mediacentre.signets.published":
+        setEmptyText("mediacentre.empty.state.published");
+        setEmptyImage("empty-state-published.png")
+        break;
+      case "mediacentre.signets.archived":
+        setEmptyText("mediacentre.empty.state.archived");
+        setEmptyImage("empty-state-archived.png")
+        break
+      default:
+        setEmptyText("mediacentre.search.empty")
+        setEmptyImage("empty-state.png")
+        break
+    }
+  }, [selectedTab])
 
   return (
     <>

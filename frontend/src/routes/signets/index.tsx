@@ -38,19 +38,20 @@ export const SignetPage: React.FC = () => {
     Resource[] | null
   >(null); // all resources after the filters
   const [signetsData, setSignetsData] = useState<Signet[] | null>(null);
-  const [selectedTab, setSelectedTab] = useState<string>("mediacentre.signets.mine")
+  const [selectedTab, setSelectedTab] = useState<string>("mediacentre.signets.mine");
+  const [initialLoadDone, setInitialLoadDone] = useState<boolean>(false);
 
   const canAccess = () => (canAccessSignet ? "signets" : "search");
 
   useEffect(() => {
     if (allSignets) {
-      // initialload ? a voir si besoin
-      setSignetsData(mine(allSignets));
+      setSignetsData(mine(allSignets)); // sort resources first render
     }
   }, [allSignets]);
 
   useEffect(() => {
-    if (signetsData) {
+    if (signetsData && !initialLoadDone) {
+      setInitialLoadDone(true);
       setAllResourcesDisplayed(sortByAlphabet(signetsData));
     }
   }, [signetsData]);
@@ -87,6 +88,7 @@ export const SignetPage: React.FC = () => {
             {canAccessSignet && (
               <div className="med-signets-admin-container">
                   <AdminSignet
+                      selectedTab={selectedTab}
                       setSelectedTab={setSelectedTab}
                       signets={allSignets}
                       setSignetsData={setSignetsData}
