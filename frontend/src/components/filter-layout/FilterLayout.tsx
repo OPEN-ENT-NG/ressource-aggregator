@@ -22,8 +22,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   allResourcesDisplayed,
   setAllResourcesDisplayed,
 }) => {
-  const { resourcesMap } = useResourceListInfo(resources);
-  const { resourcesInfosMap } = useResourceListInfo(allResourcesDisplayed);
+  const { resourcesMap, resourcesInfosMap  } = useResourceListInfo(resources);
+  const { resourcesInfosMap : displayedResourcesInfosMap } = useResourceListInfo(allResourcesDisplayed);
 
   const page = useLocation().pathname;
   const { t } = useTranslation();
@@ -63,10 +63,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   const isShowingThemes = page === "/signets";
 
   // we show types only if we have resources in displayed resources
-  const isShowingTypes =
-    selectedCheckboxes.sources.includes(SOURCES.RESOURCES) ||
-    page === "/resources" ||
-    (!selectedCheckboxes.sources.length && sources.includes(SOURCES.RESOURCES));
+  const isShowingTypes = !!displayedResourcesInfosMap.types.length;
 
   // we show sources only if we are on favorites or search page
   const isShowingSources = page === "/favorites" || page === "/search";
@@ -95,11 +92,19 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       sourcesTemp = [...sourcesTemp, SOURCES.MOODLES];
     }
     setSources(sourcesTemp);
+    // reset selected checkboxes when we change the resources
+    setSelectedCheckboxes({
+      sources: [],
+      themes: [],
+      levels: [],
+      types: [],
+      disciplines: [],
+    });
   }, [resourcesMap]);
 
   return (
     <>
-      {!!allResourcesDisplayed?.length && (
+      {!!resources?.length && (
         <div className="med-filters">
           {isShowingSources && (
             <DropDown
