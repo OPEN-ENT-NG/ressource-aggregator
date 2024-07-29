@@ -82,7 +82,7 @@ public class TextBookHelper {
     }
 
     private void retrieveUserTextbooks(String state, UserInfos user, Source source, List<String> idStructures, ResponseHandlerHelper answer) {
-        ((GAR) source).initTextBooks(user, event -> {
+        ((GAR) source).initTextBooks(user, idStructures, event -> {
             if (event.isLeft()) {
                 log.error("[TextBookHelper] Failed to retrieve GAR textbooks", event.left().getValue());
                 answer.answerSuccess(new JsonObject().put("error", "Failed to retrieve GAR textbooks").put("status", "ko").encode());

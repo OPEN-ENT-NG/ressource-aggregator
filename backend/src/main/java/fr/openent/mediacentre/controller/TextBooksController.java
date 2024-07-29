@@ -31,8 +31,18 @@ public class TextBooksController extends ControllerHelper {
     @ResourceFilter(ViewRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void getGar(HttpServerRequest request) {
+        String listIdStructuresParam = request.getParam(Field.STRUCTUREIDS);
+        final List<String> listIdStructures;
+
+        if (listIdStructuresParam != null) {
+            listIdStructures = Arrays.asList(listIdStructuresParam.split(","));
+        }
+        else {
+            listIdStructures = new ArrayList<>();
+        }
+
         UserUtils.getUserInfos(eb, request, user -> {
-            textBookHelper.retrieveTextBooks("get", user, sources, new APIHelper(request));
+            textBookHelper.retrieveTextBooks("get", user, sources, listIdStructures, new APIHelper(request));
         });
     }
 
