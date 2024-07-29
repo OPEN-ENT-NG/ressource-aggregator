@@ -130,13 +130,7 @@ public class GAR implements Source {
      * @param handler Function handler returning data
      */
     private void getStructuresData(UserInfos user, List<String> idStructures, List<Future> futures, Handler<AsyncResult<CompositeFuture>> handler) {
-        List<String> structures;
-    
-        if (idStructures == null || idStructures.isEmpty()) {
-            structures = user.getStructures();
-        } else {
-            structures = idStructures;
-        }
+        List<String> structures = idStructures == null || idStructures.isEmpty() ? user.getStructures() : idStructures;
 
         for (String structure : structures) {
             Future<JsonArray> future = Future.future();
@@ -455,14 +449,9 @@ public class GAR implements Source {
         this.config = config;
     }
 
-    public void initTextBooks(UserInfos user, List<Array> idStructures, Handler<Either<String, JsonArray>> handler) {
+    public void initTextBooks(UserInfos user, List<String> idStructures, Handler<Either<String, JsonArray>> handler) {
         List<Future> futures = new ArrayList<>();
-        List<String> structures;
-        if (idStructures == null || idStructures.isEmpty()) {
-            structures = user.getStructures();
-        } else {
-            structures = idStructures;
-        }
+        List<String> structures = idStructures == null || idStructures.isEmpty() ? user.getStructures() : idStructures;
         for (String structure : structures) {
             Future<JsonArray> future = Future.future();
             futures.add(future);

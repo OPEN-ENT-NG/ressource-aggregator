@@ -21,7 +21,7 @@ public interface Source {
      * @param user    Current user
      * @param handler Function handler returning data
      */
-    void plainTextSearch(String query, UserInfos user, Handler<Either<JsonObject, JsonObject>> handler);
+    void plainTextSearch(String query, UserInfos user, List<String> idStructures, Handler<Either<JsonObject, JsonObject>> handler);
 
     /**
      * Advanced search

@@ -32,14 +32,7 @@ public class TextBooksController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void getGar(HttpServerRequest request) {
         String listIdStructuresParam = request.getParam(Field.STRUCTUREIDS);
-        final List<String> listIdStructures;
-
-        if (listIdStructuresParam != null) {
-            listIdStructures = Arrays.asList(listIdStructuresParam.split(","));
-        }
-        else {
-            listIdStructures = new ArrayList<>();
-        }
+        final List<String> listIdStructures = listIdStructuresParam != null ? Arrays.asList(listIdStructuresParam.split(",")) : new ArrayList<>();
 
         UserUtils.getUserInfos(eb, request, user -> {
             textBookHelper.retrieveTextBooks("get", user, sources, listIdStructures, new APIHelper(request));
@@ -51,14 +44,7 @@ public class TextBooksController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void refreshGar(HttpServerRequest request) {
         String listIdStructuresParam = request.getParam(Field.STRUCTUREIDS);
-        final List<String> listIdStructures;
-
-        if (listIdStructuresParam != null) {
-            listIdStructures = Arrays.asList(listIdStructuresParam.split(","));
-        }
-        else {
-            listIdStructures = new ArrayList<>();
-        }
+        final List<String> listIdStructures = listIdStructuresParam != null ? Arrays.asList(listIdStructuresParam.split(",")) : new ArrayList<>();
 
         UserUtils.getUserInfos(eb, request, user -> {
             textBookHelper.refreshTextBooks("refresh", sources, user, listIdStructures, new APIHelper(request));
