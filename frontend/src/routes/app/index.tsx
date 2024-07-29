@@ -26,6 +26,7 @@ import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { usePinProvider } from "~/providers/PinProvider";
+import { useModalProvider } from "~/providers/ModalsProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 
 export interface AppProps {
@@ -60,6 +61,7 @@ export const App = () => {
   >(null);
   const [textbooksData, setTextbooksData] = useState<Textbook[] | null>(null);
   const { t } = useTranslation();
+  const {openModal} = useModalProvider();
 
   useEffect(() => {
     setPinsEmpty(!pins || pins.length === 0);
@@ -280,9 +282,9 @@ export const App = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins refetch={refetchPins} />
-      <EditPins refetch={refetchPins} />
-      <ConfirmDelete refetch={refetchPins} />
+      {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
+      {openModal === "edit-pin" && (<EditPins refetch={refetchPins} />)}
+      {openModal === "confirm-delete-pin" && (<ConfirmDelete refetch={refetchPins} />)}
       <div className="med-container">
         <div id="pinId">{!pinsEmpty && <PinsCarousel />}</div>
         <div id="favoriteId">

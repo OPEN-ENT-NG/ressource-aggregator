@@ -17,6 +17,7 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { useModalProvider } from "~/providers/ModalsProvider";
 
 export const ResourcePage: React.FC = () => {
   const { user } = useUser();
@@ -24,6 +25,7 @@ export const ResourcePage: React.FC = () => {
   const { idSelectedStructure } = useSelectedStructureProvider();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
+  const { openModal } = useModalProvider();
 
   const { globals } = useGlobal();
   const { externalResources, refetchSearch } =
@@ -75,7 +77,7 @@ export const ResourcePage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins refetch={refetchPins} />
+      {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

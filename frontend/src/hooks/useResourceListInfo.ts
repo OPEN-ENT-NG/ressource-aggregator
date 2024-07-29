@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { GAR, MOODLE, SIGNET } from "~/core/const/sources.const";
+import { ExternalResource } from "~/model/ExternalResource.model";
+import { Moodle } from "~/model/Moodle.model";
 import { Resource } from "~/model/Resource.model";
 import { ResourceInfosMap } from "~/model/ResourceInfosMap";
 import { ResourcesMap } from "~/model/ResourcesMap";
+import { Signet } from "~/model/Signet.model";
+import { Textbook } from "~/model/Textbook.model";
 
 const ResourcesMapInitialStates: ResourcesMap = {
   textbooks: [],
@@ -57,9 +61,9 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
           acc.externalResources = [...acc.externalResources, resource];
           acc.types = [
             ...acc.types,
-            ...resource.document_types.filter(
-              (type) => !acc.types.includes(type),
-            ),
+            ...resource.document_types
+              .filter(type => !acc.types.includes(type))
+              .map(type => Array.isArray(type) ? type[1] : type)
           ];
         }
         // Case moodle
@@ -73,13 +77,15 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
 
         acc.disciplines = [
           ...acc.disciplines,
-          ...resource.disciplines.filter(
-            (discipline) => !acc.disciplines.includes(discipline),
-          ),
+          ...resource.disciplines
+            .filter(discipline => !acc.disciplines.includes(discipline))
+            .map(discipline => Array.isArray(discipline) ? discipline[1] : discipline),
         ];
         acc.levels = [
           ...acc.levels,
-          ...resource.levels.filter((level) => !acc.levels.includes(level)),
+          ...resource.levels
+            .filter(level => !acc.levels.includes(level))
+            .map(level => Array.isArray(level) ? level[1] : level),
         ];
 
         return acc;
@@ -96,10 +102,10 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
     );
 
     setResourcesMap({
-      textbooks: result.textbooks,
-      externalResources: result.externalResources,
-      moodle: result.moodle,
-      signets: result.signets,
+      textbooks: result.textbooks as Textbook[],
+      externalResources: result.externalResources as ExternalResource[],
+      moodle: result.moodle as Moodle[],
+      signets: result.signets as Signet[],
     });
 
     setResourcesInfosMap({

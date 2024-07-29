@@ -1,0 +1,23 @@
+.font-red {
+  margin-top: 0.3em;
+  font-size: 1.15rem;
+  color: red;
+}
+
+.med-modal-signet-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.med-modal-signet-keywords {
+  width: 100%;
+
+  .med-keywords-chip {
+    margin: 2px 5px;
+  }
+
+  span {
+    font-size: 1.2rem;
+  }
+}

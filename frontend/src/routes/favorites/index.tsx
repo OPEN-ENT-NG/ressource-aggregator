@@ -16,11 +16,13 @@ import { Resource } from "~/model/Resource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { useModalProvider } from "~/providers/ModalsProvider";
 
 export const FavoritePage: React.FC = () => {
   const { t } = useTranslation();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
+  const { openModal } = useModalProvider();
 
   const { favorites, refetchFavorite } = useFavorite();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
@@ -66,7 +68,7 @@ export const FavoritePage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins refetch={refetchPins} />
+      {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

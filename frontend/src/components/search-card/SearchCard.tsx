@@ -46,7 +46,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { setModalResource, setIsCreatedOpen } = useModalProvider();
+  const { setModalResource, openSpecificModal } = useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
 
   // used to check if the user has the right to pin a resource
@@ -151,7 +151,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   const pin = () => {
     if (searchResource) {
       setModalResource(searchResource);
-      setIsCreatedOpen(true);
+      openSpecificModal("create-pin");
     }
   };
 

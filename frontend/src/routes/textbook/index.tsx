@@ -18,11 +18,14 @@ import { Textbook } from "~/model/Textbook.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { useModalProvider } from "~/providers/ModalsProvider";
 
 export const TextbookPage: React.FC = () => {
   const { t } = useTranslation();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
+  const {openModal} = useModalProvider();
+
   const { textbooks, refetchTextbooks } = useTextbook();
   const [textbooksData, setTextbooksData] = useState<Resource[] | null>(null);
   const { favorites, refetchFavorite } = useFavorite();
@@ -86,7 +89,7 @@ export const TextbookPage: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      <CreatePins refetch={refetchPins} />
+      {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

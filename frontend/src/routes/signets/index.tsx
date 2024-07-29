@@ -10,9 +10,11 @@ import { FilterLayout } from "~/components/filter-layout/FilterLayout";
 import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteScrollList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
+import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
+import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
@@ -23,6 +25,7 @@ export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
+  const {openModal, openSpecificModal} = useModalProvider();
 
   // RIGHTS
   const { data: actions } = useActions();
@@ -53,6 +56,10 @@ export const SignetPage: React.FC = () => {
     }
   }, [signetResourcesData]);
 
+  const handleCreateSignet = () => {
+    openSpecificModal("create-signet");
+  }
+
   return (
     <>
       <>
@@ -71,7 +78,8 @@ export const SignetPage: React.FC = () => {
             {alertText}
           </Alert>
         )}
-        <CreatePins refetch={refetchPins} />
+        {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
+        {openModal === "create-signet" && (<CreateSignet />)}
         <div className="med-root-container">
           <div className={`med-${canAccess()}-container`}>
             {canAccessSignet && (
@@ -92,6 +100,7 @@ export const SignetPage: React.FC = () => {
                     color="primary"
                     type="button"
                     className="med-signets-create-button"
+                    onClick={handleCreateSignet}
                   >
                     {t("mediacentre.signet.create.button")}
                   </Button>
@@ -108,9 +117,10 @@ export const SignetPage: React.FC = () => {
                     <FilterLayout
                       resources={signetResourcesData}
                       allResourcesDisplayed={allResourcesDisplayed}
-                      setAllResourcesDisplayed={setAllResourcesDisplayed}
-                    />
-                    {allResourcesDisplayed && !allResourcesDisplayed.length ? (
+                      allResourcesDisplayed={allResourcesDisplayed}
+                  setAllResourcesDisplayed={setAllResourcesDisplayed}
+                />
+                {allResourcesDisplayed && !allResourcesDisplayed.length ? (
                       <EmptyState title="mediacentre.empty.state.filter" />
                     ) : (
                       <InfiniteScrollList

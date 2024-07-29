@@ -69,7 +69,7 @@ export const Resource: React.FC<ResourceProps> = ({
   const [removeFavorite] = useRemoveFavoriteMutation();
   const { t } = useTranslation();
   const { setAlertText, setAlertType } = useAlertProvider();
-  const { setModalResource, setIsCreatedOpen } = useModalProvider();
+  const { setModalResource, openSpecificModal } = useModalProvider();
 
   // used to check if the user has the right to pin a resource
   const { data: actions } = useActions();
@@ -140,7 +140,7 @@ export const Resource: React.FC<ResourceProps> = ({
   const pin = () => {
     if (resource) {
       setModalResource(resource as SearchResource);
-      setIsCreatedOpen(true);
+      openSpecificModal("create-pin");
     }
   };
 

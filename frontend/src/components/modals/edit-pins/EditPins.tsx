@@ -25,7 +25,7 @@ interface EditPinsProps {
 export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   const { t } = useTranslation();
   const { idSelectedStructure } = useSelectedStructureProvider();
-  const { modalResource, isEditOpen, setIsEditOpen, setIsDeleteOpen } =
+  const { modalResource, openModal, closeAllModals, openSpecificModal } =
     useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
   const [updatePin] = useUpdatePinMutation();
@@ -37,7 +37,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   );
 
   const handleCloseModal = () => {
-    setIsEditOpen(false);
+    closeAllModals();
   };
 
   const resetFields = () => {
@@ -51,8 +51,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   };
 
   const onSubmitDelete = async () => {
-    setIsDeleteOpen(true);
-    handleCloseModal();
+    openSpecificModal("confirm-delete-pin")
   };
 
   const onSubmit = async () => {
@@ -87,12 +86,12 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
     setDescription((modalResource as Pin)?.pinned_description ?? "");
   }, [modalResource]);
 
-  if (!modalResource || !isEditOpen) {
+  if (!modalResource || openModal !== "edit-pin") {
     return null;
   }
 
   return (
-    <Modal onModalClose={handleCloseModal} isOpen={isEditOpen} id="create-pins">
+    <Modal onModalClose={handleCloseModal} isOpen={true} id="create-pins">
       <Modal.Header onModalClose={handleCloseModal}>
         {t("mediacentre.pins.modal.edit.title")}
       </Modal.Header>
