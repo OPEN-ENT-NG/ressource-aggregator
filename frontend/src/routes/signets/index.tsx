@@ -100,7 +100,7 @@ export const SignetPage: React.FC = () => {
               <div className={`med-${canAccess()}-page-content-body`}>
                 {signetResourcesData && !signetResourcesData.length ? (
                   <EmptyState
-                    imgSource="/mediacentre/public/img/empty-state-signets.png"
+                    imgSource="empty-state-signets.png"
                     title="mediacentre.empty.state.signets"
                   />
                 ) : (

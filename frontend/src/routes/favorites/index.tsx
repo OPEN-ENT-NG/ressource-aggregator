@@ -80,7 +80,7 @@ export const FavoritePage: React.FC = () => {
           <div className="med-search-page-content-body">
             {favoriteResourcesData && !favoriteResourcesData.length ? (
               <EmptyState
-                imgSource="/mediacentre/public/img/empty-state-favorites.png"
+                imgSource="empty-state-favorites.png"
                 title="mediacentre.empty.state.favorites"
               />
             ) : (

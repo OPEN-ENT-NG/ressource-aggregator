@@ -86,7 +86,7 @@ export const ResourcePage: React.FC = () => {
           <div className="med-search-page-content-body">
             {externalResourcesData && !externalResourcesData.length ? (
               <EmptyState
-                imgSource="/mediacentre/public/img/empty-state-resources.png"
+                imgSource="empty-state-resources.png"
                 title="mediacentre.empty.state.resources"
               />
             ) : (
