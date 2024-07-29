@@ -45,10 +45,10 @@ export const Search: React.FC = () => {
     };
   };
 
-  const { allResources, refetchSearch } = useSearch({
-    jsondata: createSearchBody(searchQuery),
-    idStructure: idSelectedStructure,
-  });
+  const { allResources, refetchSearch } = useSearch(
+    createSearchBody(searchQuery),
+    idSelectedStructure
+  );
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters
