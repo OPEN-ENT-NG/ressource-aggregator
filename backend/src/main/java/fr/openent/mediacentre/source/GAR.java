@@ -142,6 +142,11 @@ public class GAR implements Source {
     }
 
     @Override
+    public void plainTextSearch(String query, UserInfos user, Handler<Either<JsonObject, JsonObject>> handler) {
+        plainTextSearch(query, user, null, handler);
+    }
+
+    @Override
     public void plainTextSearch(String query, UserInfos user, List<String> idStructures, Handler<Either<JsonObject, JsonObject>> handler) {
         List<Future> futures = new ArrayList<>();
         getStructuresData(user, idStructures, futures, event -> {

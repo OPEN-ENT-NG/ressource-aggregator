@@ -21,7 +21,7 @@ public class PMB implements Source {
     private final Logger log = LoggerFactory.getLogger(PMB.class);
 
     @Override
-    public void plainTextSearch(String query, UserInfos user, List<String> idStructures, Handler<Either<JsonObject, JsonObject>> handler) {
+    public void plainTextSearch(String query, UserInfos user, Handler<Either<JsonObject, JsonObject>> handler) {
         ElasticSearchHelper.plainTextSearch(PMB.class, query, user.getUserId(), user.getStructures(), false, ElasticSearchHelper.searchHandler(PMB.class, null, handler));
     }
 

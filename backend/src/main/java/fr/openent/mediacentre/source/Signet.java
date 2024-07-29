@@ -11,8 +11,6 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.user.UserInfos;
 
-import java.util.List;
-
 public class Signet implements Source {
 
     private final Logger log = LoggerFactory.getLogger(Signet.class);
@@ -24,7 +22,7 @@ public class Signet implements Source {
     }
 
     @Override
-    public void plainTextSearch(String query, UserInfos user, List<String> idStructures, Handler<Either<JsonObject, JsonObject>> handler) {
+    public void plainTextSearch(String query, UserInfos user, Handler<Either<JsonObject, JsonObject>> handler) {
         ElasticSearchHelper.plainTextSearch(Signet.class, query, user.getUserId(), null, false, ElasticSearchHelper.searchHandler(Signet.class, null, handler));
     }
 
