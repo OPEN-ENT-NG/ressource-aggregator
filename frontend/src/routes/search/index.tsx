@@ -16,10 +16,12 @@ import "~/styles/page/search.scss";
 import { Resource } from "~/model/Resource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { usePinProvider } from "~/providers/PinProvider";
+import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
+  const { idSelectedStructure } = useSelectedStructureProvider();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
   const location = useLocation();
@@ -43,9 +45,10 @@ export const Search: React.FC = () => {
     };
   };
 
-  const { allResources, refetchSearch } = useSearch(
-    createSearchBody(searchQuery),
-  );
+  const { allResources, refetchSearch } = useSearch({
+    jsondata: createSearchBody(searchQuery),
+    idStructure: idSelectedStructure,
+  });
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters

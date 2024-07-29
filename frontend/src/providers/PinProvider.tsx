@@ -26,7 +26,7 @@ export const PinProvider: FC<PinProviderProviderProps> = ({ children }) => {
   const [pins, setPins] = useState<Pin[] | null>(null);
   const { idSelectedStructure } = useSelectedStructureProvider();
 
-  const { data: fetchedPins, refetch: refetchPins } = useGetPinsQuery(
+  const { currentData: fetchedPins, refetch: refetchPins } = useGetPinsQuery(
     idSelectedStructure ?? "",
   );
 
