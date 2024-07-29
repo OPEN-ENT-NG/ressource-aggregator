@@ -47,7 +47,7 @@ export const Search: React.FC = () => {
 
   const { allResources, refetchSearch } = useSearch(
     createSearchBody(searchQuery),
-    idSelectedStructure
+    idSelectedStructure,
   );
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
