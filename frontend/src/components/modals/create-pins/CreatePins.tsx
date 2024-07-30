@@ -16,6 +16,7 @@ import { useModalProvider } from "~/providers/ModalsProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { useCreatePinMutation } from "~/services/api/pin.service";
 import "../Modal.scss";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface CreatePinsProps {
   refetch: () => void;
@@ -78,7 +79,7 @@ export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
     setDescription((modalResource as any)?.description ?? "");
   }, [modalResource]);
 
-  if (!modalResource || openModal !== "create-pin") {
+  if (!modalResource || openModal !== ModalEnum.CREATE_PIN) {
     return null;
   }
 

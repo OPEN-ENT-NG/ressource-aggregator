@@ -51,7 +51,7 @@ export const ConfirmDelete: React.FC<ConfirmDeleteProps> = ({ refetch }) => {
     }
   };
 
-  if (!modalResource || openModal !== "confirm-delete-pin") {
+  if (!modalResource || openModal !== ModalEnum.CONFIRM_DELETE_PIN) {
     return null;
   }
 

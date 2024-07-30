@@ -20,6 +20,7 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export const SignetPage: React.FC = () => {
   }, [signetResourcesData]);
 
   const handleCreateSignet = () => {
-    openSpecificModal("create-signet");
+    openSpecificModal(ModalEnum.CREATE_SIGNET);
   };
 
   return (
@@ -78,8 +79,8 @@ export const SignetPage: React.FC = () => {
             {alertText}
           </Alert>
         )}
-        {openModal === "create-pin" && <CreatePins refetch={refetchPins} />}
-        {openModal === "create-signet" && (
+        {openModal === ModalEnum.CREATE_PIN && <CreatePins refetch={refetchPins} />}
+        {openModal === ModalEnum.CREATE_SIGNET && (
           <CreateSignet refetch={refetchSignet} />
         )}
         <div className="med-root-container">

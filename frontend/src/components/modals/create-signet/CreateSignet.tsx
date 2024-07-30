@@ -25,6 +25,7 @@ import { useGetLevelsQuery } from "~/services/api/levels.service";
 import { useCreateSignetMutation } from "~/services/api/signet.service";
 import "../Modal.scss";
 import "./CreateSignet.scss";
+import { breakpoints } from "~/core/const/breakpoints";
 
 interface CreateSignetProps {
   refetch: () => void;
@@ -166,8 +167,8 @@ export const CreateSignet: React.FC<CreateSignetProps> = ({ refetch }) => {
     return (
       title !== "" &&
       url !== "" &&
-      selectedCheckboxes?.levels?.length > 0 &&
-      selectedCheckboxes?.disciplines?.length > 0 &&
+      !!selectedCheckboxes?.levels?.length &&
+      !!selectedCheckboxes?.disciplines?.length &&
       (thumbnail != "" || thumbnailSrc != "")
     );
   };
@@ -188,7 +189,7 @@ export const CreateSignet: React.FC<CreateSignetProps> = ({ refetch }) => {
     }
   }, [levels, disciplines]);
 
-  if (!allLevels || !allDisciplines || openModal !== "create-signet") {
+  if (!allLevels || !allDisciplines || openModal !== ModalEnum.CREATE_SIGNET) {
     return null;
   }
 
@@ -207,7 +208,7 @@ export const CreateSignet: React.FC<CreateSignetProps> = ({ refetch }) => {
       <Modal.Body>
         <Grid>
           <Grid.Col
-            lg={width < 1280 ? "2" : "3"}
+            lg={width < breakpoints.xl ? "2" : "3"}
             md="2"
             sm="4"
             style={{
@@ -237,7 +238,7 @@ export const CreateSignet: React.FC<CreateSignetProps> = ({ refetch }) => {
             )}
           </Grid.Col>
           <Grid.Col
-            lg={width < 1280 ? "6" : "9"}
+            lg={width < breakpoints.xl ? "6" : "9"}
             md="6"
             sm="4"
             style={{

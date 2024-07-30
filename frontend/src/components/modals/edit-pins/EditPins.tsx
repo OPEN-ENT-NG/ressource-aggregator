@@ -17,6 +17,7 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { useUpdatePinMutation } from "~/services/api/pin.service";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface EditPinsProps {
   refetch: () => void;
@@ -51,7 +52,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   };
 
   const onSubmitDelete = async () => {
-    openSpecificModal("confirm-delete-pin");
+    openSpecificModal(ModalEnum.CONFIRM_DELETE_PIN);
   };
 
   const onSubmit = async () => {
@@ -86,7 +87,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
     setDescription((modalResource as Pin)?.pinned_description ?? "");
   }, [modalResource]);
 
-  if (!modalResource || openModal !== "edit-pin") {
+  if (!modalResource || openModal !== ModalEnum.EDIT_PIN) {
     return null;
   }
 

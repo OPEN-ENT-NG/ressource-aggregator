@@ -95,7 +95,7 @@ export const Search: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      {openModal === "create-pin" && <CreatePins refetch={refetchPins} />}
+      {openModal === ModalEnum.CREATE_PIN && <CreatePins refetch={refetchPins} />}
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

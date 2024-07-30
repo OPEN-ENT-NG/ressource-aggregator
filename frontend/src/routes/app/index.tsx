@@ -28,6 +28,7 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 export interface AppProps {
   _id: string;
@@ -282,9 +283,9 @@ export const App = () => {
           {alertText}
         </Alert>
       )}
-      {openModal === "create-pin" && <CreatePins refetch={refetchPins} />}
-      {openModal === "edit-pin" && <EditPins refetch={refetchPins} />}
-      {openModal === "confirm-delete-pin" && (
+      {openModal === ModalEnum.CREATE_PIN && <CreatePins refetch={refetchPins} />}
+      {openModal === ModalEnum.EDIT_PIN && <EditPins refetch={refetchPins} />}
+      {openModal === ModalEnum.CONFIRM_DELETE_PIN && (
         <ConfirmDelete refetch={refetchPins} />
       )}
       <div className="med-container">

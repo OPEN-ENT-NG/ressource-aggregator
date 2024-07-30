@@ -29,6 +29,7 @@ import {
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
 import { useActions } from "~/services/queries";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface SearchResourceProps {
   searchResource: SearchResource;
@@ -151,7 +152,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   const pin = () => {
     if (searchResource) {
       setModalResource(searchResource);
-      openSpecificModal("create-pin");
+      openSpecificModal(ModalEnum.CREATE_PIN);
     }
   };
 
