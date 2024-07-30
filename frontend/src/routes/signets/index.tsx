@@ -122,15 +122,15 @@ export const SignetPage: React.FC = () => {
                 )}
               </div>
               <div className={`med-${canAccess()}-page-content-body`}>
-                {signetData && !signetData.length ? (
+                {signetsData && !signetsData.length ? (
                   <EmptyState
-                    imgSource="empty-state-signets.png"
+                    image="empty-state-signets.png"
                     title="mediacentre.empty.state.signets"
                   />
                 ) : (
                   <>
                     <FilterLayout
-                      resources={signetData}
+                      resources={signetsData}
                       allResourcesDisplayed={allResourcesDisplayed}
                       setAllResourcesDisplayed={setAllResourcesDisplayed}
                     />
@@ -149,6 +149,5 @@ export const SignetPage: React.FC = () => {
           </div>
         </div>
       </>
-    </>
   );
 };
