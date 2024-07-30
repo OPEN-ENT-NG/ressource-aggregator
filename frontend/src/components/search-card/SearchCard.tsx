@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { SearchCardDescription } from "./search-card-description/SearchCardDescription";
 import { SearchCardDetails } from "./search-card-details/SearchCardDetails";
 import { SearchCardType } from "./search-card-type/SearchCardType";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { SearchCardTypeEnum } from "~/core/enum/search-card-type.enum";
 import { SearchResource } from "~/model/SearchResource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
@@ -29,7 +30,6 @@ import {
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
 import { useActions } from "~/services/queries";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface SearchResourceProps {
   searchResource: SearchResource;

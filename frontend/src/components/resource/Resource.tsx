@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import { ResourceTitle } from "./resource-title/ResourceTitle";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
 import { GlobalResource } from "~/model/GlobalResource.model";
@@ -26,7 +27,6 @@ import {
   useRemoveFavoriteMutation,
 } from "~/services/api/favorite.service";
 import { useActions } from "~/services/queries";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface ResourceProps {
   resource:

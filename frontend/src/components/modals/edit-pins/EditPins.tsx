@@ -12,12 +12,12 @@ import { useTranslation } from "react-i18next";
 
 import "../Modal.scss";
 import { links } from "~/core/const/links.const";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { useUpdatePinMutation } from "~/services/api/pin.service";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 interface EditPinsProps {
   refetch: () => void;

@@ -14,6 +14,7 @@ import { ConfirmDelete } from "~/components/modals/confirm-delete/ConfirmDelete"
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { EditPins } from "~/components/modals/edit-pins/EditPins";
 import { CardTypeEnum } from "~/core/enum/card-type.enum";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useGlobal } from "~/hooks/useGlobal";
@@ -28,7 +29,6 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 export interface AppProps {
   _id: string;
@@ -283,7 +283,9 @@ export const App = () => {
           {alertText}
         </Alert>
       )}
-      {openModal === ModalEnum.CREATE_PIN && <CreatePins refetch={refetchPins} />}
+      {openModal === ModalEnum.CREATE_PIN && (
+        <CreatePins refetch={refetchPins} />
+      )}
       {openModal === ModalEnum.EDIT_PIN && <EditPins refetch={refetchPins} />}
       {openModal === ModalEnum.CONFIRM_DELETE_PIN && (
         <ConfirmDelete refetch={refetchPins} />

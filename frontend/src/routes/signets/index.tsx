@@ -11,6 +11,7 @@ import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteSc
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
@@ -20,7 +21,6 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
@@ -79,7 +79,9 @@ export const SignetPage: React.FC = () => {
             {alertText}
           </Alert>
         )}
-        {openModal === ModalEnum.CREATE_PIN && <CreatePins refetch={refetchPins} />}
+        {openModal === ModalEnum.CREATE_PIN && (
+          <CreatePins refetch={refetchPins} />
+        )}
         {openModal === ModalEnum.CREATE_SIGNET && (
           <CreateSignet refetch={refetchSignet} />
         )}

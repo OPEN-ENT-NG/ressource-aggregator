@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { ChipController } from "~/components/chip-controller/ChipController";
 import { DropDown } from "~/components/drop-down/DropDown";
 import UniqueImagePicker from "~/components/unique-image-picker/UniqueImagePicker";
+import { breakpoints } from "~/core/const/breakpoints";
 import useImageHandler from "~/hooks/useImageHandler";
 import useWindowDimensions from "~/hooks/useWindowDimensions";
 import { SignetPayload } from "~/model/payloads/SignetPayload";
@@ -25,7 +26,6 @@ import { useGetLevelsQuery } from "~/services/api/levels.service";
 import { useCreateSignetMutation } from "~/services/api/signet.service";
 import "../Modal.scss";
 import "./CreateSignet.scss";
-import { breakpoints } from "~/core/const/breakpoints";
 
 interface CreateSignetProps {
   refetch: () => void;
