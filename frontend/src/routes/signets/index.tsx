@@ -43,7 +43,6 @@ export const SignetPage: React.FC = () => {
   const canAccess = () => (canAccessSignet ? "signets" : "search");
 
   useEffect(() => {
-    console.log("homeSignets", homeSignets);
     if (!homeSignets) return;
     if (!initialLoadDone) {
       setInitialLoadDone(true);
@@ -120,10 +119,9 @@ export const SignetPage: React.FC = () => {
                     <FilterLayout
                       resources={signetResourcesData}
                       allResourcesDisplayed={allResourcesDisplayed}
-                      allResourcesDisplayed={allResourcesDisplayed}
-                  setAllResourcesDisplayed={setAllResourcesDisplayed}
-                />
-                {allResourcesDisplayed && !allResourcesDisplayed.length ? (
+                      setAllResourcesDisplayed={setAllResourcesDisplayed}
+                    />
+                    {allResourcesDisplayed && !allResourcesDisplayed.length ? (
                       <EmptyState title="mediacentre.empty.state.filter" />
                     ) : (
                       <InfiniteScrollList
