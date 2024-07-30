@@ -15,10 +15,10 @@ import { useSearch } from "~/hooks/useSearch";
 import "~/styles/page/search.scss";
 import { Resource } from "~/model/Resource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
+import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
-import { useModalProvider } from "~/providers/ModalsProvider";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();
@@ -95,7 +95,7 @@ export const Search: React.FC = () => {
           {alertText}
         </Alert>
       )}
-      {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
+      {openModal === "create-pin" && <CreatePins refetch={refetchPins} />}
       <div className="med-search-container">
         <div className="med-search-page-content">
           <div className="med-search-page-header">

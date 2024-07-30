@@ -11,30 +11,31 @@ import {
   Modal,
 } from "@edifice-ui/react";
 import { useTranslation } from "react-i18next";
-import { useAlertProvider } from "~/providers/AlertProvider";
-import { useModalProvider } from "~/providers/ModalsProvider";
+
+import { ChipController } from "~/components/chip-controller/ChipController";
+import { DropDown } from "~/components/drop-down/DropDown";
+import UniqueImagePicker from "~/components/unique-image-picker/UniqueImagePicker";
 import useImageHandler from "~/hooks/useImageHandler";
 import useWindowDimensions from "~/hooks/useWindowDimensions";
-import UniqueImagePicker from "~/components/unique-image-picker/UniqueImagePicker";
+import { SignetPayload } from "~/model/payloads/SignetPayload";
+import { useAlertProvider } from "~/providers/AlertProvider";
+import { useModalProvider } from "~/providers/ModalsProvider";
 import { useGetDisciplinesQuery } from "~/services/api/disciplines.service";
 import { useGetLevelsQuery } from "~/services/api/levels.service";
-import { DropDown } from "~/components/drop-down/DropDown";
+import { useCreateSignetMutation } from "~/services/api/signet.service";
 import "../Modal.scss";
 import "./CreateSignet.scss";
-import { Chip } from "@mui/material";
-import { SignetPayload } from "~/model/payloads/SignetPayload";
-import { useCreateSignetMutation } from "~/services/api/signet.service";
 
 interface CreateSignetProps {
-  
+  refetch: () => void;
 }
 
-export const CreateSignet: React.FC<CreateSignetProps> = () => {
+export const CreateSignet: React.FC<CreateSignetProps> = ({ refetch }) => {
   const { t } = useTranslation();
   const { openModal, closeAllModals } = useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
-  let {data: disciplines } = useGetDisciplinesQuery(null);
-  let {data: levels } = useGetLevelsQuery(null);
+  const { data: disciplines } = useGetDisciplinesQuery(null);
+  const { data: levels } = useGetLevelsQuery(null);
   const [createSignet] = useCreateSignetMutation();
   const [allLevels, setAllLevels] = useState<string[] | null>(null);
   const [allDisciplines, setAllDisciplines] = useState<string[] | null>(null);
@@ -48,7 +49,8 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
   });
   const [plainText, setPlainText] = useState<string>("");
   const [keyWordArray, setKeyWordArray] = useState<string[]>([]);
-  const [isOrientationChecked, setIsOrientationChecked] = useState<boolean>(false);
+  const [isOrientationChecked, setIsOrientationChecked] =
+    useState<boolean>(false);
 
   const setSelectedCheckboxesItems = (key: string) => {
     return (value: string[]) =>
@@ -95,26 +97,38 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
         notify(t("mediacentre.modal.signet.ask.image"), "danger");
         return;
       }
-      const signet: SignetPayload = {
+      const payload: SignetPayload = {
         id: uuidv(),
         title: title,
-        levels: levels?.filter((level: {label: string}) => selectedCheckboxes.levels.includes(level.label)).map((level: {id: string, label: string}) => ({id: level.id, label: level.label})),
-        disciplines: disciplines?.filter((discipline: {label: string}) => selectedCheckboxes.disciplines.includes(discipline.label)).map((discipline: {id: string, label: string}) => ({id: discipline.id, label: discipline.label})),
+        levels: levels
+          ?.filter((level: { label: string }) =>
+            selectedCheckboxes.levels.includes(level.label),
+          )
+          .map((level: { id: string; label: string }) => ({
+            id: level.id,
+            label: level.label,
+          })),
+        disciplines: disciplines
+          ?.filter((discipline: { label: string }) =>
+            selectedCheckboxes.disciplines.includes(discipline.label),
+          )
+          .map((discipline: { id: string; label: string }) => ({
+            id: discipline.id,
+            label: discipline.label,
+          })),
         url: url,
         image: imageUrl ?? "",
-        plain_text: keyWordArray.map((keyword: string) => ({label: keyword})),
+        plain_text: keyWordArray.map((keyword: string) => ({ label: keyword })),
         orientation: isOrientationChecked,
       };
-      let response = await createSignet(signet);
-
-      console.log(response);
-      
+      const response = await createSignet({ payload });
       if (response?.error) {
-        notify(t("mediacentre.error.pin"), "danger");
+        notify(t("mediacentre.error.signet.create"), "danger");
         return;
       }
-
+      handleCloseModal();
       resetFields();
+      refetch();
       notify(t("mediacentre.signet.create.success"), "success");
     } catch (error) {
       notify(t("mediacentre.error.signet.create"), "danger");
@@ -123,37 +137,56 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
   };
 
   const uuidv = () => {
-    return 'xxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
+    return "xxxxxxxx".replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0,
+        v = c == "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
     });
-  }
+  };
 
   const handleChangePlainText = (value: string) => {
     if (value !== " ") {
       setPlainText(value);
     }
-  }
+  };
 
   const handleKeyPress = (e: any) => {
     if ((e.key === "Enter" || e.key === " ") && plainText !== "") {
       setKeyWordArray([...keyWordArray, plainText.trim()]);
       setPlainText("");
     }
-  }
+  };
+
+  const handleDelete = (index: number, key: "levels" | "disciplines") => {
+    const newArray = selectedCheckboxes[key].filter((_, i) => i !== index);
+    setSelectedCheckboxesItems(key)(newArray);
+  };
 
   const canCreateSignet = () => {
-    return title !== "" && url !== "" && selectedCheckboxes?.levels?.length > 0 && selectedCheckboxes?.disciplines?.length > 0 && (thumbnail != "" || thumbnailSrc != "");
-  }
+    return (
+      title !== "" &&
+      url !== "" &&
+      selectedCheckboxes?.levels?.length > 0 &&
+      selectedCheckboxes?.disciplines?.length > 0 &&
+      (thumbnail != "" || thumbnailSrc != "")
+    );
+  };
 
   useEffect(() => {
     if (levels) {
-      setAllLevels(levels?.map((level: {id: string, label: string}) => level.label) ?? []);
+      setAllLevels(
+        levels?.map((level: { id: string; label: string }) => level.label) ??
+          [],
+      );
     }
     if (disciplines) {
-      setAllDisciplines(disciplines?.map((discipline: {id: string, label: string}) => discipline.label) ?? []);
+      setAllDisciplines(
+        disciplines?.map(
+          (discipline: { id: string; label: string }) => discipline.label,
+        ) ?? [],
+      );
     }
-  }, [levels, disciplines])
+  }, [levels, disciplines]);
 
   if (!allLevels || !allDisciplines || openModal !== "create-signet") {
     return null;
@@ -197,13 +230,11 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
                 }
               }}
             />
-            {(thumbnail == "" || thumbnail == null) &&
-              thumbnailSrc == "" && (
-                <div className="font-red">
-                  {t("mediacentre.modal.signet.ask.image")} *
-                </div>
-              )
-            }
+            {(thumbnail == "" || thumbnail == null) && thumbnailSrc == "" && (
+              <div className="font-red">
+                {t("mediacentre.modal.signet.ask.image")} *
+              </div>
+            )}
           </Grid.Col>
           <Grid.Col
             lg={width < 1280 ? "6" : "9"}
@@ -246,18 +277,32 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
                     }`,
                   )}
                 />
+                <ChipController
+                  array={selectedCheckboxes?.levels}
+                  onDelete={(index: number) => handleDelete(index, "levels")}
+                  className="med-chip-dropdown"
+                />
               </FormControl>
               <FormControl id="create-signet-discipline" isRequired={true}>
                 <Label>{t("mediacentre.modal.signet.input.disciplines")}</Label>
                 <DropDown
                   selectedCheckboxes={selectedCheckboxes.disciplines}
-                  setSelectedCheckboxes={setSelectedCheckboxesItems("disciplines")}
+                  setSelectedCheckboxes={setSelectedCheckboxesItems(
+                    "disciplines",
+                  )}
                   checkboxOptions={allDisciplines ?? []}
                   label={t(
                     `mediacentre.filter.${
                       allDisciplines.length > 1 ? "disciplines" : "discipline"
                     }`,
                   )}
+                />
+                <ChipController
+                  array={selectedCheckboxes?.disciplines}
+                  onDelete={(index: number) =>
+                    handleDelete(index, "disciplines")
+                  }
+                  className="med-chip-dropdown"
                 />
               </FormControl>
               <FormControl id="create-signet-plaintext">
@@ -271,23 +316,22 @@ export const CreateSignet: React.FC<CreateSignetProps> = () => {
                   onKeyPress={handleKeyPress}
                 />
               </FormControl>
-              <div className="med-modal-signet-keywords">
-                {keyWordArray.map((keyword, index) => (
-                  <Chip
-                    key={index}
-                    label={keyword}
-                    onDelete={() => setKeyWordArray(keyWordArray.filter((_, i) => i !== index))}
-                    size="medium"
-                    className="med-keywords-chip"
-                  />
-                ))}
-              </div>
+              <ChipController
+                array={keyWordArray}
+                onDelete={(index: number) =>
+                  setKeyWordArray(keyWordArray.filter((_, i) => i !== index))
+                }
+              />
               <FormControl id="create-signet-orientation">
-                  <Checkbox
-                    checked={isOrientationChecked}
-                    label={t("mediacentre.modal.signet.input.orientation")}
-                    onChange={() => setIsOrientationChecked((isOrientationChecked) => !isOrientationChecked)}
-                  />
+                <Checkbox
+                  checked={isOrientationChecked}
+                  label={t("mediacentre.modal.signet.input.orientation")}
+                  onChange={() =>
+                    setIsOrientationChecked(
+                      (isOrientationChecked) => !isOrientationChecked,
+                    )
+                  }
+                />
               </FormControl>
             </div>
           </Grid.Col>

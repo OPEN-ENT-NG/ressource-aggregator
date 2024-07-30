@@ -51,7 +51,7 @@ export const EditPins: React.FC<EditPinsProps> = ({ refetch }) => {
   };
 
   const onSubmitDelete = async () => {
-    openSpecificModal("confirm-delete-pin")
+    openSpecificModal("confirm-delete-pin");
   };
 
   const onSubmit = async () => {

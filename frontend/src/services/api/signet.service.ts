@@ -18,4 +18,8 @@ export const signetsApi = emptySplitApi.injectEndpoints({
   }),
 });
 
-export const { useGetPublishedSignetsQuery, useGetMySignetsQuery, useCreateSignetMutation } = signetsApi;
+export const {
+  useGetPublishedSignetsQuery,
+  useGetMySignetsQuery,
+  useCreateSignetMutation,
+} = signetsApi;

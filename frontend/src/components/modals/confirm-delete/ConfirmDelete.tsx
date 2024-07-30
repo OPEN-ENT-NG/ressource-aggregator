@@ -56,11 +56,7 @@ export const ConfirmDelete: React.FC<ConfirmDeleteProps> = ({ refetch }) => {
   }
 
   return (
-    <Modal
-      onModalClose={handleCloseModal}
-      isOpen={true}
-      id="delete-pins"
-    >
+    <Modal onModalClose={handleCloseModal} isOpen={true} id="delete-pins">
       <Modal.Header onModalClose={handleCloseModal}>
         {t("mediacentre.pins.modal.delete.title")}
       </Modal.Header>

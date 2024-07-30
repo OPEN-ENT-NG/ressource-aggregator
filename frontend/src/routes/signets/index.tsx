@@ -25,13 +25,13 @@ export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
-  const {openModal, openSpecificModal} = useModalProvider();
+  const { openModal, openSpecificModal } = useModalProvider();
 
   // RIGHTS
   const { data: actions } = useActions();
   const canAccessSignet = isActionAvailable("signets", actions);
 
-  const { homeSignets } = useSignet();
+  const { homeSignets, refetchSignet } = useSignet();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters
@@ -43,6 +43,7 @@ export const SignetPage: React.FC = () => {
   const canAccess = () => (canAccessSignet ? "signets" : "search");
 
   useEffect(() => {
+    console.log("homeSignets", homeSignets);
     if (!homeSignets) return;
     if (!initialLoadDone) {
       setInitialLoadDone(true);
@@ -58,7 +59,7 @@ export const SignetPage: React.FC = () => {
 
   const handleCreateSignet = () => {
     openSpecificModal("create-signet");
-  }
+  };
 
   return (
     <>
@@ -78,8 +79,10 @@ export const SignetPage: React.FC = () => {
             {alertText}
           </Alert>
         )}
-        {openModal === "create-pin" && (<CreatePins refetch={refetchPins} />)}
-        {openModal === "create-signet" && (<CreateSignet />)}
+        {openModal === "create-pin" && <CreatePins refetch={refetchPins} />}
+        {openModal === "create-signet" && (
+          <CreateSignet refetch={refetchSignet} />
+        )}
         <div className="med-root-container">
           <div className={`med-${canAccess()}-container`}>
             {canAccessSignet && (

@@ -42,7 +42,7 @@ export const ModalProvider: FC<ModalProviderProviderProps> = ({ children }) => {
       setModalResource,
       openModal,
       openSpecificModal,
-      closeAllModals
+      closeAllModals,
     }),
     [modalResource, openModal],
   );

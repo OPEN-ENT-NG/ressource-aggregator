@@ -33,7 +33,7 @@ export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
   );
 
   const handleCloseModal = () => {
-    closeAllModals()
+    closeAllModals();
   };
 
   const resetFields = () => {
@@ -83,11 +83,7 @@ export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
   }
 
   return (
-    <Modal
-      onModalClose={handleCloseModal}
-      isOpen={true}
-      id="create-pins"
-    >
+    <Modal onModalClose={handleCloseModal} isOpen={true} id="create-pins">
       <Modal.Header onModalClose={handleCloseModal}>
         {t("mediacentre.pins.modal.create.title")}
       </Modal.Header>
