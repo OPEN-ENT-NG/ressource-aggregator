@@ -93,7 +93,10 @@ export const ResourcePage: React.FC = () => {
           </div>
           <div className="med-search-page-content-body">
             {externalResourcesData && !externalResourcesData.length ? (
-              <EmptyState title="mediacentre.empty.state.resources" />
+              <EmptyState
+                image="empty-state-resources.png"
+                title="mediacentre.empty.state.resources"
+              />
             ) : (
               <>
                 <FilterLayout
