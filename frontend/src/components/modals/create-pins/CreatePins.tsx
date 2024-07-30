@@ -24,7 +24,6 @@ interface CreatePinsProps {
 export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
   const { t } = useTranslation();
   const { idSelectedStructure } = useSelectedStructureProvider();
-  console.log(idSelectedStructure);
   const { modalResource, isCreatedOpen, setIsCreatedOpen } = useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
   const [createPin] = useCreatePinMutation();
@@ -55,7 +54,6 @@ export const CreatePins: React.FC<CreatePinsProps> = ({ refetch }) => {
         id: modalResource?.id ? String(modalResource.id) : undefined,
         source: modalResource?.source,
       };
-      console.log("test", idSelectedStructure);
       const response = await createPin({
         idStructure: idSelectedStructure,
         payload,

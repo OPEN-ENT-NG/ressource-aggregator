@@ -49,11 +49,10 @@ export const App = () => {
   const { pins, setPins, refetchPins } = usePinProvider();
   const { favorites, setFavorites, refetchFavorite } = useFavorite();
   const { homeSignets, setHomeSignets } = useSignet();
-  const { textbooks, setTextbooks, refetchTextbooks } = useTextbook(
-    idSelectedStructure ?? "",
-  );
+  const { textbooks, setTextbooks, refetchTextbooks } =
+    useTextbook(idSelectedStructure);
   const { externalResources, setExternalResources, refetchSearch } =
-    useExternalResource(idSelectedStructure ?? "");
+    useExternalResource(idSelectedStructure);
   const { globals } = useGlobal();
   const [pinsEmpty, setPinsEmpty] = useState<boolean>(true);
   const [externalResourcesData, setExternalResourcesData] = useState<

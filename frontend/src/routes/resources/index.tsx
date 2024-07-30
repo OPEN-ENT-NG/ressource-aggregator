@@ -26,9 +26,8 @@ export const ResourcePage: React.FC = () => {
   const { alertType, alertText, setAlertText } = useAlertProvider();
 
   const { globals } = useGlobal();
-  const { externalResources, refetchSearch } = useExternalResource(
-    idSelectedStructure ?? "",
-  );
+  const { externalResources, refetchSearch } =
+    useExternalResource(idSelectedStructure);
 
   const [externalResourcesData, setExternalResourcesData] = useState<
     Resource[] | null

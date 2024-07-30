@@ -54,15 +54,15 @@ root.render(
         }}
       >
         <ThemeProvider>
-          <AlertProvider>
-            <SelectedStructureProvider>
+          <SelectedStructureProvider>
+            <AlertProvider>
               <PinProvider>
                 <ModalProvider>
                   <RouterProvider router={router} />
                 </ModalProvider>
               </PinProvider>
-            </SelectedStructureProvider>
-          </AlertProvider>
+            </AlertProvider>
+          </SelectedStructureProvider>
         </ThemeProvider>
       </OdeClientProvider>
     </Provider>

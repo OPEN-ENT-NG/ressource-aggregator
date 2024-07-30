@@ -82,7 +82,7 @@ export interface SelectedStructureProviderProviderProps {
 }
 
 export type SelectedStructureProviderContextType = {
-  nameSelectedStructure: string | undefined;
-  setNameSelectedStructure: Dispatch<SetStateAction<string | undefined>>;
-  idSelectedStructure: string | undefined;
+  nameSelectedStructure: string;
+  setNameSelectedStructure: Dispatch<SetStateAction<string>>;
+  idSelectedStructure: string;
 };

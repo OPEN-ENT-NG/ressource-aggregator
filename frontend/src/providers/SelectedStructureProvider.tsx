@@ -25,12 +25,9 @@ export const useSelectedStructureProvider = () => {
 export const SelectedStructureProvider: React.FC<
   SelectedStructureProviderProviderProps
 > = ({ children }) => {
-  const [idSelectedStructure, setIdSelectedStructure] = useState<
-    string | undefined
-  >(undefined);
-  const [nameSelectedStructure, setNameSelectedStructure] = useState<
-    string | undefined
-  >(undefined);
+  const [idSelectedStructure, setIdSelectedStructure] = useState<string>("");
+  const [nameSelectedStructure, setNameSelectedStructure] =
+    useState<string>("");
   const { user } = useUser();
   const { getPreference, savePreference } = usePreferences(PREF_STRUCTURE);
 
