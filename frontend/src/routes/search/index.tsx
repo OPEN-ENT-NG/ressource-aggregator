@@ -19,6 +19,7 @@ import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const Search: React.FC = () => {
   const { t } = useTranslation();

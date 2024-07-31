@@ -19,14 +19,17 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { ModalEnum } from "~/core/enum/modal.enum";
+import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 
 export const TextbookPage: React.FC = () => {
   const { t } = useTranslation();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
   const { openModal } = useModalProvider();
+  const { idSelectedStructure } = useSelectedStructureProvider();
 
-  const { textbooks, refetchTextbooks } = useTextbook();
+  const { textbooks, refetchTextbooks } = useTextbook(idSelectedStructure);
   const [textbooksData, setTextbooksData] = useState<Resource[] | null>(null);
   const { favorites, refetchFavorite } = useFavorite();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
