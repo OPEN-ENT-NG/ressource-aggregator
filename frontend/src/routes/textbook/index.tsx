@@ -10,6 +10,7 @@ import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteSc
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import "~/styles/page/search.scss";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useTextbook } from "~/hooks/useTextbook";
 import { Favorite } from "~/model/Favorite.model";
@@ -18,9 +19,8 @@ import { Textbook } from "~/model/Textbook.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
-import { sortByAlphabet } from "~/utils/sortResources.util";
-import { ModalEnum } from "~/core/enum/modal.enum";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
+import { sortByAlphabet } from "~/utils/sortResources.util";
 
 export const TextbookPage: React.FC = () => {
   const { t } = useTranslation();

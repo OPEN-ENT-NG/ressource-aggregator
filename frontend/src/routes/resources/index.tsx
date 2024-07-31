@@ -10,6 +10,7 @@ import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteSc
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import "~/styles/page/search.scss";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useGlobal } from "~/hooks/useGlobal";
 import { Resource } from "~/model/Resource.model";
@@ -18,7 +19,6 @@ import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const ResourcePage: React.FC = () => {
   const { user } = useUser();
