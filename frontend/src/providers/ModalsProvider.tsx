@@ -7,6 +7,7 @@ import { Pin } from "~/model/Pin.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 const ModalProviderContext = createContext<ModalProviderContextType | null>(
   null,
@@ -28,7 +29,7 @@ export const ModalProvider: FC<ModalProviderProviderProps> = ({ children }) => {
   >(null);
   const [openModal, setOpenModal] = useState<string | null>(null);
 
-  const openSpecificModal = (modalType: string) => {
+  const openSpecificModal = (modalType: ModalEnum) => {
     setOpenModal(modalType);
   };
 

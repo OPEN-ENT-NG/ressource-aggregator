@@ -50,6 +50,10 @@ export const PinProvider: FC<PinProviderProviderProps> = ({ children }) => {
     }
   }, [fetchedPins]);
 
+  useEffect(() => {
+    refetchPins();
+  }, [idSelectedStructure]);
+
   const value = useMemo<PinProviderContextType>(
     () => ({
       pins,

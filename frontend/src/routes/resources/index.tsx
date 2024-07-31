@@ -22,7 +22,7 @@ import { sortByAlphabet } from "~/utils/sortResources.util";
 
 export const ResourcePage: React.FC = () => {
   const { user } = useUser();
-  const { t } = useTranslation();
+  const { t } = useTranslation("mediacentre");
   const { idSelectedStructure } = useSelectedStructureProvider();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();

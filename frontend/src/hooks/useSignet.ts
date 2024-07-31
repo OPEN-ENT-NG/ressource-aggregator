@@ -21,18 +21,10 @@ import {
 export const useSignet = () => {
   const { user } = useUser();
   const { pins } = usePinProvider();
-  const {
-    data: publicSignets,
-    error: publicSignetError,
-    isLoading: publicSignetIsLoading,
-    refetch: refetchPublicSignet,
-  } = useGetPublishedSignetsQuery(null);
-  const {
-    data: mySignets,
-    error: mySignetError,
-    isLoading: mySignetIsLoading,
-    refetch: refetchMySignet,
-  } = useGetMySignetsQuery(null);
+  const { data: publicSignets, refetch: refetchPublicSignet } =
+    useGetPublishedSignetsQuery(null);
+  const { data: mySignets, refetch: refetchMySignet } =
+    useGetMySignetsQuery(null);
   const [homeSignets, setHomeSignets] = useState<Signet[] | null>(null);
   const [allSignets, setAllSignets] = useState<Signet[] | null>(null);
   const { favorites } = useFavorite();
@@ -41,6 +33,7 @@ export const useSignet = () => {
     if (!allSignets) {
       return null;
     }
+
     return allSignets.filter(
       (signet: Signet) => signet.owner_id != user?.userId,
     );
@@ -68,6 +61,7 @@ export const useSignet = () => {
         ),
         shared: true,
         source: SIGNET,
+        published: true,
       }),
     );
     let signetsData: Signet[] = [
@@ -95,7 +89,7 @@ export const useSignet = () => {
       }));
     }
     return signetsData;
-  }, [favorites, mySignets, publicSignets, user?.userId, pins])
+  }, [favorites, mySignets, publicSignets, pins]);
 
   const refetchSignet = async () => {
     await refetchPublicSignet();
@@ -107,38 +101,39 @@ export const useSignet = () => {
       const signetsData = getHomeSignets();
       setHomeSignets(signetsData);
     }
-  }, [
-    allSignets
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSignets, favorites, pins]);
 
   useEffect(() => {
     if (favorites && pins) {
       const signetsData = getAllSignets();
       setAllSignets(signetsData);
     }
-  }, [
-    publicSignets,
-    mySignets,
-    user?.userId,
-    favorites,
-    pins
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [publicSignets, mySignets, favorites, pins]);
 
   const mine = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.owner_id === user?.userId);
-  }
+    return signets.filter(
+      (signet: Signet) => !signet.archived && signet.owner_id === user?.userId,
+    );
+  };
 
   const shared = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.collab && signet.owner_id !== user?.userId);
-  }
+    return signets.filter(
+      (signet: Signet) =>
+        !signet.archived && signet.collab && signet.owner_id !== user?.userId,
+    );
+  };
 
   const published = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.shared);
-  }
+    return signets.filter(
+      (signet: Signet) => !signet.archived && signet.shared,
+    );
+  };
 
   const archived = (signets: Signet[]) => {
     return signets.filter((signet: Signet) => signet.archived);
-  }
+  };
 
   useEffect(() => {
     if (favorites && pins) {

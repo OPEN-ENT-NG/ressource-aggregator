@@ -6,6 +6,10 @@
   transition: max-height 1s ease-in-out;
   animation: fade 2s;
 
+  &.is-selected {
+    --edifice-card-border-width: 3px;
+  }
+
   &.not-expanded {
     max-height: 177px;
   }
@@ -139,6 +143,10 @@
 }
 
 @keyframes fade {
-  from {opacity: 0}
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

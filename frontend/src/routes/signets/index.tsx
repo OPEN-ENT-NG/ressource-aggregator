@@ -11,6 +11,11 @@ import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteSc
 import { MainLayout } from "~/components/main-layout/MainLayout";
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
+import { SignetArchive } from "~/components/modals/signet-archive/SignetArchive";
+import { SignetDelete } from "~/components/modals/signet-delete/SignetDelete";
+import { SignetProperty } from "~/components/modals/signet-property/SignetProperty";
+import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
+import { ToasterContainer } from "~/components/toaster-container/ToasterContainer";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
@@ -18,13 +23,15 @@ import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
+import { useGetDisciplinesQuery } from "~/services/api/disciplines.service";
+import { useGetLevelsQuery } from "~/services/api/levels.service";
 import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
 
 export const SignetPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("mediacentre");
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
   const { openModal, openSpecificModal } = useModalProvider();
@@ -34,6 +41,8 @@ export const SignetPage: React.FC = () => {
   const hasSignetRight = isActionAvailable("signets", actions);
 
   const { allSignets, mine, refetchSignet } = useSignet();
+  const { data: disciplines } = useGetDisciplinesQuery(null);
+  const { data: levels } = useGetLevelsQuery(null);
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters
@@ -64,10 +73,6 @@ export const SignetPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signetsData]);
 
-  const handleCreateSignet = () => {
-    openSpecificModal(ModalEnum.CREATE_SIGNET);
-  };
-
   return (
     <>
       <MainLayout />
@@ -85,15 +90,51 @@ export const SignetPage: React.FC = () => {
           {alertText}
         </Alert>
       )}
+      {canAccess() && (
+        <ToasterContainer
+          selectedTab={selectedTab}
+          levels={levels}
+          disciplines={disciplines}
+          refetch={refetchSignet}
+        />
+      )}
+      {openModal === ModalEnum.PUBLISH_SIGNET && (
+        <SignetPublish
+          refetch={refetchSignet}
+          levels={levels}
+          disciplines={disciplines}
+        />
+      )}
+      {openModal === ModalEnum.PROPERTY_SIGNET && (
+        <SignetProperty
+          refetch={refetchSignet}
+          levels={levels}
+          disciplines={disciplines}
+        />
+      )}
+      {openModal === ModalEnum.ARCHIVE_SIGNET && (
+        <SignetArchive
+          refetch={refetchSignet}
+          levels={levels}
+          disciplines={disciplines}
+        />
+      )}
+      {openModal === ModalEnum.DELETE_SIGNET && (
+        <SignetDelete refetch={refetchSignet} />
+      )}
       {openModal === ModalEnum.CREATE_PIN && (
         <CreatePins refetch={refetchPins} />
       )}
       {openModal === ModalEnum.CREATE_SIGNET && (
-        <CreateSignet refetch={refetchSignet} />
+        <CreateSignet
+          refetch={refetchSignet}
+          levels={levels}
+          disciplines={disciplines}
+        />
       )}
       <div className="med-root-container">
         <div className={`med-${canAccess()}-container`}>
-          {hasSignetRight && (
+          {canAccess() && (
             <div className="med-signets-admin-container">
               <AdminSignet
                 selectedTab={selectedTab}
@@ -111,19 +152,19 @@ export const SignetPage: React.FC = () => {
                 <h1 className={`med-${canAccess()}-title`}>
                   {t("mediacentre.sidebar.signets")}
                 </h1>
-                {hasSignetRight && (
+                {canAccess() && (
                   <div className="med-signets-selected-tab">
                     <span>{">"}</span>
                     <p>{t(selectedTab)}</p>
                   </div>
                 )}
               </div>
-              {hasSignetRight && (
+              {canAccess() && (
                 <Button
                   color="primary"
                   type="button"
                   className="med-signets-create-button"
-                  onClick={handleCreateSignet}
+                  onClick={() => openSpecificModal(ModalEnum.CREATE_SIGNET)}
                 >
                   {t("mediacentre.signet.create.button")}
                 </Button>

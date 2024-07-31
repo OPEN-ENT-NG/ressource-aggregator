@@ -28,6 +28,7 @@ import { Resource } from "~/model/Resource.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
+import { useToasterProvider } from "~/providers/ToasterProvider";
 import {
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
@@ -48,17 +49,19 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   allResourcesDisplayed,
 }) => {
   const [newLink, setNewLink] = useState<string>("");
+  const { t } = useTranslation("mediacentre");
   const [isExpanded, setIsExpanded] = useState(false);
   const cardRef = React.useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const { setModalResource, openSpecificModal } = useModalProvider();
   const { setAlertText, setAlertType } = useAlertProvider();
+  const { isSelectable, toggleResource } = useToasterProvider();
 
   // used to check if the user has the right to pin a resource
   const { data: actions } = useActions();
   const hasPinRight = isActionAvailable("pins", actions);
+  const canAccessSignet = isActionAvailable("signets", actions);
 
   const type = (): SearchCardTypeEnum => {
     if (searchResource?.source) {
@@ -205,11 +208,13 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
 
   return (
     <Card
-      isSelectable={false}
+      isSelectable={canAccessSignet}
+      isSelected={isSelectable(searchResource)}
       isClickable={false}
       className={`med-search-resource-card ${
         isExpanded ? "expanded" : "not-expanded"
       }`}
+      onSelect={() => toggleResource(searchResource)}
       ref={cardRef}
     >
       <div className="med-search-resource-top-container">
@@ -230,16 +235,16 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
           </div>
         </a>
         <div className="med-search-resource-right-container">
-          <a href={newLink !== "/" ? newLink : "/"} target="_blank">
-            <Card.Body space={"0"}>
+          <Card.Body space={"0"}>
+            <a href={newLink !== "/" ? newLink : "/"} target="_blank">
               <SearchCardType type={type()} />
               <Card.Title>{searchResource.title}</Card.Title>
-              <SearchCardSubtitle
-                type={type()}
-                searchResource={searchResource}
-              />
-            </Card.Body>
-          </a>
+                <SearchCardSubtitle
+                    type={type()}
+                    searchResource={searchResource}
+                />
+            </a>
+          </Card.Body>
           <Card.Footer>
             <div
               className="med-footer-details"

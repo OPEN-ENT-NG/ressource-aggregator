@@ -18,9 +18,10 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
+import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const FavoritePage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("mediacentre");
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
   const { openModal } = useModalProvider();
