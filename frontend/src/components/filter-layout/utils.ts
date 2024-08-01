@@ -100,7 +100,9 @@ const filterByDisciplines = (resources: Resource[], disciplines: string[]) => {
     return resources;
   }
   return resources.filter((resource) =>
-    disciplines.some((discipline) => resource.disciplines?.includes(discipline)),
+    disciplines.some(
+      (discipline) => resource.disciplines?.includes(discipline),
+    ),
   );
 };
 
