@@ -12,6 +12,11 @@ import { SIGNET } from "~/core/const/sources.const";
 import { Favorite } from "~/model/Favorite.model";
 import { Pin } from "~/model/Pin.model";
 import { usePinProvider } from "~/providers/PinProvider";
+import {
+  convertDisciplines,
+  convertKeyWords,
+  convertLevels,
+} from "~/utils/property.utils";
 
 export const useSignet = () => {
   const { user } = useUser();
@@ -45,10 +50,9 @@ export const useSignet = () => {
         ...signet,
         source: SIGNET,
         shared: false,
-        disciplines: signet.disciplines?.map(
-          (item: [number, string]) => item[1],
-        ),
-        levels: signet.levels?.map((item: [number, string]) => item[1]),
+        disciplines: convertDisciplines(signet.disciplines),
+        levels: convertLevels(signet.levels),
+        plain_text: convertKeyWords(signet.plain_text),
       }),
     );
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
