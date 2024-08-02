@@ -68,15 +68,6 @@ export const useSignet = () => {
       ...updatedPublicSignetsData,
       ...updatedMySignetsData,
     ];
-    //delete duplicate signets
-    signetsData = signetsData.filter(
-      (signet, index, self) =>
-        index ===
-        self.findIndex(
-          (t) =>
-            t.id.toString() === signet.id.toString()
-        ),
-    );
     if (favorites) {
       signetsData = signetsData.map((signet: Signet) => ({
         ...signet,
