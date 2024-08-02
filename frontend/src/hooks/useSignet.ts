@@ -12,7 +12,6 @@ import { SIGNET } from "~/core/const/sources.const";
 import { Favorite } from "~/model/Favorite.model";
 import { Pin } from "~/model/Pin.model";
 import { usePinProvider } from "~/providers/PinProvider";
-import { SIGNET } from "~/core/const/sources.const";
 import {
   convertDisciplines,
   convertKeyWords,
@@ -42,7 +41,9 @@ export const useSignet = () => {
     if (!allSignets) {
       return null;
     }
-    return allSignets.filter((signet: Signet) => signet.owner_id != user?.userId)
+    return allSignets.filter(
+      (signet: Signet) => signet.owner_id != user?.userId,
+    );
   }, [allSignets]);
 
   const getAllSignets = useCallback(() => {
@@ -51,19 +52,14 @@ export const useSignet = () => {
     }
     const publicSignetsData: Signet[] =
       publicSignets?.data?.signets?.resources ?? [];
-    const mySignetsData: Signet[] = mySignets
-      ? mySignets.filter((signet: Signet) => signet.owner_id != user?.userId)
-      : [];
-    const updatedMySignetsData: Signet[] = mySignetsData.map(
-      (signet: Signet) => ({
-        ...signet,
-        source: SIGNET,
-        shared: false,
-        disciplines: convertDisciplines(signet.disciplines),
-        levels: convertLevels(signet.levels),
-        plain_text: convertKeyWords(signet.plain_text),
-      }),
-    );
+    const updatedMySignetsData: Signet[] = mySignets.map((signet: Signet) => ({
+      ...signet,
+      source: SIGNET,
+      shared: false,
+      disciplines: convertDisciplines(signet.disciplines),
+      levels: convertLevels(signet.levels),
+      plain_text: convertKeyWords(signet.plain_text),
+    }));
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
         ...signet,
@@ -71,7 +67,7 @@ export const useSignet = () => {
           type.toLowerCase().includes("orientation"),
         ),
         shared: true,
-        source: SIGNET
+        source: SIGNET,
       }),
     );
     let signetsData: Signet[] = [
@@ -98,6 +94,7 @@ export const useSignet = () => {
         ),
       }));
     }
+    console.log(signetsData.length);
     return signetsData;
   }, [favorites, mySignets, publicSignets, user?.userId, pins]);
 
@@ -113,38 +110,37 @@ export const useSignet = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicSignets, mySignets, user?.userId, favorites, pins]);
-  }, [
-    allSignets
-  ]);
 
   useEffect(() => {
     if (favorites && pins) {
       const signetsData = getAllSignets();
       setAllSignets(signetsData);
     }
-  }, [
-    publicSignets,
-    mySignets,
-    user?.userId,
-    favorites,
-    pins
-  ])
+  }, [publicSignets, mySignets, user?.userId, favorites, pins]);
 
   const mine = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.owner_id === user?.userId);
-  }
+    return signets.filter(
+      (signet: Signet) => !signet.archived && signet.owner_id === user?.userId,
+    );
+  };
 
   const shared = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.collab && signet.owner_id !== user?.userId);
-  }
+    console.log(signets);
+    return signets.filter(
+      (signet: Signet) =>
+        !signet.archived && signet.collab && signet.owner_id !== user?.userId,
+    );
+  };
 
   const published = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => !signet.archived && signet.shared);
-  }
+    return signets.filter(
+      (signet: Signet) => !signet.archived && signet.shared,
+    );
+  };
 
   const archived = (signets: Signet[]) => {
     return signets.filter((signet: Signet) => signet.archived);
-  }
+  };
 
   return {
     homeSignets,
@@ -160,6 +156,6 @@ export const useSignet = () => {
     mine,
     shared,
     published,
-    archived
+    archived,
   };
 };

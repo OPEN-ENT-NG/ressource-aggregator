@@ -306,7 +306,10 @@ export const App = () => {
           id={pinsEmpty ? "resourcesId" : "resourcesWithPinsId"}
         >
           {resourcesList().length === 0 ? (
-            <EmptyState title={t("mediacentre.ressources.empty")} image="empty-state.png"/>
+            <EmptyState
+              title={t("mediacentre.ressources.empty")}
+              image="empty-state.png"
+            />
           ) : (
             resourcesList().map((resource) => (
               <HomeList

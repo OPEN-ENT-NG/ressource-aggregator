@@ -137,7 +137,10 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
                 link={searchResource.link ?? searchResource.url ?? "/"}
                 setIsRemoveResource={setIsRemoveResource}
                 allResourcesDisplayed={allResourcesDisplayed}
-                key={searchResource.id + typeof searchResource.id}
+                key={
+                  searchResource.id +
+                  (typeof searchResource.id === "number" ? "n" : "s")
+                }
               />
             ))}
             redirectLink={() => navigate(redirectLink)}

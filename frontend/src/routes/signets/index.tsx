@@ -14,6 +14,7 @@ import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
+import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
@@ -21,7 +22,6 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
-import { Signet } from "~/model/Signet.model";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation();
@@ -31,21 +31,27 @@ export const SignetPage: React.FC = () => {
 
   // RIGHTS
   const { data: actions } = useActions();
-  const canAccessSignet = isActionAvailable("signets", actions);
+  const hasSignetRight = isActionAvailable("signets", actions);
 
-  const { allSignets, mine } = useSignet();
+  const { allSignets, mine, refetchSignet } = useSignet();
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
     Resource[] | null
   >(null); // all resources after the filters
   const [signetsData, setSignetsData] = useState<Signet[] | null>(null);
-  const [selectedTab, setSelectedTab] = useState<string>("mediacentre.signets.mine");
+  const [selectedTab, setSelectedTab] = useState<string>(
+    "mediacentre.signets.mine",
+  );
   const [initialLoadDone, setInitialLoadDone] = useState<boolean>(false);
 
-  const canAccess = () => (canAccessSignet ? "signets" : "search");
+  const canAccess = () => (hasSignetRight ? "signets" : "search");
 
   useEffect(() => {
     if (allSignets) {
-      setSignetsData(mine(allSignets)); // sort resources first render
+      if (hasSignetRight) {
+        setSignetsData(mine(allSignets)); // sort resources first render
+      } else {
+        setSignetsData(allSignets);
+      }
     }
   }, [allSignets]);
 
@@ -62,92 +68,92 @@ export const SignetPage: React.FC = () => {
 
   return (
     <>
-        <MainLayout />
-        {alertText !== "" && (
-          <Alert
-            autoClose
-            autoCloseDelay={3000}
-            isDismissible={false}
-            isToast
-            onClose={() => setAlertText("")}
-            position="top-right"
-            type={alertType}
-            className="med-alert"
-          >
-            {alertText}
-          </Alert>
-        )}
-        {openModal === ModalEnum.CREATE_PIN && (
-          <CreatePins refetch={refetchPins} />
-        )}
-        {openModal === ModalEnum.CREATE_SIGNET && (
-          <CreateSignet refetch={refetchSignet} />
-        )}
-        <div className="med-root-container">
-          <div className={`med-${canAccess()}-container`}>
-            {canAccessSignet && (
-              <div className="med-signets-admin-container">
-                  <AdminSignet
-                      selectedTab={selectedTab}
-                      setSelectedTab={setSelectedTab}
-                      signets={allSignets}
-                      setSignetsData={setSignetsData}
-                      setAllResourcesDisplayed={setAllResourcesDisplayed}
-                  />
-              </div>
-            )}
-            <div className={`med-${canAccess()}-page-content`}>
-              <div className={`med-${canAccess()}-page-header`}>
-                <div className={`med-${canAccess()}-page-title`}>
-                  <BookmarkIcon className={`med-${canAccess()}-icon`} />
-                  <h1 className={`med-${canAccess()}-title`}>
-                    {t("mediacentre.sidebar.signets")}
-                  </h1>
-                    {canAccessSignet && (
-                        <div className="med-signets-selected-tab">
-                            <span>{'>'}</span>
-                            <p>{t(selectedTab)}</p>
-                        </div>
-                    )}
-                </div>
-                {canAccessSignet && (
-                  <Button
-                    color="primary"
-                    type="button"
-                    className="med-signets-create-button"
-                    onClick={handleCreateSignet}
-                  >
-                    {t("mediacentre.signet.create.button")}
-                  </Button>
+      <MainLayout />
+      {alertText !== "" && (
+        <Alert
+          autoClose
+          autoCloseDelay={3000}
+          isDismissible={false}
+          isToast
+          onClose={() => setAlertText("")}
+          position="top-right"
+          type={alertType}
+          className="med-alert"
+        >
+          {alertText}
+        </Alert>
+      )}
+      {openModal === ModalEnum.CREATE_PIN && (
+        <CreatePins refetch={refetchPins} />
+      )}
+      {openModal === ModalEnum.CREATE_SIGNET && (
+        <CreateSignet refetch={refetchSignet} />
+      )}
+      <div className="med-root-container">
+        <div className={`med-${canAccess()}-container`}>
+          {hasSignetRight && (
+            <div className="med-signets-admin-container">
+              <AdminSignet
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                signets={allSignets}
+                setSignetsData={setSignetsData}
+                setAllResourcesDisplayed={setAllResourcesDisplayed}
+              />
+            </div>
+          )}
+          <div className={`med-${canAccess()}-page-content`}>
+            <div className={`med-${canAccess()}-page-header`}>
+              <div className={`med-${canAccess()}-page-title`}>
+                <BookmarkIcon className={`med-${canAccess()}-icon`} />
+                <h1 className={`med-${canAccess()}-title`}>
+                  {t("mediacentre.sidebar.signets")}
+                </h1>
+                {hasSignetRight && (
+                  <div className="med-signets-selected-tab">
+                    <span>{">"}</span>
+                    <p>{t(selectedTab)}</p>
+                  </div>
                 )}
               </div>
-              <div className={`med-${canAccess()}-page-content-body`}>
-                {signetsData && !signetsData.length ? (
-                  <EmptyState
-                    image="empty-state-signets.png"
-                    title="mediacentre.empty.state.signets"
+              {hasSignetRight && (
+                <Button
+                  color="primary"
+                  type="button"
+                  className="med-signets-create-button"
+                  onClick={handleCreateSignet}
+                >
+                  {t("mediacentre.signet.create.button")}
+                </Button>
+              )}
+            </div>
+            <div className={`med-${canAccess()}-page-content-body`}>
+              {signetsData && !signetsData.length ? (
+                <EmptyState
+                  image="empty-state-signets.png"
+                  title="mediacentre.empty.state.signets"
+                />
+              ) : (
+                <>
+                  <FilterLayout
+                    resources={signetsData}
+                    allResourcesDisplayed={allResourcesDisplayed}
+                    setAllResourcesDisplayed={setAllResourcesDisplayed}
                   />
-                ) : (
-                  <>
-                    <FilterLayout
-                      resources={signetsData}
+                  {allResourcesDisplayed && !allResourcesDisplayed.length ? (
+                    <EmptyState title="mediacentre.empty.state.filter" />
+                  ) : (
+                    <InfiniteScrollList
+                      redirectLink="/signets"
                       allResourcesDisplayed={allResourcesDisplayed}
-                      setAllResourcesDisplayed={setAllResourcesDisplayed}
                     />
-                    {allResourcesDisplayed && !allResourcesDisplayed.length ? (
-                      <EmptyState title="mediacentre.empty.state.filter" />
-                    ) : (
-                      <InfiniteScrollList
-                        redirectLink="/signets"
-                        allResourcesDisplayed={allResourcesDisplayed}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
-      </>
+      </div>
+    </>
   );
 };
