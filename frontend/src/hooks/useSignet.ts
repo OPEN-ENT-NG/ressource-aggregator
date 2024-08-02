@@ -51,7 +51,6 @@ export const useSignet = () => {
         levels: signet.levels?.map((item: [number, string]) => item[1]),
       }),
     );
-    console.log(updatedMySignetsData);
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
         ...signet,
