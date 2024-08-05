@@ -44,7 +44,7 @@ export const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
         allResourcesDisplayed.slice(0, indexVisibleResources * 10),
       );
     }
-    // eslint-dis able-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     visibleResources,
     allResourcesDisplayed,
