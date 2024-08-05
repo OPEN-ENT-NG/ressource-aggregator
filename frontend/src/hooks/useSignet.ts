@@ -44,7 +44,7 @@ export const useSignet = () => {
     return allSignets.filter(
       (signet: Signet) => signet.owner_id != user?.userId,
     );
-  }, [allSignets]);
+  }, [allSignets, user?.userId]);
 
   const getAllSignets = useCallback(() => {
     if (!publicSignets || !mySignets) {
@@ -94,9 +94,8 @@ export const useSignet = () => {
         ),
       }));
     }
-    console.log(signetsData.length);
     return signetsData;
-  }, [favorites, mySignets, publicSignets, user?.userId, pins]);
+  }, [favorites, mySignets, publicSignets, pins]);
 
   const refetchSignet = async () => {
     await refetchPublicSignet();
@@ -116,6 +115,7 @@ export const useSignet = () => {
       const signetsData = getAllSignets();
       setAllSignets(signetsData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicSignets, mySignets, user?.userId, favorites, pins]);
 
   const mine = (signets: Signet[]) => {

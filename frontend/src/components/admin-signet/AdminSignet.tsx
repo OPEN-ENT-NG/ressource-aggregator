@@ -68,7 +68,15 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         className={`med-signets-admin-box ${
           selectedTab === "mediacentre.signets.mine" ? "active" : ""
         }`}
-        onClick={selectMine}
+        onClick={() => selectMine()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectMine();
+          }
+        }}
       >
         <FolderIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
@@ -79,7 +87,15 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         className={`med-signets-admin-box ${
           selectedTab === "mediacentre.signets.shared" ? "active" : ""
         }`}
-        onClick={selectShared}
+        onClick={() => selectShared()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectShared();
+          }
+        }}
       >
         <FolderSharedIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
@@ -90,7 +106,15 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         className={`med-signets-admin-box ${
           selectedTab === "mediacentre.signets.published" ? "active" : ""
         }`}
-        onClick={selectPublished}
+        onClick={() => selectPublished()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectPublished();
+          }
+        }}
       >
         <PublicIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">
@@ -101,7 +125,15 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
         className={`med-signets-admin-box ${
           selectedTab === "mediacentre.signets.archived" ? "active" : ""
         }`}
-        onClick={selectArchived}
+        onClick={() => selectArchived()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectArchived();
+          }
+        }}
       >
         <DeleteForeverIcon style={{ width: "1.75em", height: "1.75em" }} />
         <p className="med-signets-admin-box-text">

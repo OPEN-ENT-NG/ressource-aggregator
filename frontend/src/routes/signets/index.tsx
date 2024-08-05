@@ -53,13 +53,15 @@ export const SignetPage: React.FC = () => {
         setSignetsData(allSignets);
       }
     }
-  }, [allSignets]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSignets, hasSignetRight]);
 
   useEffect(() => {
     if (signetsData && !initialLoadDone) {
       setInitialLoadDone(true);
       setAllResourcesDisplayed(sortByAlphabet(signetsData));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signetsData]);
 
   const handleCreateSignet = () => {
