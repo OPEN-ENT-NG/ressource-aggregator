@@ -125,7 +125,6 @@ export const useSignet = () => {
   };
 
   const shared = (signets: Signet[]) => {
-    console.log(signets);
     return signets.filter(
       (signet: Signet) =>
         !signet.archived && signet.collab && signet.owner_id !== user?.userId,

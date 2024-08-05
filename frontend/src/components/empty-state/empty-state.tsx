@@ -7,7 +7,7 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  image,
+  image = "empty-state.png",
   title,
   description,
 }) => {
@@ -15,7 +15,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div className="empty-state">
       <img
-        src={`/mediacentre/public/img/${image || "empty-state.png"}`}
+        src={`/mediacentre/public/img/${image}`}
         alt="empty-state"
         className="empty-state-img"
       />
