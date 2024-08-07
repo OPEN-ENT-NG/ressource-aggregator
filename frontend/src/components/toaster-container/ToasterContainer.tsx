@@ -1,23 +1,23 @@
+import { useState } from "react";
+
 import { ActionBar, Button, checkUserRight } from "@edifice-ui/react";
 import "./ToasterContainer.scss";
+import { ShareOptions } from "node_modules/@edifice-ui/react/dist/common/ShareModal/ShareModal";
 import { useTranslation } from "react-i18next";
 
+import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { SearchResource } from "~/model/SearchResource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 import { useUpdateSignetMutation } from "~/services/api/signet.service";
+import { useUserRightsStore } from "~/stores/rights/store";
 import {
   convertDisciplines,
   convertKeyWords,
   convertLevels,
 } from "~/utils/property.utils";
-import { useUserRightsStore } from "~/stores/rights/store";
-import { ShareOptions } from "node_modules/@edifice-ui/react/dist/common/ShareModal/ShareModal";
-import { useState } from "react";
-import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
-import { RESOURCE_BIG_TYPE } from "~/core/enum/resource-big-type.enum";
 
 export interface ToasterContainerProps {
   selectedTab: string;
@@ -129,14 +129,14 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
       if (!toasterResources || toasterResources.length > 1) {
         return null;
       }
-      
-      const userRights = await (checkUserRight(toasterResources[0].rights));
+
+      const userRights = await checkUserRight(toasterResources[0].rights);
       setUserRights(userRights);
 
       setShareOptions({
         resourceCreatorId: toasterResources[0]?.owner_id?.toString() ?? "",
         resourceId: toasterResources[0]?.id?.toString() ?? "",
-        resourceRights: toasterResources[0].rights as string[] ?? [],
+        resourceRights: (toasterResources[0].rights as string[]) ?? [],
       });
       openSpecificModal(ModalEnum.SHARE_MODAL);
     } catch (error) {
@@ -244,7 +244,6 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
       {openModal === ModalEnum.SHARE_MODAL && shareOptions && (
         <ShareModalMediacentre
           shareOptions={shareOptions}
-          resourceType={RESOURCE_BIG_TYPE.SIGNET}
           onClose={() => setShareOptions(null)}
         />
       )}

@@ -1,13 +1,13 @@
 import { FC, createContext, useContext, useMemo, useState } from "react";
 
 import { ModalProviderContextType, ModalProviderProviderProps } from "./types";
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { Pin } from "~/model/Pin.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 const ModalProviderContext = createContext<ModalProviderContextType | null>(
   null,

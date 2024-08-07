@@ -10,13 +10,13 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 
+import { ModalEnum } from "~/core/enum/modal.enum";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { Pin } from "~/model/Pin.model";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { Textbook } from "~/model/Textbook.model";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 export interface ModalProviderProviderProps {
   children: ReactNode;

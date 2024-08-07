@@ -73,7 +73,7 @@ export const SignetPage: React.FC = () => {
   const chooseEmptyState = (text: string, image: string) => {
     setEmptyText(text);
     setEmptyImage(image);
-  }
+  };
 
   return (
     <>
@@ -100,7 +100,12 @@ export const SignetPage: React.FC = () => {
           refetch={refetchSignet}
         />
       )}
-      <ModalContainer refetchSignet={refetchSignet} levels={levels} disciplines={disciplines} refetchPins={refetchPins}/>
+      <ModalContainer
+        refetchSignet={refetchSignet}
+        levels={levels}
+        disciplines={disciplines}
+        refetchPins={refetchPins}
+      />
       <div className="med-root-container">
         <div className={`med-${canAccess()}-container`}>
           {canAccess() && (
@@ -142,10 +147,7 @@ export const SignetPage: React.FC = () => {
             </div>
             <div className={`med-${canAccess()}-page-content-body`}>
               {signetsData && !signetsData.length ? (
-                <EmptyState
-                  image={emptyImage}
-                  title={emptyText}
-                />
+                <EmptyState image={emptyImage} title={emptyText} />
               ) : (
                 <>
                   <FilterLayout

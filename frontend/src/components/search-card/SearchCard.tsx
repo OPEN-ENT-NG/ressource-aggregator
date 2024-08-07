@@ -1,11 +1,7 @@
 import "./SearchCard.scss";
 import React, { useEffect, useState } from "react";
 
-import {
-  Card,
-  isActionAvailable,
-  Tooltip,
-} from "@edifice-ui/react";
+import { Card, isActionAvailable, Tooltip } from "@edifice-ui/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";

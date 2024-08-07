@@ -17,6 +17,6 @@ export interface Signet extends Resource {
   orientation?: boolean;
   published?: boolean;
   collab?: boolean;
-  owner?: {userId: string, displayName: string};
+  owner?: { userId: string; displayName: string };
   rights?: [];
 }

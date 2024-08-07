@@ -6,6 +6,7 @@ import FolderSharedIcon from "@mui/icons-material/FolderSharedOutlined";
 import PublicIcon from "@mui/icons-material/PublicOutlined";
 import "./AdminSignet.scss";
 import { useTranslation } from "react-i18next";
+
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { Signet } from "~/model/Signet.model";
@@ -46,7 +47,10 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
   };
 
   const selectShared = () => {
-    chooseEmptyState("mediacentre.empty.state.shared", "empty-state-shared.png");
+    chooseEmptyState(
+      "mediacentre.empty.state.shared",
+      "empty-state-shared.png",
+    );
     resetResources();
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.shared");
@@ -56,7 +60,10 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
   };
 
   const selectPublished = () => {
-    chooseEmptyState("mediacentre.empty.state.published", "empty-state-published.png");
+    chooseEmptyState(
+      "mediacentre.empty.state.published",
+      "empty-state-published.png",
+    );
     resetResources();
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.published");
@@ -66,7 +73,10 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
   };
 
   const selectArchived = () => {
-    chooseEmptyState("mediacentre.empty.state.archived", "empty-state-archived.png");
+    chooseEmptyState(
+      "mediacentre.empty.state.archived",
+      "empty-state-archived.png",
+    );
     resetResources();
     setAllResourcesDisplayed(null);
     setSelectedTab("mediacentre.signets.archived");

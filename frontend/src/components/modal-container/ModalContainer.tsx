@@ -1,12 +1,13 @@
 import React from "react";
-import { useModalProvider } from "~/providers/ModalsProvider";
-import { ModalEnum } from "~/core/enum/modal.enum";
-import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
-import { SignetProperty } from "~/components/modals/signet-property/SignetProperty";
-import { SignetArchive } from "~/components/modals/signet-archive/SignetArchive";
-import { SignetDelete } from "~/components/modals/signet-delete/SignetDelete";
+
 import { CreatePins } from "~/components/modals/create-pins/CreatePins";
 import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
+import { SignetArchive } from "~/components/modals/signet-archive/SignetArchive";
+import { SignetDelete } from "~/components/modals/signet-delete/SignetDelete";
+import { SignetProperty } from "~/components/modals/signet-property/SignetProperty";
+import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
+import { ModalEnum } from "~/core/enum/modal.enum";
+import { useModalProvider } from "~/providers/ModalsProvider";
 
 interface ModalContainerProps {
   refetchSignet: () => void;
@@ -60,4 +61,4 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
       )}
     </div>
   );
-}
+};
