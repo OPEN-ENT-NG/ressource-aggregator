@@ -1,6 +1,7 @@
 package fr.openent.mediacentre.service.impl;
 
 import fr.openent.mediacentre.Mediacentre;
+import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.helper.ElasticSearchHelper;
 import fr.openent.mediacentre.helper.IModelHelper;
 import fr.openent.mediacentre.model.SignetResource;
@@ -38,12 +39,12 @@ public class DefaultSignetService implements SignetService {
     }
 
     public Optional<UserInfos> getCreatorForModel(final JsonObject json) {
-        if(!json.containsKey("owner_id")) {
+        if(!json.containsKey(Field.OWNER_ID)) {
             return Optional.empty();
         }
         final UserInfos user = new UserInfos();
-        user.setUserId(json.getString("owner_id"));
-        user.setUsername(json.getString("owner_name"));
+        user.setUserId(json.getString(Field.OWNER_ID));
+        user.setUsername(json.getString(Field.OWNER_NAME));
         return Optional.of(user);
     }
 

@@ -45,18 +45,22 @@ export const SignetPublish: React.FC<SignetPublishProps> = ({
       }
       const payload = {
         ...toasterResources[0],
-        levels: convertLevels(toasterResources[0].levels).reduce((acc, discipline) => {
-          if (disciplines.includes(discipline.label)) {
-            acc.push({ id: discipline.id, label: discipline.label });
-          }
-          return acc;
-        }),
-        disciplines: convertDisciplines(toasterResources[0].disciplines).reduce((acc, discipline) => {
-          if (disciplines.includes(discipline.label)) {
-            acc.push({ id: discipline.id, label: discipline.label });
-          }
-          return acc;
-        }),
+        levels: convertLevels(toasterResources[0].levels).reduce(
+          (acc, level) => {
+            if (levels.includes(level.label)) {
+              acc.push({ id: level.id, label: level.label });
+            }
+            return acc;
+          },
+        ),
+        disciplines: convertDisciplines(toasterResources[0].disciplines).reduce(
+          (acc, discipline) => {
+            if (disciplines.includes(discipline.label)) {
+              acc.push({ id: discipline.id, label: discipline.label });
+            }
+            return acc;
+          },
+        ),
         plain_text: convertKeyWords(toasterResources[0].plain_text).map(
           (keyword) => ({ label: keyword }),
         ),

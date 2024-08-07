@@ -55,12 +55,14 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
               }
               return acc;
             }),
-            disciplines: convertDisciplines(resource.disciplines).reduce((acc, discipline) => {
-              if (disciplines.includes(discipline.label)) {
-                acc.push({ id: discipline.id, label: discipline.label });
-              }
-              return acc;
-            }),
+            disciplines: convertDisciplines(resource.disciplines).reduce(
+              (acc, discipline) => {
+                if (disciplines.includes(discipline.label)) {
+                  acc.push({ id: discipline.id, label: discipline.label });
+                }
+                return acc;
+              },
+            ),
             plain_text: convertKeyWords(resource.plain_text).map((keyword) => ({
               label: keyword,
             })),

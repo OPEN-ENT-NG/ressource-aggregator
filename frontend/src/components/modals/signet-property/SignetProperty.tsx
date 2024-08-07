@@ -119,23 +119,26 @@ export const SignetProperty: React.FC<SignetPropertyProps> = ({
         return;
       }
       const payload: SignetUpdatePayload = {
-        levels: levels
-          ?.filter((level: { label: string }) =>
-            selectedCheckboxes.levels.includes(level.label),
-          )
-          ?.map((level: { id: string; label: string }) => ({
-            id: level.id,
-            label: level.label,
-          })) ?? [],
-        disciplines: disciplines
-          ?.filter((discipline: { label: string }) =>
-            selectedCheckboxes.disciplines.includes(discipline.label),
-          )
-          ?.map((discipline: { id: string; label: string }) => ({
-            id: discipline.id,
-            label: discipline.label,
-          })) ?? [],
-        plain_text: keyWordArray?.map((keyword: string) => ({ label: keyword })) ?? [],
+        levels:
+          levels
+            ?.filter((level: { label: string }) =>
+              selectedCheckboxes.levels.includes(level.label),
+            )
+            ?.map((level: { id: string; label: string }) => ({
+              id: level.id,
+              label: level.label,
+            })) ?? [],
+        disciplines:
+          disciplines
+            ?.filter((discipline: { label: string }) =>
+              selectedCheckboxes.disciplines.includes(discipline.label),
+            )
+            ?.map((discipline: { id: string; label: string }) => ({
+              id: discipline.id,
+              label: discipline.label,
+            })) ?? [],
+        plain_text:
+          keyWordArray?.map((keyword: string) => ({ label: keyword })) ?? [],
         title: title,
         url: url,
         image: imageUrl ?? "",

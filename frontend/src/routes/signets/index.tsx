@@ -35,7 +35,8 @@ export const SignetPage: React.FC = () => {
   const { data: actions } = useActions();
   const hasSignetRight = isActionAvailable("signets", actions);
 
-  const { allSignets, mine, shared, archived, published, refetchSignet } = useSignet();
+  const { allSignets, mine, shared, archived, published, refetchSignet } =
+    useSignet();
   const { data: disciplines } = useGetDisciplinesQuery(null);
   const { data: levels } = useGetLevelsQuery(null);
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
@@ -78,7 +79,7 @@ export const SignetPage: React.FC = () => {
   }, [allSignets, hasSignetRight]);
 
   useEffect(() => {
-    console.log(signetsData)
+    console.log(signetsData);
     if (signetsData && !initialLoadDone) {
       setInitialLoadDone(true);
       setAllResourcesDisplayed(sortByAlphabet(signetsData));
