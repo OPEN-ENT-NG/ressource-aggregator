@@ -22,7 +22,7 @@ import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvi
 import { sortByAlphabet } from "~/utils/sortResources.util";
 
 export const Search: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("mediacentre");
   const { idSelectedStructure } = useSelectedStructureProvider();
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();

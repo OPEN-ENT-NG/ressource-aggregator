@@ -59,16 +59,14 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
         // Case external resource
         if (isExternalResource(resource)) {
           acc.externalResources = [...acc.externalResources, resource];
-          acc.types = resource.document_types.reduce(
-            (accumulatedTypes, type) => {
+          acc.types =
+            resource?.document_types?.reduce((accumulatedTypes, type) => {
               const typeToAdd = Array.isArray(type) ? type[1] : type;
               if (!accumulatedTypes.includes(typeToAdd)) {
                 accumulatedTypes.push(typeToAdd);
               }
               return accumulatedTypes;
-            },
-            acc.types,
-          );
+            }, acc.types) ?? [];
         }
         // Case moodle
         if (isMoodle(resource)) {
@@ -79,25 +77,27 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
           acc.signets = [...acc.signets, resource];
         }
 
-        acc.disciplines = resource.disciplines.reduce(
-          (accumulatedDisciplines, discipline) => {
-            const disciplineToAdd = Array.isArray(discipline)
-              ? discipline[1]
-              : discipline;
-            if (!accumulatedDisciplines.includes(disciplineToAdd)) {
-              accumulatedDisciplines.push(disciplineToAdd);
+        acc.disciplines =
+          resource?.disciplines?.reduce(
+            (accumulatedDisciplines, discipline) => {
+              const disciplineToAdd = Array.isArray(discipline)
+                ? discipline[1]
+                : discipline;
+              if (!accumulatedDisciplines.includes(disciplineToAdd)) {
+                accumulatedDisciplines.push(disciplineToAdd);
+              }
+              return accumulatedDisciplines;
+            },
+            acc.disciplines,
+          ) ?? [];
+        acc.levels =
+          resource?.levels?.reduce((accumulatedLevels, level) => {
+            const levelToAdd = Array.isArray(level) ? level[1] : level;
+            if (!accumulatedLevels.includes(levelToAdd)) {
+              accumulatedLevels.push(levelToAdd);
             }
-            return accumulatedDisciplines;
-          },
-          acc.disciplines,
-        );
-        acc.levels = resource.levels.reduce((accumulatedLevels, level) => {
-          const levelToAdd = Array.isArray(level) ? level[1] : level;
-          if (!accumulatedLevels.includes(levelToAdd)) {
-            accumulatedLevels.push(levelToAdd);
-          }
-          return accumulatedLevels;
-        }, acc.levels);
+            return accumulatedLevels;
+          }, acc.levels) ?? [];
 
         return acc;
       },
