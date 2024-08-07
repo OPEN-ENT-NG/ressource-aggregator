@@ -49,14 +49,10 @@ export const SignetDelete: React.FC<SignetDeleteProps> = ({ refetch }) => {
             groups: {},
             users: {},
           };
-          const shareResponse = await updateShareResource({
+          await updateShareResource({
             idSignet,
             payload: sharePayload,
           });
-          if (shareResponse?.error) {
-            notify(t("mediacentre.error.delete"), "danger");
-            throw new Error(t("mediacentre.error.delete"));
-          }
           const deleteResponse = await deleteSignet({ idSignet });
           if (deleteResponse?.error) {
             notify(t("mediacentre.error.delete"), "danger");

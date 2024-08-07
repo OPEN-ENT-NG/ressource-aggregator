@@ -35,7 +35,7 @@ export const SignetPage: React.FC = () => {
   const { data: actions } = useActions();
   const hasSignetRight = isActionAvailable("signets", actions);
 
-  const { allSignets, mine, refetchSignet } = useSignet();
+  const { allSignets, mine, shared, archived, published, refetchSignet } = useSignet();
   const { data: disciplines } = useGetDisciplinesQuery(null);
   const { data: levels } = useGetLevelsQuery(null);
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<
@@ -54,7 +54,22 @@ export const SignetPage: React.FC = () => {
   useEffect(() => {
     if (allSignets) {
       if (hasSignetRight) {
-        setSignetsData(mine(allSignets)); // sort resources first render
+        switch (selectedTab) {
+          case "mediacentre.signets.mine":
+            setSignetsData(mine(allSignets));
+            break;
+          case "mediacentre.signets.shared":
+            setSignetsData(shared(allSignets));
+            break;
+          case "mediacentre.signets.published":
+            setSignetsData(published(allSignets));
+            break;
+          case "mediacentre.signets.archived":
+            setSignetsData(archived(allSignets));
+            break;
+          default:
+            setSignetsData(allSignets);
+        }
       } else {
         setSignetsData(allSignets);
       }
@@ -63,6 +78,7 @@ export const SignetPage: React.FC = () => {
   }, [allSignets, hasSignetRight]);
 
   useEffect(() => {
+    console.log(signetsData)
     if (signetsData && !initialLoadDone) {
       setInitialLoadDone(true);
       setAllResourcesDisplayed(sortByAlphabet(signetsData));
