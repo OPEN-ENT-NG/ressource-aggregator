@@ -2,7 +2,6 @@ import "./SearchCard.scss";
 import React, { useEffect, useState } from "react";
 
 import {
-  AlertTypes,
   Card,
   isActionAvailable,
   Tooltip,
@@ -55,7 +54,7 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const { setModalResource, openSpecificModal } = useModalProvider();
-  const { setAlertText, setAlertType } = useAlertProvider();
+  const { notify } = useAlertProvider();
   const { isSelectable, toggleResource } = useToasterProvider();
 
   // used to check if the user has the right to pin a resource
@@ -83,11 +82,6 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
     } else {
       return SearchCardTypeEnum.manuals;
     }
-  };
-
-  const notify = (message: string, type: AlertTypes) => {
-    setAlertText(message);
-    setAlertType(type);
   };
 
   const copy = () => {
@@ -235,16 +229,16 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
           </div>
         </a>
         <div className="med-search-resource-right-container">
-          <Card.Body space={"0"}>
-            <a href={newLink !== "/" ? newLink : "/"} target="_blank">
+          <a href={newLink !== "/" ? newLink : "/"} target="_blank">
+            <Card.Body space={"0"}>
               <SearchCardType type={type()} />
               <Card.Title>{searchResource.title}</Card.Title>
-                <SearchCardSubtitle
-                    type={type()}
-                    searchResource={searchResource}
-                />
-            </a>
-          </Card.Body>
+              <SearchCardSubtitle
+                type={type()}
+                searchResource={searchResource}
+              />
+            </Card.Body>
+          </a>
           <Card.Footer>
             <div
               className="med-footer-details"

@@ -9,12 +9,7 @@ import { EmptyState } from "~/components/empty-state/empty-state";
 import { FilterLayout } from "~/components/filter-layout/FilterLayout";
 import { InfiniteScrollList } from "~/components/infinite-scroll-list/InfiniteScrollList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
-import { CreatePins } from "~/components/modals/create-pins/CreatePins";
-import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
-import { SignetArchive } from "~/components/modals/signet-archive/SignetArchive";
-import { SignetDelete } from "~/components/modals/signet-delete/SignetDelete";
-import { SignetProperty } from "~/components/modals/signet-property/SignetProperty";
-import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
+import { ModalContainer } from "~/components/modal-container/ModalContainer";
 import { ToasterContainer } from "~/components/toaster-container/ToasterContainer";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { useSignet } from "~/hooks/useSignet";
@@ -34,7 +29,7 @@ export const SignetPage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
   const { refetchPins } = usePinProvider();
   const { alertType, alertText, setAlertText } = useAlertProvider();
-  const { openModal, openSpecificModal } = useModalProvider();
+  const { openSpecificModal } = useModalProvider();
 
   // RIGHTS
   const { data: actions } = useActions();
@@ -51,6 +46,8 @@ export const SignetPage: React.FC = () => {
     "mediacentre.signets.mine",
   );
   const [initialLoadDone, setInitialLoadDone] = useState<boolean>(false);
+  const [emptyText, setEmptyText] = useState("mediacentre.empty.state.mine");
+  const [emptyImage, setEmptyImage] = useState("empty-state-mine.png");
 
   const canAccess = () => (hasSignetRight ? "signets" : "search");
 
@@ -72,6 +69,11 @@ export const SignetPage: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signetsData]);
+
+  const chooseEmptyState = (text: string, image: string) => {
+    setEmptyText(text);
+    setEmptyImage(image);
+  }
 
   return (
     <>
@@ -98,40 +100,7 @@ export const SignetPage: React.FC = () => {
           refetch={refetchSignet}
         />
       )}
-      {openModal === ModalEnum.PUBLISH_SIGNET && (
-        <SignetPublish
-          refetch={refetchSignet}
-          levels={levels}
-          disciplines={disciplines}
-        />
-      )}
-      {openModal === ModalEnum.PROPERTY_SIGNET && (
-        <SignetProperty
-          refetch={refetchSignet}
-          levels={levels}
-          disciplines={disciplines}
-        />
-      )}
-      {openModal === ModalEnum.ARCHIVE_SIGNET && (
-        <SignetArchive
-          refetch={refetchSignet}
-          levels={levels}
-          disciplines={disciplines}
-        />
-      )}
-      {openModal === ModalEnum.DELETE_SIGNET && (
-        <SignetDelete refetch={refetchSignet} />
-      )}
-      {openModal === ModalEnum.CREATE_PIN && (
-        <CreatePins refetch={refetchPins} />
-      )}
-      {openModal === ModalEnum.CREATE_SIGNET && (
-        <CreateSignet
-          refetch={refetchSignet}
-          levels={levels}
-          disciplines={disciplines}
-        />
-      )}
+      <ModalContainer refetchSignet={refetchSignet} levels={levels} disciplines={disciplines} refetchPins={refetchPins}/>
       <div className="med-root-container">
         <div className={`med-${canAccess()}-container`}>
           {canAccess() && (
@@ -142,6 +111,7 @@ export const SignetPage: React.FC = () => {
                 signets={allSignets}
                 setSignetsData={setSignetsData}
                 setAllResourcesDisplayed={setAllResourcesDisplayed}
+                chooseEmptyState={chooseEmptyState}
               />
             </div>
           )}
@@ -173,8 +143,8 @@ export const SignetPage: React.FC = () => {
             <div className={`med-${canAccess()}-page-content-body`}>
               {signetsData && !signetsData.length ? (
                 <EmptyState
-                  image="empty-state-signets.png"
-                  title="mediacentre.empty.state.signets"
+                  image={emptyImage}
+                  title={emptyText}
                 />
               ) : (
                 <>

@@ -112,29 +112,6 @@ export const useSignet = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicSignets, mySignets, favorites, pins]);
 
-  const mine = (signets: Signet[]) => {
-    return signets.filter(
-      (signet: Signet) => !signet.archived && signet.owner_id === user?.userId,
-    );
-  };
-
-  const shared = (signets: Signet[]) => {
-    return signets.filter(
-      (signet: Signet) =>
-        !signet.archived && signet.collab && signet.owner_id !== user?.userId,
-    );
-  };
-
-  const published = (signets: Signet[]) => {
-    return signets.filter(
-      (signet: Signet) => !signet.archived && signet.shared,
-    );
-  };
-
-  const archived = (signets: Signet[]) => {
-    return signets.filter((signet: Signet) => signet.archived);
-  };
-
   useEffect(() => {
     if (favorites && pins) {
       const signetsData = getAllSignets();
@@ -170,10 +147,6 @@ export const useSignet = () => {
     homeSignets,
     setHomeSignets,
     getHomeSignets,
-    publicSignetError,
-    publicSignetIsLoading,
-    mySignetError,
-    mySignetIsLoading,
     refetchSignet,
     allSignets,
     setAllSignets,

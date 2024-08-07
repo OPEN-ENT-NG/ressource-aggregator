@@ -59,7 +59,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
         // Case external resource
         if (isExternalResource(resource)) {
           acc.externalResources = [...acc.externalResources, resource];
-          acc.types = resource.document_types.reduce(
+          acc.types = resource?.document_types?.reduce(
             (accumulatedTypes, type) => {
               const typeToAdd = Array.isArray(type) ? type[1] : type;
               if (!accumulatedTypes.includes(typeToAdd)) {
@@ -68,7 +68,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
               return accumulatedTypes;
             },
             acc.types,
-          );
+          ) ?? [];
         }
         // Case moodle
         if (isMoodle(resource)) {
@@ -79,7 +79,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
           acc.signets = [...acc.signets, resource];
         }
 
-        acc.disciplines = resource.disciplines.reduce(
+        acc.disciplines = resource?.disciplines?.reduce(
           (accumulatedDisciplines, discipline) => {
             const disciplineToAdd = Array.isArray(discipline)
               ? discipline[1]
@@ -90,14 +90,14 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
             return accumulatedDisciplines;
           },
           acc.disciplines,
-        );
-        acc.levels = resource.levels.reduce((accumulatedLevels, level) => {
+        ) ?? [];
+        acc.levels = resource?.levels?.reduce((accumulatedLevels, level) => {
           const levelToAdd = Array.isArray(level) ? level[1] : level;
           if (!accumulatedLevels.includes(levelToAdd)) {
             accumulatedLevels.push(levelToAdd);
           }
           return accumulatedLevels;
-        }, acc.levels);
+        }, acc.levels) ?? [];
 
         return acc;
       },

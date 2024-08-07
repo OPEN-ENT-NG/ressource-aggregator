@@ -18,7 +18,6 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
-import { ModalEnum } from "~/core/enum/modal.enum";
 
 export const FavoritePage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -86,7 +85,7 @@ export const FavoritePage: React.FC = () => {
           <div className="med-search-page-content-body">
             {favoriteResourcesData && !favoriteResourcesData.length ? (
               <EmptyState
-                imgSource="empty-state-favorites.png"
+                image="empty-state-favorites.png"
                 title="mediacentre.empty.state.favorites"
               />
             ) : (
