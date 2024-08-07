@@ -108,7 +108,7 @@ export const SignetPage: React.FC = () => {
       />
       <div className="med-root-container">
         <div className={`med-${canAccess()}-container`}>
-          {canAccess() && (
+          {hasSignetRight && (
             <div className="med-signets-admin-container">
               <AdminSignet
                 selectedTab={selectedTab}
@@ -127,14 +127,14 @@ export const SignetPage: React.FC = () => {
                 <h1 className={`med-${canAccess()}-title`}>
                   {t("mediacentre.sidebar.signets")}
                 </h1>
-                {canAccess() && (
+                {hasSignetRight && (
                   <div className="med-signets-selected-tab">
                     <span>{">"}</span>
                     <p>{t(selectedTab)}</p>
                   </div>
                 )}
               </div>
-              {canAccess() && (
+              {hasSignetRight && (
                 <Button
                   color="primary"
                   type="button"
