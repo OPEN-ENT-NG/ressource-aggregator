@@ -86,6 +86,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     ) {
       setAllResourcesDisplayed(filteredResources);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCheckboxes, resourcesMap, resources]);
 
   useEffect(() => {
@@ -113,6 +114,16 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resourcesMap]);
+
+  useEffect(() => {
+    if (!resources) {
+      return;
+    }
+    setAllResourcesDisplayed(
+      filterByAllDropdowns(resourcesMap, selectedCheckboxes, SOURCES, THEMES),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCheckboxes, resourcesMap]);
 
   return (
     <>
