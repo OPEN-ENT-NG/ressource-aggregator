@@ -200,7 +200,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
               type="button"
               color="primary"
               variant="filled"
-              onClick={openPublish}
+              onClick={openProperty}
             >
               {t("mediacentre.toaster.properties")}
             </Button>

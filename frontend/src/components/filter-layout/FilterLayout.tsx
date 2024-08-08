@@ -127,9 +127,6 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   }, [resourcesMap]);
 
   useEffect(() => {
-    if (!resources) {
-      return;
-    }
     if (publishedIsChecked && myPublishedSignets) {
       const myPublishedSignetsResult = getResourcesMap(myPublishedSignets);
       const myPublishedSignetsResourceMap: ResourcesMap = {
@@ -154,9 +151,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       );
       setAllResourcesDisplayed(filteredResources);
     }
-    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap, publishedIsChecked]);
+  }, [selectedCheckboxes, resourcesMap, publishedIsChecked, myPublishedSignets]);
 
   return (
     <>

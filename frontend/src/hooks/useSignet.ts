@@ -84,6 +84,7 @@ export const useSignet = () => {
       plain_text: convertKeyWords(signet.plain_text),
       published: false
     }));
+    console.log("updatedMySignetData", updatedMySignetsData);
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
         ...signet,

@@ -49,20 +49,8 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
           const payload = {
             ...resource,
             archived: true,
-            levels: convertLevels(resource.levels).reduce((acc, level) => {
-              if (levels.includes(level.label)) {
-                acc.push({ id: level.id, label: level.label });
-              }
-              return acc;
-            }),
-            disciplines: convertDisciplines(resource.disciplines).reduce(
-              (acc, discipline) => {
-                if (disciplines.includes(discipline.label)) {
-                  acc.push({ id: discipline.id, label: discipline.label });
-                }
-                return acc;
-              },
-            ),
+            levels: levels.filter(level => convertLevels(resource.levels).includes(level.label)),
+            disciplines: disciplines.filter(level => convertDisciplines(resource.disciplines).includes(level.label)),
             plain_text: convertKeyWords(resource.plain_text).map((keyword) => ({
               label: keyword,
             })),

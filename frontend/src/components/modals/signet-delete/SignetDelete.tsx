@@ -54,6 +54,7 @@ export const SignetDelete: React.FC<SignetDeleteProps> = ({ refetch }) => {
             payload: sharePayload,
           });
           const deleteResponse = await deleteSignet({ idSignet });
+          console.log(deleteResponse);
           if (deleteResponse?.error) {
             notify(t("mediacentre.error.delete"), "danger");
             return;
