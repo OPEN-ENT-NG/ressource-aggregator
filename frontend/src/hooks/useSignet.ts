@@ -6,6 +6,7 @@ import { Signet } from "./../model/Signet.model";
 import {
   useGetPublishedSignetsQuery,
   useGetMySignetsQuery,
+  useGetMyPublishedSignetsQuery,
 } from "./../services/api/signet.service";
 import { useFavorite } from "./useFavorite";
 import { SIGNET } from "~/core/const/sources.const";
@@ -25,8 +26,10 @@ export const useSignet = () => {
     useGetPublishedSignetsQuery(null);
   const { data: mySignets, refetch: refetchMySignet } =
     useGetMySignetsQuery(null);
+  const { data: myPublishedSignetsData, refetch: refetchMyPublishedSignet } = useGetMyPublishedSignetsQuery(null);
   const [homeSignets, setHomeSignets] = useState<Signet[] | null>(null);
   const [allSignets, setAllSignets] = useState<Signet[] | null>(null);
+  const [myPublishedSignets, setMyPublishedSignets] = useState<Signet[] | null>(null);
   const { favorites } = useFavorite();
 
   const getHomeSignets = useCallback(() => {
@@ -39,6 +42,34 @@ export const useSignet = () => {
     );
   }, [allSignets, user?.userId]);
 
+  const getMyPublishedSignets = useCallback(() => {
+    if (!myPublishedSignetsData) {
+      return null;
+    }
+    let signetsData = myPublishedSignetsData?.resources ?? [];
+    if (favorites) {
+      signetsData = signetsData.map((signet: Signet) => ({
+        ...signet,
+        favorite: favorites.some((fav: Favorite) =>
+          signet?.id
+            ? fav?.id?.toString() === signet?.id
+            : fav?.id?.toString() === signet?._id,
+        ),
+      }));
+    }
+    if (pins) {
+      signetsData = signetsData.map((signet: Signet) => ({
+        ...signet,
+        is_pinned: pins.some(
+          (pin: Pin) =>
+            pin?.id == signet?.id &&
+            pin.source === "fr.openent.mediacentre.source.Signet",
+        ),
+      }));
+    }
+    return signetsData;
+  }, [myPublishedSignetsData, favorites, pins]);
+
   const getAllSignets = useCallback(() => {
     if (!publicSignets || !mySignets) {
       return null;
@@ -48,10 +79,10 @@ export const useSignet = () => {
     const updatedMySignetsData: Signet[] = mySignets.map((signet: Signet) => ({
       ...signet,
       source: SIGNET,
-      shared: false,
       disciplines: convertDisciplines(signet.disciplines),
       levels: convertLevels(signet.levels),
       plain_text: convertKeyWords(signet.plain_text),
+      published: false
     }));
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
@@ -59,7 +90,6 @@ export const useSignet = () => {
         orientation: signet?.document_types?.some((type) =>
           type.toLowerCase().includes("orientation"),
         ),
-        shared: true,
         source: SIGNET,
         published: true,
       }),
@@ -94,6 +124,7 @@ export const useSignet = () => {
   const refetchSignet = async () => {
     await refetchPublicSignet();
     await refetchMySignet();
+    await refetchMyPublishedSignet();
   };
 
   useEffect(() => {
@@ -110,15 +141,14 @@ export const useSignet = () => {
       setAllSignets(signetsData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicSignets, mySignets, favorites, pins]);
+  }, [publicSignets, mySignets, user?.userId, favorites, pins]);
 
   useEffect(() => {
-    if (favorites && pins) {
-      const signetsData = getAllSignets();
-      setAllSignets(signetsData);
+    if (favorites && pins && myPublishedSignetsData) {
+      const signetsData = getMyPublishedSignets();
+      setMyPublishedSignets(signetsData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicSignets, mySignets, user?.userId, favorites, pins]);
+  }, [myPublishedSignetsData]);
 
   const mine = (signets: Signet[]) => {
     return signets.filter(
@@ -135,7 +165,7 @@ export const useSignet = () => {
 
   const published = (signets: Signet[]) => {
     return signets.filter(
-      (signet: Signet) => !signet.archived && signet.shared,
+      (signet: Signet) => !signet.archived && signet.published,
     );
   };
 
@@ -154,5 +184,6 @@ export const useSignet = () => {
     shared,
     published,
     archived,
+    myPublishedSignets,
   };
 };

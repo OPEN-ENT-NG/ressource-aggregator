@@ -42,6 +42,9 @@ export const signetsApi = emptySplitApi.injectEndpoints({
         body: payload,
       }),
     }),
+    getMyPublishedSignets: builder.query({
+      query: () => "signets/public/",
+    }),
   }),
 });
 
@@ -53,4 +56,5 @@ export const {
   usePublishSignetMutation,
   useUpdateShareResourceMutation,
   useDeleteSignetMutation,
+  useGetMyPublishedSignetsQuery,
 } = signetsApi;

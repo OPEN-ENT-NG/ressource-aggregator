@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { GAR, MOODLE, SIGNET } from "~/core/const/sources.const";
 import { ExternalResource } from "~/model/ExternalResource.model";
@@ -47,9 +47,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
     ResourceInfosMapInitialStates,
   );
 
-  useEffect(() => {
-    if (!resources) return;
-
+  const getResourcesMap = useCallback((resources: Resource[]) => {
     const result = resources.reduce(
       (acc, resource) => {
         // Case textbook
@@ -111,14 +109,19 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
         types: [] as string[],
       },
     );
+    return result;
+  }, [resources]);
 
+  useEffect(() => {
+    if (!resources) return;
+
+    const result = getResourcesMap(resources);
     setResourcesMap({
       textbooks: result.textbooks as Textbook[],
       externalResources: result.externalResources as ExternalResource[],
       moodle: result.moodle as Moodle[],
       signets: result.signets as Signet[],
     });
-
     setResourcesInfosMap({
       // sort disciplines, levels and types by custom string sort
       disciplines: result.disciplines.sort(customStringSort),
@@ -130,5 +133,6 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
   return {
     resourcesMap,
     resourcesInfosMap,
+    getResourcesMap,
   };
 };

@@ -35,7 +35,7 @@ export const SignetPage: React.FC = () => {
   const { data: actions } = useActions();
   const hasSignetRight = isActionAvailable("signets", actions);
 
-  const { allSignets, mine, shared, archived, published, refetchSignet } =
+  const { allSignets, myPublishedSignets, mine, shared, archived, published, refetchSignet } =
     useSignet();
   const { data: disciplines } = useGetDisciplinesQuery(null);
   const { data: levels } = useGetLevelsQuery(null);
@@ -79,7 +79,6 @@ export const SignetPage: React.FC = () => {
   }, [allSignets, hasSignetRight]);
 
   useEffect(() => {
-    console.log(signetsData);
     if (signetsData && !initialLoadDone) {
       setInitialLoadDone(true);
       setAllResourcesDisplayed(sortByAlphabet(signetsData));
@@ -168,9 +167,11 @@ export const SignetPage: React.FC = () => {
               ) : (
                 <>
                   <FilterLayout
+                    selectedTab={selectedTab}
                     resources={signetsData}
                     allResourcesDisplayed={allResourcesDisplayed}
                     setAllResourcesDisplayed={setAllResourcesDisplayed}
+                    myPublishedSignets={myPublishedSignets}
                   />
                   {allResourcesDisplayed && !allResourcesDisplayed.length ? (
                     <EmptyState title="mediacentre.empty.state.filter" />

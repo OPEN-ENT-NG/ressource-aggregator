@@ -8,8 +8,13 @@ import { DropDown } from "../drop-down/DropDown";
 import { useResourceListInfo } from "~/hooks/useResourceListInfo";
 import { Resource } from "~/model/Resource.model";
 import "./FilterLayout.scss";
+import { Checkbox } from "@edifice-ui/react";
+import { Signet } from "~/model/Signet.model";
+import { ResourcesMap } from "~/model/ResourcesMap";
 
 interface FilterLayoutProps {
+  selectedTab?: string;
+  myPublishedSignets?: Signet[] | null;
   resources: Resource[] | null;
   allResourcesDisplayed: Resource[] | null;
   setAllResourcesDisplayed: React.Dispatch<
@@ -18,11 +23,13 @@ interface FilterLayoutProps {
 }
 
 export const FilterLayout: React.FC<FilterLayoutProps> = ({
+  selectedTab = null,
+  myPublishedSignets = null,
   resources,
   allResourcesDisplayed,
   setAllResourcesDisplayed,
 }) => {
-  const { resourcesMap, resourcesInfosMap } = useResourceListInfo(resources);
+  const { resourcesMap, resourcesInfosMap, getResourcesMap } = useResourceListInfo(resources);
   const { resourcesInfosMap: displayedResourcesInfosMap } = useResourceListInfo(
     allResourcesDisplayed,
   );
@@ -48,6 +55,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     return (value: string[]) =>
       setSelectedCheckboxes({ ...selectedCheckboxes, [key]: value });
   };
+  const [publishedIsChecked, setPublishedIsChecked] = useState(false);
 
   const SOURCES = {
     MANUALS: t("mediacentre.sidebar.textbooks"),
@@ -69,6 +77,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
 
   // we show sources only if we are on favorites or search page
   const isShowingSources = page === "/favorites" || page === "/search";
+
+  const isShowingPublished = page === "/signets" && selectedTab === "mediacentre.signets.published";
 
   useEffect(() => {
     if (!resources) {
@@ -112,6 +122,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       types: [],
       disciplines: [],
     });
+    setPublishedIsChecked(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resourcesMap]);
 
@@ -119,11 +130,33 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     if (!resources) {
       return;
     }
-    setAllResourcesDisplayed(
-      filterByAllDropdowns(resourcesMap, selectedCheckboxes, SOURCES, THEMES),
-    );
+    if (publishedIsChecked && myPublishedSignets) {
+      const myPublishedSignetsResult = getResourcesMap(myPublishedSignets);
+      const myPublishedSignetsResourceMap: ResourcesMap = {
+        textbooks: [],
+        externalResources: [],
+        moodle: [],
+        signets: myPublishedSignetsResult?.signets as Signet[] ?? [],
+      };
+      const filteredResources = filterByAllDropdowns(
+        myPublishedSignetsResourceMap,
+        selectedCheckboxes,
+        SOURCES,
+        THEMES,
+      );
+      setAllResourcesDisplayed(filteredResources);
+    } else {
+      const filteredResources = filterByAllDropdowns(
+        resourcesMap,
+        selectedCheckboxes,
+        SOURCES,
+        THEMES,
+      );
+      setAllResourcesDisplayed(filteredResources);
+    }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap]);
+  }, [selectedCheckboxes, resourcesMap, publishedIsChecked]);
 
   return (
     <>
@@ -180,6 +213,15 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
             }`,
           )}
         />
+        {isShowingPublished && (
+          <div className="med-published-checkbox">
+            <Checkbox
+              label={t("mediacentre.filter.signets.published")}
+              checked={publishedIsChecked}
+              onChange={() => setPublishedIsChecked((isChecked) => !isChecked)}
+            />
+          </div>
+        )}
       </div>
     </>
   );
