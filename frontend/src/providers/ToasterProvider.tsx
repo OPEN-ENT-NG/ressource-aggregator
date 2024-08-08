@@ -28,6 +28,9 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     SearchResource[] | null
   >(null);
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState<string>(
+    "mediacentre.signets.mine",
+  );
 
   const isSelectable = useCallback(
     (resource: SearchResource) =>
@@ -50,11 +53,19 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
             ) || [],
         );
       } else {
-        setToasterResources((prev) => [...(prev || []), resource]);
+        if (selectedTab === "mediacentre.signets.shared") {
+          setToasterResources([resource]);
+        } else {
+          setToasterResources((prev) => [...(prev || []), resource]);
+        }
       }
     },
     [isSelectable],
   );
+
+  useEffect(() => {
+    console.log("toasterResources", toasterResources);
+  }, [toasterResources]);
 
   const resetResources = () => {
     setToasterResources(null);
@@ -70,13 +81,15 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     () => ({
       toasterResources,
       setToasterResources,
+      selectedTab,
+      setSelectedTab,
       isSelectable,
       toggleResource,
       isToasterOpen,
       setIsToasterOpen,
       resetResources,
     }),
-    [toasterResources, isToasterOpen, isSelectable, toggleResource],
+    [toasterResources, isToasterOpen, selectedTab, isSelectable, toggleResource],
   );
 
   return (
