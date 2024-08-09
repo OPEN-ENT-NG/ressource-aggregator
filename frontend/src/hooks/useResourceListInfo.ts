@@ -124,9 +124,9 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
     });
     setResourcesInfosMap({
       // sort disciplines, levels and types by custom string sort
-      disciplines: result.disciplines.sort(customStringSort),
-      levels: result.levels.sort(customStringSort),
-      types: result.types.sort(customStringSort),
+      disciplines: result.disciplines.filter(discipline => discipline.trim() !== "").sort(customStringSort),
+      levels: result.levels.filter(level => level.trim() !== "").sort(customStringSort),
+      types: result.types.filter(type => type.trim() !== "").sort(customStringSort),
     });
   }, [resources]);
 
