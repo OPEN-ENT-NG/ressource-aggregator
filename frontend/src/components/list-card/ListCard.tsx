@@ -15,13 +15,13 @@ import { useTranslation } from "react-i18next";
 import { NavigateFunction } from "react-router-dom";
 
 import { ListCardTitle } from "./list-card-title/ListCardTitle";
+import { EmptyState } from "../empty-state/EmptyState";
 import { breakpoints } from "~/core/const/breakpoints.ts";
 import {
   NbColumnsListCard,
   NbComponentsListCard,
 } from "~/core/const/home-element-list-sizes.const";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
-import { EmptyState } from "../empty-state/EmptyState";
 
 interface ListCardProps {
   scrollable: boolean;

@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import './EmptyState.scss'
+import "./EmptyState.scss";
 
 interface EmptyStateProps {
   image?: string;
   title: string;
   description?: string;
-  size?: "normal" | "big"
+  size?: "normal" | "big";
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({

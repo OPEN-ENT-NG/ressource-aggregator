@@ -164,7 +164,7 @@ export const SignetPage: React.FC = () => {
             </div>
             <div className={`med-${canAccess()}-page-content-body`}>
               {signetsData && !signetsData.length ? (
-                <EmptyState image={emptyImage} title={emptyText} size="big"/>
+                <EmptyState image={emptyImage} title={emptyText} size="big" />
               ) : (
                 <>
                   <FilterLayout
