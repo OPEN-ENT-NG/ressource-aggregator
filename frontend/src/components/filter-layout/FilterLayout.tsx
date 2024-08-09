@@ -54,6 +54,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     RESOURCES: t("mediacentre.sidebar.resources"),
     SIGNETS: t("mediacentre.sidebar.signets"),
     MOODLES: t("mediacentre.search.card.moodle"),
+    GLOBAL_RESOURCES: t("mediacentre.resource.globalResources"),
   };
 
   const THEMES = {
@@ -103,6 +104,9 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     if (resourcesMap.moodle.length) {
       sourcesTemp = [...sourcesTemp, SOURCES.MOODLES];
     }
+    if (resourcesMap.global.length) {
+      sourcesTemp = [...sourcesTemp, SOURCES.GLOBAL_RESOURCES];
+    }
     setSources(sourcesTemp);
     // reset selected checkboxes when we change the resources
     setSelectedCheckboxes({
@@ -114,16 +118,6 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resourcesMap]);
-
-  useEffect(() => {
-    if (!resources) {
-      return;
-    }
-    setAllResourcesDisplayed(
-      filterByAllDropdowns(resourcesMap, selectedCheckboxes, SOURCES, THEMES),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap]);
 
   return (
     <>

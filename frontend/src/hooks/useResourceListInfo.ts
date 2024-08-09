@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { GAR, MOODLE, SIGNET } from "~/core/const/sources.const";
+import { GAR, MOODLE, SIGNET, GLOBAL } from "~/core/const/sources.const";
 import { ExternalResource } from "~/model/ExternalResource.model";
+import { GlobalResource } from "~/model/GlobalResource.model";
 import { Moodle } from "~/model/Moodle.model";
 import { Resource } from "~/model/Resource.model";
 import { ResourceInfosMap } from "~/model/ResourceInfosMap";
@@ -14,6 +15,7 @@ const ResourcesMapInitialStates: ResourcesMap = {
   externalResources: [],
   moodle: [],
   signets: [],
+  global: [],
 };
 const ResourceInfosMapInitialStates: ResourceInfosMap = {
   disciplines: [],
@@ -38,6 +40,7 @@ const isExternalResource = (resource: Resource) =>
   resource.source === GAR && (!resource?.is_textbook ?? true);
 const isMoodle = (resource: Resource) => resource.source === MOODLE;
 const isSignet = (resource: Resource) => resource.source === SIGNET;
+const isGlobalResource = (resource: Resource) => resource.source === GLOBAL;
 
 // this kook get all information about a list of resources and it's used in the FilterLayout component
 export const useResourceListInfo = (resources: Resource[] | null) => {
@@ -77,6 +80,11 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
           acc.signets = [...acc.signets, resource];
         }
 
+        // Case global resource
+        if (isGlobalResource(resource)) {
+          acc.global = [...acc.global, resource];
+        }
+
         acc.disciplines =
           resource?.disciplines?.reduce(
             (accumulatedDisciplines, discipline) => {
@@ -106,6 +114,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
         externalResources: [] as Resource[],
         moodle: [] as Resource[],
         signets: [] as Resource[],
+        global: [] as Resource[],
         disciplines: [] as string[],
         levels: [] as string[],
         types: [] as string[],
@@ -117,6 +126,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
       externalResources: result.externalResources as ExternalResource[],
       moodle: result.moodle as Moodle[],
       signets: result.signets as Signet[],
+      global: result.global as GlobalResource[],
     });
 
     setResourcesInfosMap({
