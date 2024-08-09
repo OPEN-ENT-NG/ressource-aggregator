@@ -46,7 +46,6 @@ export const ResourcePage: React.FC = () => {
       refetchSearch();
       setInitialLoadDone(true);
     }
-    console.log(user);
     if (user?.type === "PERSRELELEVE") {
       if (globals) {
         setExternalResourcesData(globals);

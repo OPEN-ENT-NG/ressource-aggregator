@@ -21,7 +21,7 @@ const filterBySources = (
       ...sortByAlphabet(resources.externalResources),
       ...sortByAlphabet(resources.signets),
       ...sortByAlphabet(resources.moodle),
-      ...sortByAlphabet(resources.global)
+      ...sortByAlphabet(resources.global),
     ];
   }
   let filteredResources: Resource[] = [];

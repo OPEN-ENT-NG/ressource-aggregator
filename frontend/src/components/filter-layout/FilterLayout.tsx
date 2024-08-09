@@ -119,18 +119,6 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resourcesMap]);
 
-  useEffect(() => {
-    if (!resources) {
-      return;
-    }
-    console.log(resourcesMap);
-    setAllResourcesDisplayed(
-      filterByAllDropdowns(resourcesMap, selectedCheckboxes, SOURCES, THEMES),
-    );
-    console.log(filterByAllDropdowns(resourcesMap, selectedCheckboxes, SOURCES, THEMES))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap]);
-
   return (
     <>
       <div className="med-filters">
