@@ -21,6 +21,7 @@ import {
   NbComponentsListCard,
 } from "~/core/const/home-element-list-sizes.const";
 import { CardTypeEnum } from "~/core/enum/card-type.enum.ts";
+import { EmptyState } from "../empty-state/EmptyState";
 
 interface ListCardProps {
   scrollable: boolean;
@@ -115,18 +116,11 @@ export const ListCard: React.FC<ListCardProps> = ({
           </Grid>
         ) : (
           type === CardTypeEnum.favorites && (
-            <div className="favorite-empty-state">
-              <img
-                src={"/mediacentre/public/img/empty-state.png"}
-                alt="empty-state"
-                className="empty-state-img"
-              />
-              <span className="empty-state-text">
-                {t("mediacentre.favorite.empty.first")}
-                <br />
-                {t("mediacentre.favorite.empty.second")}
-              </span>
-            </div>
+            <EmptyState
+              image="empty-state-favorites.png"
+              title={t("mediacentre.favorite.empty.first")}
+              description={t("mediacentre.favorite.empty.second")}
+            />
           )
         )}
       </div>
