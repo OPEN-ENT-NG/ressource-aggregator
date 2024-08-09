@@ -81,25 +81,6 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   const isShowingPublished = page === "/signets" && selectedTab === "mediacentre.signets.published";
 
   useEffect(() => {
-    if (!resources) {
-      return;
-    }
-    const filteredResources = filterByAllDropdowns(
-      resourcesMap,
-      selectedCheckboxes,
-      SOURCES,
-      THEMES,
-    );
-    if (
-      JSON.stringify(filteredResources) !==
-      JSON.stringify(allResourcesDisplayed)
-    ) {
-      setAllResourcesDisplayed(filteredResources);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap, resources]);
-
-  useEffect(() => {
     let sourcesTemp: string[] = [];
     if (resourcesMap.textbooks.length) {
       sourcesTemp = [...sourcesTemp, SOURCES.MANUALS];
@@ -141,7 +122,12 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
         SOURCES,
         THEMES,
       );
-      setAllResourcesDisplayed(filteredResources);
+      if (
+        JSON.stringify(filteredResources) !==
+        JSON.stringify(allResourcesDisplayed)
+      ) {
+        setAllResourcesDisplayed(filteredResources);
+      }
     } else {
       const filteredResources = filterByAllDropdowns(
         resourcesMap,
@@ -149,7 +135,12 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
         SOURCES,
         THEMES,
       );
-      setAllResourcesDisplayed(filteredResources);
+      if (
+        JSON.stringify(filteredResources) !==
+        JSON.stringify(allResourcesDisplayed)
+      ) {
+        setAllResourcesDisplayed(filteredResources);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCheckboxes, resourcesMap, publishedIsChecked, myPublishedSignets]);
