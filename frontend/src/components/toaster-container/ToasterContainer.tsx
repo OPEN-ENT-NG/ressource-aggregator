@@ -60,7 +60,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     } else {
       notify(t("mediacentre.toaster.selectOneResource.error"), "danger");
     }
-  }
+  };
 
   const openPublish = () => {
     if (toasterResources) {

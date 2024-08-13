@@ -60,7 +60,7 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
         }
       }
     },
-    [isSelectable],
+    [isSelectable, selectedTab],
   );
 
   useEffect(() => {
@@ -89,7 +89,13 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
       setIsToasterOpen,
       resetResources,
     }),
-    [toasterResources, isToasterOpen, selectedTab, isSelectable, toggleResource],
+    [
+      toasterResources,
+      isToasterOpen,
+      selectedTab,
+      isSelectable,
+      toggleResource,
+    ],
   );
 
   return (

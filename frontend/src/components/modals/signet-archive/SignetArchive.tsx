@@ -45,34 +45,42 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
         return;
       }
 
-      const promises = toasterResources.map(async (resource: SearchResource) => {
-        try {
-          const idSignet = resource?.id?.toString();
-          const payload = {
-            ...resource,
-            archived: true,
-            levels: levels.filter(level => convertLevels(resource.levels).includes(level.label)),
-            disciplines: disciplines.filter(level => convertDisciplines(resource.disciplines).includes(level.label)),
-            plain_text: convertKeyWords(resource.plain_text).map((keyword) => ({
-              label: keyword,
-            })),
-          };
-          const response = await updateSignet({ idSignet, payload });
-          if (response?.error) {
-            throw new Error(t("mediacentre.error.archived"));
+      const promises = toasterResources.map(
+        async (resource: SearchResource) => {
+          try {
+            const idSignet = resource?.id?.toString();
+            const payload = {
+              ...resource,
+              archived: true,
+              levels: levels.filter((level) =>
+                convertLevels(resource.levels).includes(level.label),
+              ),
+              disciplines: disciplines.filter((level) =>
+                convertDisciplines(resource.disciplines).includes(level.label),
+              ),
+              plain_text: convertKeyWords(resource.plain_text).map(
+                (keyword) => ({
+                  label: keyword,
+                }),
+              ),
+            };
+            const response = await updateSignet({ idSignet, payload });
+            if (response?.error) {
+              throw new Error(t("mediacentre.error.archived"));
+            }
+            return { status: "fulfilled" };
+          } catch (error) {
+            return { status: "rejected", reason: error };
           }
-          return { status: "fulfilled" }
-        } catch (error) {
-          return { status: "rejected", reason: error };
-        }
-      });
+        },
+      );
 
       const results = await Promise.allSettled(promises);
-  
+
       const rejectedResults = results.filter(
-        (result) => (result as any)?.value?.status === "rejected"
+        (result) => (result as any)?.value?.status === "rejected",
       );
-  
+
       if (rejectedResults.length > 0) {
         notify(t("mediacentre.error.archived"), "danger");
       } else {
@@ -83,7 +91,7 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
           toasterResources.length > 1
             ? t("mediacentre.signet.delete.many.success")
             : t("mediacentre.signet.delete.success"),
-          "success"
+          "success",
         );
       }
     } catch (e) {

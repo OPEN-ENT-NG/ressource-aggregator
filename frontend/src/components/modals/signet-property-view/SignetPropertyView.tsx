@@ -1,11 +1,7 @@
 import React from "react";
 
-import {
-  Checkbox,
-  Grid,
-  Label,
-  Modal,
-} from "@edifice-ui/react";
+import { Checkbox, Grid, Modal } from "@edifice-ui/react";
+import { Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { breakpoints } from "~/core/const/breakpoints";
@@ -24,10 +20,8 @@ import {
   convertKeyWords,
   convertLevels,
 } from "~/utils/property.utils";
-import { Chip } from "@mui/material";
 
-interface SignetPropertyViewProps {
-}
+interface SignetPropertyViewProps {}
 
 export const SignetPropertyView: React.FC<SignetPropertyViewProps> = () => {
   const { t } = useTranslation("mediacentre");
@@ -40,10 +34,7 @@ export const SignetPropertyView: React.FC<SignetPropertyViewProps> = () => {
     closeAllModals();
   };
 
-  if (
-    openModal !== ModalEnum.PROPERTY_VIEW_SIGNET ||
-    !modalResource
-  ) {
+  if (openModal !== ModalEnum.PROPERTY_VIEW_SIGNET || !modalResource) {
     return null;
   }
 
@@ -92,15 +83,21 @@ export const SignetPropertyView: React.FC<SignetPropertyViewProps> = () => {
                 <p>{modalResource?.title}</p>
               </div>
               <div className="med-modal-property-box">
-                <h5>{t("mediacentre.modal.signet.property.view.url")}</h5>        
-                <p>{(modalResource as SearchResource)?.link ?? (modalResource as SearchResource)?.url ?? ""}</p>
+                <h5>{t("mediacentre.modal.signet.property.view.url")}</h5>
+                <p>
+                  {(modalResource as SearchResource)?.link ??
+                    (modalResource as SearchResource)?.url ??
+                    ""}
+                </p>
               </div>
               <div className="med-modal-property-box">
                 <h5>{t("mediacentre.modal.signet.input.levels")}</h5>
                 <div className="med-chip-controller">
-                  {convertDisciplines(modalResource.disciplines).length > 0 ? convertLevels(modalResource.levels).map((level: string) => (
-                    <Chip label={level} className="med-chip"/>
-                  )) : (
+                  {convertDisciplines(modalResource.disciplines).length > 0 ? (
+                    convertLevels(modalResource.levels).map((level: string) => (
+                      <Chip label={level} className="med-chip" />
+                    ))
+                  ) : (
                     <p>{t("mediacentre.modal.property.view.any.levels")}</p>
                   )}
                 </div>
@@ -108,19 +105,29 @@ export const SignetPropertyView: React.FC<SignetPropertyViewProps> = () => {
               <div className="med-modal-property-box">
                 <h5>{t("mediacentre.modal.signet.input.disciplines")}</h5>
                 <div className="med-chip-controller">
-                  {convertDisciplines(modalResource.disciplines).length > 0 ? convertDisciplines(modalResource.disciplines).map((level: string) => (
-                    <Chip label={level} className="med-chip"/>
-                  )) : (
-                    <p>{t("mediacentre.modal.property.view.any.disciplines")}</p>
+                  {convertDisciplines(modalResource.disciplines).length > 0 ? (
+                    convertDisciplines(modalResource.disciplines).map(
+                      (level: string) => (
+                        <Chip label={level} className="med-chip" />
+                      ),
+                    )
+                  ) : (
+                    <p>
+                      {t("mediacentre.modal.property.view.any.disciplines")}
+                    </p>
                   )}
                 </div>
               </div>
               <div className="med-modal-property-box">
                 <h5>{t("mediacentre.modal.signet.input.plaintext")}</h5>
                 <div className="med-chip-controller">
-                  {convertKeyWords(modalResource.plain_text).length > 0 ? convertKeyWords(modalResource.plain_text).map((keyword: string) => (
-                    <Chip label={keyword} className="med-chip"/>
-                  )) : (
+                  {convertKeyWords(modalResource.plain_text).length > 0 ? (
+                    convertKeyWords(modalResource.plain_text).map(
+                      (keyword: string) => (
+                        <Chip label={keyword} className="med-chip" />
+                      ),
+                    )
+                  ) : (
                     <p>{t("mediacentre.modal.property.view.any.plaintext")}</p>
                   )}
                 </div>

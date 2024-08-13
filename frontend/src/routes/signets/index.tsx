@@ -18,13 +18,13 @@ import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
+import { useToasterProvider } from "~/providers/ToasterProvider";
 import { useGetDisciplinesQuery } from "~/services/api/disciplines.service";
 import { useGetLevelsQuery } from "~/services/api/levels.service";
 import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
-import { useToasterProvider } from "~/providers/ToasterProvider";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -37,8 +37,15 @@ export const SignetPage: React.FC = () => {
   const { data: actions } = useActions();
   const hasSignetRight = isActionAvailable("signets", actions);
 
-  const { allSignets, myPublishedSignets, mine, shared, archived, published, refetchSignet } =
-    useSignet();
+  const {
+    allSignets,
+    myPublishedSignets,
+    mine,
+    shared,
+    archived,
+    published,
+    refetchSignet,
+  } = useSignet();
   const { data: disciplines } = useGetDisciplinesQuery(null);
   const { data: levels } = useGetLevelsQuery(null);
   const [allResourcesDisplayed, setAllResourcesDisplayed] = useState<

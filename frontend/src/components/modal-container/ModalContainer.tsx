@@ -5,8 +5,8 @@ import { CreateSignet } from "~/components/modals/create-signet/CreateSignet";
 import { SignetArchive } from "~/components/modals/signet-archive/SignetArchive";
 import { SignetDelete } from "~/components/modals/signet-delete/SignetDelete";
 import { SignetProperty } from "~/components/modals/signet-property/SignetProperty";
-import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
 import { SignetPropertyView } from "~/components/modals/signet-property-view/SignetPropertyView";
+import { SignetPublish } from "~/components/modals/signet-publish/SignetPublish";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { useModalProvider } from "~/providers/ModalsProvider";
 
@@ -60,9 +60,7 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
           disciplines={disciplines}
         />
       )}
-      {openModal === ModalEnum.PROPERTY_VIEW_SIGNET && (
-        <SignetPropertyView />
-      )}
+      {openModal === ModalEnum.PROPERTY_VIEW_SIGNET && <SignetPropertyView />}
     </div>
   );
 };

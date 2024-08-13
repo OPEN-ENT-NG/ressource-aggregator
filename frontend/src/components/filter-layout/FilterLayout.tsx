@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Checkbox } from "@edifice-ui/react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
@@ -8,9 +9,8 @@ import { DropDown } from "../drop-down/DropDown";
 import { useResourceListInfo } from "~/hooks/useResourceListInfo";
 import { Resource } from "~/model/Resource.model";
 import "./FilterLayout.scss";
-import { Checkbox } from "@edifice-ui/react";
-import { Signet } from "~/model/Signet.model";
 import { ResourcesMap } from "~/model/ResourcesMap";
+import { Signet } from "~/model/Signet.model";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 
 interface FilterLayoutProps {
@@ -32,7 +32,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   allResourcesDisplayed,
   setAllResourcesDisplayed,
 }) => {
-  const { resourcesMap, resourcesInfosMap, getResourcesMap } = useResourceListInfo(resources);
+  const { resourcesMap, resourcesInfosMap, getResourcesMap } =
+    useResourceListInfo(resources);
   const { resourcesInfosMap: displayedResourcesInfosMap } = useResourceListInfo(
     allResourcesDisplayed,
   );
@@ -82,7 +83,8 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
   // we show sources only if we are on favorites or search page
   const isShowingSources = page === "/favorites" || page === "/search";
 
-  const isShowingPublished = page === "/signets" && selectedTab === "mediacentre.signets.published";
+  const isShowingPublished =
+    page === "/signets" && selectedTab === "mediacentre.signets.published";
 
   useEffect(() => {
     let sourcesTemp: string[] = [];
@@ -121,7 +123,7 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
         textbooks: [],
         externalResources: [],
         moodle: [],
-        signets: myPublishedSignetsResult?.signets as Signet[] ?? [],
+        signets: (myPublishedSignetsResult?.signets as Signet[]) ?? [],
         global: [],
       };
       const filteredResources = filterByAllDropdowns(
@@ -151,7 +153,12 @@ export const FilterLayout: React.FC<FilterLayoutProps> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCheckboxes, resourcesMap, publishedIsChecked, myPublishedSignets]);
+  }, [
+    selectedCheckboxes,
+    resourcesMap,
+    publishedIsChecked,
+    myPublishedSignets,
+  ]);
 
   return (
     <>

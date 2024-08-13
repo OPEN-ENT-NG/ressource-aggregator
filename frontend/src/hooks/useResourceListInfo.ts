@@ -119,7 +119,7 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
       },
     );
     return result;
-  }, [resources]);
+  }, []);
 
   useEffect(() => {
     if (!resources) return;
@@ -134,10 +134,17 @@ export const useResourceListInfo = (resources: Resource[] | null) => {
     });
     setResourcesInfosMap({
       // sort disciplines, levels and types by custom string sort
-      disciplines: result.disciplines.filter(discipline => discipline.trim() !== "").sort(customStringSort),
-      levels: result.levels.filter(level => level.trim() !== "").sort(customStringSort),
-      types: result.types.filter(type => type.trim() !== "").sort(customStringSort),
+      disciplines: result.disciplines
+        .filter((discipline) => discipline.trim() !== "")
+        .sort(customStringSort),
+      levels: result.levels
+        .filter((level) => level.trim() !== "")
+        .sort(customStringSort),
+      types: result.types
+        .filter((type) => type.trim() !== "")
+        .sort(customStringSort),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resources]);
 
   return {

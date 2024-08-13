@@ -45,8 +45,14 @@ export const SignetPublish: React.FC<SignetPublishProps> = ({
       }
       const payload = {
         ...toasterResources[0],
-        levels: levels.filter(level => convertLevels(toasterResources[0].levels).includes(level.label)),
-        disciplines: disciplines.filter(level => convertDisciplines(toasterResources[0].disciplines).includes(level.label)),
+        levels: levels.filter((level) =>
+          convertLevels(toasterResources[0].levels).includes(level.label),
+        ),
+        disciplines: disciplines.filter((level) =>
+          convertDisciplines(toasterResources[0].disciplines).includes(
+            level.label,
+          ),
+        ),
         plain_text: convertKeyWords(toasterResources[0].plain_text).map(
           (keyword) => ({ label: keyword }),
         ),

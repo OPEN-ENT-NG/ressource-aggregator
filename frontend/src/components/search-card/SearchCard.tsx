@@ -200,7 +200,10 @@ export const SearchCard: React.FC<SearchResourceProps> = ({
 
   return (
     <Card
-      isSelectable={canAccessSignet && (selectedTab !== "mediacentre.signets.published" || publishedIsChecked)}
+      isSelectable={
+        canAccessSignet &&
+        (selectedTab !== "mediacentre.signets.published" || publishedIsChecked)
+      }
       isSelected={isSelectable(searchResource)}
       isClickable={false}
       className={`med-search-resource-card ${

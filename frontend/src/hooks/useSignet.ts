@@ -26,10 +26,13 @@ export const useSignet = () => {
     useGetPublishedSignetsQuery(null);
   const { data: mySignets, refetch: refetchMySignet } =
     useGetMySignetsQuery(null);
-  const { data: myPublishedSignetsData, refetch: refetchMyPublishedSignet } = useGetMyPublishedSignetsQuery(null);
+  const { data: myPublishedSignetsData, refetch: refetchMyPublishedSignet } =
+    useGetMyPublishedSignetsQuery(null);
   const [homeSignets, setHomeSignets] = useState<Signet[] | null>(null);
   const [allSignets, setAllSignets] = useState<Signet[] | null>(null);
-  const [myPublishedSignets, setMyPublishedSignets] = useState<Signet[] | null>(null);
+  const [myPublishedSignets, setMyPublishedSignets] = useState<Signet[] | null>(
+    null,
+  );
   const { favorites } = useFavorite();
 
   const getHomeSignets = useCallback(() => {
@@ -58,24 +61,28 @@ export const useSignet = () => {
       }),
     );
     if (favorites) {
-      updatedMyPublishedSignetsData = updatedMyPublishedSignetsData.map((signet: Signet) => ({
-        ...signet,
-        favorite: favorites.some((fav: Favorite) =>
-          signet?.id
-            ? fav?.id?.toString() === signet?.id
-            : fav?.id?.toString() === signet?._id,
-        ),
-      }));
+      updatedMyPublishedSignetsData = updatedMyPublishedSignetsData.map(
+        (signet: Signet) => ({
+          ...signet,
+          favorite: favorites.some((fav: Favorite) =>
+            signet?.id
+              ? fav?.id?.toString() === signet?.id
+              : fav?.id?.toString() === signet?._id,
+          ),
+        }),
+      );
     }
     if (pins) {
-      updatedMyPublishedSignetsData = updatedMyPublishedSignetsData.map((signet: Signet) => ({
-        ...signet,
-        is_pinned: pins.some(
-          (pin: Pin) =>
-            pin?.id == signet?.id &&
-            pin.source === "fr.openent.mediacentre.source.Signet",
-        ),
-      }));
+      updatedMyPublishedSignetsData = updatedMyPublishedSignetsData.map(
+        (signet: Signet) => ({
+          ...signet,
+          is_pinned: pins.some(
+            (pin: Pin) =>
+              pin?.id == signet?.id &&
+              pin.source === "fr.openent.mediacentre.source.Signet",
+          ),
+        }),
+      );
     }
     return updatedMyPublishedSignetsData;
   }, [myPublishedSignetsData, favorites, pins]);
@@ -92,7 +99,7 @@ export const useSignet = () => {
       disciplines: convertDisciplines(signet.disciplines),
       levels: convertLevels(signet.levels),
       plain_text: convertKeyWords(signet.plain_text),
-      published: false
+      published: false,
     }));
     const updatedPublicSignetsData: Signet[] = publicSignetsData.map(
       (signet: Signet) => ({
@@ -158,6 +165,7 @@ export const useSignet = () => {
       const signetsData = getMyPublishedSignets();
       setMyPublishedSignets(signetsData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myPublishedSignetsData, favorites, pins]);
 
   const mine = (signets: Signet[]) => {
