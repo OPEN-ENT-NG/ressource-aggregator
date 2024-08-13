@@ -63,10 +63,6 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     [isSelectable, selectedTab],
   );
 
-  useEffect(() => {
-    console.log("toasterResources", toasterResources);
-  }, [toasterResources]);
-
   const resetResources = () => {
     setToasterResources(null);
   };

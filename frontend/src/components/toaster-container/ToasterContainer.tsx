@@ -52,7 +52,6 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   };
 
   const openPropertyView = () => {
-    console.log(toasterResources);
     if (toasterResources && toasterResources.length === 1) {
       setModalResource(toasterResources[0]);
       openSpecificModal(ModalEnum.PROPERTY_VIEW_SIGNET);
