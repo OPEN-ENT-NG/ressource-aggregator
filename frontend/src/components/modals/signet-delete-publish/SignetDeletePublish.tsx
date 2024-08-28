@@ -4,33 +4,31 @@ import { Button, Modal } from "@edifice-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { ModalEnum } from "~/core/enum/modal.enum";
+import { PutSharePayload } from "~/model/payloads/PutSharePayload";
 import { SearchResource } from "~/model/SearchResource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 import "../Modal.scss";
-import { useUpdateSignetMutation } from "~/services/api/signet.service";
 import {
-  convertDisciplines,
-  convertKeyWords,
-  convertLevels,
-} from "~/utils/property.utils";
+  useDeleteSignetMutation,
+  useDeleteSignetPublicMutation,
+  useUpdateShareResourceMutation,
+} from "~/services/api/signet.service";
 
-interface SignetArchiveProps {
+interface SignetDeletePublishProps {
   refetch: () => void;
-  disciplines: { id: string; label: string }[];
-  levels: { id: string; label: string }[];
 }
 
-export const SignetArchive: React.FC<SignetArchiveProps> = ({
+export const SignetDeletePublish: React.FC<SignetDeletePublishProps> = ({
   refetch,
-  levels,
-  disciplines,
 }) => {
   const { t } = useTranslation("mediacentre");
   const { openModal, closeAllModals } = useModalProvider();
   const { toasterResources, resetResources } = useToasterProvider();
-  const [updateSignet] = useUpdateSignetMutation();
+  const [updateShareResource] = useUpdateShareResourceMutation();
+  const [deleteSignet] = useDeleteSignetMutation();
+  const [deletePublicSignet] = useDeleteSignetPublicMutation();
   const { notify } = useAlertProvider();
 
   const handleCloseModal = () => {
@@ -40,33 +38,34 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
 
   const onSubmit = async () => {
     try {
-      if (!toasterResources) {
+      if (
+        !toasterResources ||
+        !toasterResources.find((resource) => resource.published)
+      ) {
         notify(t("mediacentre.error.anyResource"), "danger");
         return;
       }
 
       const promises = toasterResources.map(
         async (resource: SearchResource) => {
+          const idSignet = resource?.id?.toString();
           try {
-            const idSignet = resource?.id?.toString();
-            const payload = {
-              ...resource,
-              archived: true,
-              levels: levels.filter((level) =>
-                convertLevels(resource.levels).includes(level.label),
-              ),
-              disciplines: disciplines.filter((level) =>
-                convertDisciplines(resource.disciplines).includes(level.label),
-              ),
-              plain_text: convertKeyWords(resource.plain_text).map(
-                (keyword) => ({
-                  label: keyword,
-                }),
-              ),
-            };
-            const response = await updateSignet({ idSignet, payload });
-            if (response?.error) {
-              throw new Error(t("mediacentre.error.archived"));
+            if (resource.published) {
+              const deleteResponse = await deletePublicSignet({ idSignet });
+              if (deleteResponse?.error) {
+                throw new Error(t("mediacentre.error.delete"));
+              }
+            } else {
+              const sharePayload: PutSharePayload = {
+                bookmarks: {},
+                groups: {},
+                users: {},
+              };
+              await updateShareResource({ idSignet, payload: sharePayload });
+              const deleteResponse = await deleteSignet({ idSignet });
+              if (deleteResponse?.error) {
+                throw new Error(t("mediacentre.error.delete"));
+              }
             }
             return { status: "fulfilled" };
           } catch (error) {
@@ -82,39 +81,39 @@ export const SignetArchive: React.FC<SignetArchiveProps> = ({
       );
 
       if (rejectedResults.length > 0) {
-        notify(t("mediacentre.error.archived"), "danger");
+        notify(t("mediacentre.error.delete"), "danger");
       } else {
         refetch();
         resetResources();
         handleCloseModal();
         notify(
           toasterResources.length > 1
-            ? t("mediacentre.signet.archive.many.success")
-            : t("mediacentre.signet.archive.success"),
+            ? t("mediacentre.signet.delete.many.success")
+            : t("mediacentre.signet.delete.success"),
           "success",
         );
       }
     } catch (e) {
       console.error(e);
-      notify(t("mediacentre.error.archived"), "danger");
+      notify(t("mediacentre.error.delete"), "danger");
     }
   };
 
-  if (!toasterResources || openModal !== ModalEnum.ARCHIVE_SIGNET) {
+  if (!toasterResources || openModal !== ModalEnum.DELETE_SIGNET_PUBLISHED) {
     return null;
   }
 
   return (
-    <Modal onModalClose={handleCloseModal} isOpen={true} id="archive-signet">
+    <Modal onModalClose={handleCloseModal} isOpen={true} id="delete-signet">
       <Modal.Header onModalClose={handleCloseModal}>
         {toasterResources.length > 1
-          ? t("mediacentre.modal.signet.archive.title.many")
-          : t("mediacentre.modal.signet.archive.title")}
+          ? t("mediacentre.modal.signet.delete.published.title.many")
+          : t("mediacentre.modal.signet.delete.published.title")}
       </Modal.Header>
       <Modal.Body>
         {toasterResources.length > 1
-          ? t("mediacentre.modal.signet.archive.subtitle.many")
-          : t("mediacentre.modal.signet.archive.subtitle")}
+          ? t("mediacentre.modal.signet.delete.published.subtitle.many")
+          : t("mediacentre.modal.signet.delete.published.subtitle")}
       </Modal.Body>
       <Modal.Footer>
         <Button color="tertiary" onClick={handleCloseModal}>

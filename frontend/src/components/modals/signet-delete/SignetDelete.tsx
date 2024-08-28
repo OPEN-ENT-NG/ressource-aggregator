@@ -36,10 +36,7 @@ export const SignetDelete: React.FC<SignetDeleteProps> = ({ refetch }) => {
 
   const onSubmit = async () => {
     try {
-      if (
-        !toasterResources ||
-        !toasterResources.find((resource) => resource.published)
-      ) {
+      if (!toasterResources) {
         notify(t("mediacentre.error.anyResource"), "danger");
         return;
       }

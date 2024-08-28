@@ -71,7 +71,8 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     if (toasterResources && !!toasterResources.length && !isToasterOpen) {
       setIsToasterOpen(true);
     }
-  }, [toasterResources, isToasterOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toasterResources]);
 
   const value = useMemo<ToasterProviderContextType>(
     () => ({
