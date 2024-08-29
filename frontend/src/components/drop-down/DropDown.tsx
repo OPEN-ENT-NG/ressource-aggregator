@@ -39,7 +39,7 @@ export const DropDown: React.FC<DropDownProps> = ({
   };
 
   const toggleSelectAll = () => {
-    if (selectedCheckboxes === undefined || selectedCheckboxes.length === 0) {
+    if (!selectedCheckboxes || !selectedCheckboxes.length) {
       setSelectedCheckboxes(checkboxOptions);
     } else {
       setSelectedCheckboxes([]);
