@@ -139,8 +139,8 @@ export const useSignet = () => {
   }, [favorites, mySignets, publicSignets, pins]);
 
   const refetchSignet = async () => {
-    await refetchPublicSignet();
     await refetchMySignet();
+    await refetchPublicSignet();
     await refetchMyPublishedSignet();
   };
 
@@ -156,6 +156,7 @@ export const useSignet = () => {
     if (favorites && pins) {
       const signetsData = getAllSignets();
       setAllSignets(signetsData);
+      console.log("on modifie allsignets");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicSignets, mySignets, user?.userId, favorites, pins]);

@@ -60,6 +60,7 @@ export const SignetPage: React.FC = () => {
   const canAccess = () => (hasSignetRight ? "signets" : "search");
 
   useEffect(() => {
+    console.log("ALL SIGNETS", allSignets);
     if (allSignets) {
       if (hasSignetRight) {
         switch (selectedTab) {
