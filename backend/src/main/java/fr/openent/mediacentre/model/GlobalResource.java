@@ -24,9 +24,8 @@ public class GlobalResource extends Resource implements IModel<GlobalResource> {
     public GlobalResource(JsonObject resource) {
         super(resource);
         this.id = resource.getInteger(ID, null);
+        this.setAuthors(Collections.singletonList(resource.getString(Field.AUTHORS, "")));
         this.setSource(SourceConstant.GLOBAL);
-        this.setPlainText(Collections.singletonList(Field.GLOBAL));
-        this.setDocumentTypes(Collections.singletonList(Field.DOCUMENT_TYPES_GLOBAL));
         JsonArray resourceProfiles = resource.getJsonArray(Field.PROFILES, new JsonArray());
         this.profiles = IModelHelper.toStringList(resourceProfiles).stream()
                 .map(Profile::getProfile)

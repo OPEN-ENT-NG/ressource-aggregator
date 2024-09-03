@@ -27,13 +27,13 @@ import java.util.Optional;
 
 import static fr.openent.mediacentre.core.constants.Field.*;
 
-public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implements GlobalResourceService {
+public class DefaultGlobalResourceService extends MongoDbCrudService implements GlobalResourceService {
 
     private final String collection;
     private final MongoDb mongo;
-    private static final Logger log = LoggerFactory.getLogger(GlobalResourceServiceMongoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultGlobalResourceService.class);
 
-    public GlobalResourceServiceMongoImpl(final String collection) {
+    public DefaultGlobalResourceService(final String collection) {
         super(collection);
         this.collection = collection;
         this.mongo = MongoDb.getInstance();
@@ -45,7 +45,6 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
 
         JsonObject now = MongoDb.now();
         resource.put(Field.DATE, now);
-        resource.put(Field.AUTHORS, Collections.singletonList(user.getUsername()));
         GlobalResource globalResource = new GlobalResource(resource);
 
         if (globalResource.getProfiles().isEmpty()) {
@@ -74,8 +73,8 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
     }
 
     @Override
-    public Future<List<GlobalResource>> list(Profile profile) {
-        Promise<List<GlobalResource>> promise = Promise.promise();
+    public Future<JsonArray> list(Profile profile) {
+        Promise<JsonArray> promise = Promise.promise();
         QueryBuilder query = QueryBuilder.start(Field.PROFILES).is(profile.getName());
         mongo.find(collection, MongoQueryBuilder.build(query), MongoDbResult.validResultsHandler(result -> {
             if (result.isLeft()) {
@@ -83,7 +82,7 @@ public class GlobalResourceServiceMongoImpl extends MongoDbCrudService implement
                 promise.fail(result.left().getValue());
                 return;
             }
-            promise.complete(IModelHelper.toList(result.right().getValue(), GlobalResource.class));
+            promise.complete(result.right().getValue());
 
         }));
         return promise.future();

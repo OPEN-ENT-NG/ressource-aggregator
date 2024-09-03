@@ -3,9 +3,10 @@ package fr.openent.mediacentre.controller;
 import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.enums.Profile;
 import fr.openent.mediacentre.helper.HelperUtils;
+import fr.openent.mediacentre.helper.IModelHelper;
 import fr.openent.mediacentre.security.ViewRight;
 import fr.openent.mediacentre.service.GlobalResourceService;
-import fr.openent.mediacentre.service.impl.GlobalResourceServiceMongoImpl;
+import fr.openent.mediacentre.service.impl.DefaultGlobalResourceService;
 import fr.wseduc.rs.Delete;
 import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
@@ -15,6 +16,7 @@ import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
@@ -31,7 +33,7 @@ public class GlobalResourceController extends ControllerHelper {
     public GlobalResourceController(EventBus eb) {
         super();
         this.eb = eb;
-        this.globalResourceService = new GlobalResourceServiceMongoImpl(Field.GLOBAL_COLLECTION);
+        this.globalResourceService = new DefaultGlobalResourceService(Field.GLOBAL_COLLECTION);
     }
 
     @Get("/global/resources")
