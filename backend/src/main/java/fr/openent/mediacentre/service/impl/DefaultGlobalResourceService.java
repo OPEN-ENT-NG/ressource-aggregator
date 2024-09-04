@@ -73,8 +73,8 @@ public class DefaultGlobalResourceService extends MongoDbCrudService implements 
     }
 
     @Override
-    public Future<JsonArray> list(Profile profile) {
-        Promise<JsonArray> promise = Promise.promise();
+    public Future<List<GlobalResource>> list(Profile profile) {
+        Promise<List<GlobalResource>> promise = Promise.promise();
         QueryBuilder query = QueryBuilder.start(Field.PROFILES).is(profile.getName());
         mongo.find(collection, MongoQueryBuilder.build(query), MongoDbResult.validResultsHandler(result -> {
             if (result.isLeft()) {
@@ -82,8 +82,7 @@ public class DefaultGlobalResourceService extends MongoDbCrudService implements 
                 promise.fail(result.left().getValue());
                 return;
             }
-            promise.complete(result.right().getValue());
-
+            promise.complete(IModelHelper.toList(result.right().getValue(), GlobalResource.class));
         }));
         return promise.future();
     }

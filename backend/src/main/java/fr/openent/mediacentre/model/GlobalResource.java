@@ -24,7 +24,7 @@ public class GlobalResource extends Resource implements IModel<GlobalResource> {
     public GlobalResource(JsonObject resource) {
         super(resource);
         this.id = resource.getInteger(ID, null);
-        this.setAuthors(Collections.singletonList(resource.getString(Field.AUTHORS, "")));
+        this.setAuthors(resource.getJsonArray(Field.AUTHORS, new JsonArray()).getList());
         this.setSource(SourceConstant.GLOBAL);
         JsonArray resourceProfiles = resource.getJsonArray(Field.PROFILES, new JsonArray());
         this.profiles = IModelHelper.toStringList(resourceProfiles).stream()
@@ -58,9 +58,8 @@ public class GlobalResource extends Resource implements IModel<GlobalResource> {
 
 
     // Functions
-
     @Override
     public JsonObject toJson() {
-        return super.toJson().mergeIn(IModelHelper.toJson(this, false, false));
+        return super.toJson().mergeIn(IModelHelper.toJson(this, false, true));
     }
 }

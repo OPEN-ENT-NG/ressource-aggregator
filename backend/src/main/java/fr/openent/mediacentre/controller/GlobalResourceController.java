@@ -42,12 +42,14 @@ public class GlobalResourceController extends ControllerHelper {
     public void getResources(HttpServerRequest request) {
         // get only resources for relative profile
         globalResourceService.list(Profile.RELATIVE)
-            .onSuccess(resources -> renderJson(request, new JsonObject(HelperUtils.frameLoad(
-                    Field.GLOBAL_RESULT,
-                    Field.GET,
-                    Field.OK,
-                    new JsonObject().put(Field.GLOBAL, resources)).encode()))
-            )
+            .onSuccess(resources -> {
+                JsonArray resourcesArray = IModelHelper.toJsonArray(resources);
+                renderJson(request, new JsonObject(HelperUtils.frameLoad(
+                        Field.GLOBAL_RESULT,
+                        Field.GET,
+                        Field.OK,
+                        new JsonObject().put(Field.GLOBAL, resourcesArray)).encode()));
+            })
             .onFailure(error -> {
                 String message = String.format("[GlobalResourceController@%s::getResources] Failed to get resources : %s",
                         this.getClass().getSimpleName(), error.getMessage());
