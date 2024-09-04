@@ -25,6 +25,7 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
+import { useFavorite } from "~/hooks/useFavorite";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -56,8 +57,13 @@ export const SignetPage: React.FC = () => {
   const [emptyText, setEmptyText] = useState("mediacentre.empty.state.mine");
   const [emptyImage, setEmptyImage] = useState("empty-state-mine.png");
   const [publishedIsChecked, setPublishedIsChecked] = useState<boolean>(false);
+  const { refetchFavorite } = useFavorite();
 
   const canAccess = () => (hasSignetRight ? "signets" : "search");
+
+  useEffect(() => {
+    refetchFavorite();
+  }, []);
 
   useEffect(() => {
     if (allSignets) {
