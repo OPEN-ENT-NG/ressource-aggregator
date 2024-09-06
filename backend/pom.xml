@@ -33,8 +33,7 @@
     </repositories>
 
     <properties>
-        <vertxVersion>3.9.5</vertxVersion>
-        <entCoreVersion>5.2.0</entCoreVersion>
+        <entCoreVersion>5.0-b2school-SNAPSHOT</entCoreVersion>
         <vertxCronTimer>2.0.0</vertxCronTimer>
         <junitVersion>5.1.0</junitVersion>
         <reflectionsVersion>0.10.2</reflectionsVersion>

@@ -22,11 +22,10 @@ package fr.openent.mediacentre.helper.elasticsearch;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import fr.wseduc.webutils.DefaultAsyncResult;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClient;
-import io.vertx.core.http.HttpClientOptions;
-import io.vertx.core.http.HttpClientRequest;
+import io.vertx.core.http.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -34,6 +33,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.net.ProxyOptions;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -157,28 +157,56 @@ public class ElasticSearch {
 
 	private void postInternal(String path, int expectedStatus, JsonObject payload, Handler<AsyncResult<JsonObject>> handler) {
 		final ElasticSearchClient esc = getClient();
-		final HttpClientRequest req = esc.client.post(path, event -> {
-			if (event.statusCode() == expectedStatus) {
-				event.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
-			} else {
-				handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(event.statusMessage())));
-			}
-			esc.checkSuccess();
-		});
-		req.exceptionHandler(e -> checkDisableClientAfterError(esc, e));
-		req.putHeader("Content-Type", "application/json");
-		req.putHeader("Accept", "application/json; charset=UTF-8");
+
+
+		RequestOptions requestOptions = new RequestOptions()
+				.setAbsoluteURI(path)
+				.putHeader("Content-Type", "application/json")
+				.putHeader("Accept", "application/json; charset=UTF-8");
 
 		if (this.username != null && this.password != null && !this.username.isEmpty() && !this.password.isEmpty()) {
 			String credentials = this.username + ":" + this.password;
-			req.putHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes()));
+			requestOptions.putHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes()));
 		}
 
-		req.end(payload.encode());
+		esc.client.request(requestOptions)
+				.flatMap(HttpClientRequest::send)
+				.flatMap(HttpClientResponse::body)
+				.map(buffer -> {
+					String responseBody = buffer.toString(StandardCharsets.UTF_8);
+					return new JsonObject(responseBody);
+				})
+				.onSuccess(jsonObject -> {
+					if (jsonObject.getInteger("statusCode") == expectedStatus) {
+						handler.handle(Future.succeededFuture(jsonObject));
+					} else {
+						handler.handle(Future.failedFuture(new ElasticSearchException("Unexpected status: " + jsonObject.getString("statusMessage", ""))));
+					}
+					esc.checkSuccess();
+				})
+				.onFailure(e -> {
+					checkDisableClientAfterError(esc, e);
+					handler.handle(Future.failedFuture(e));
+				});
+
+
+
+		esc.client.request(requestOptions).flatMap(req -> req.end(payload.encode()));
 	}
 
 	public BulkRequest bulk(String type, Handler<AsyncResult<JsonObject>> handler) {
 		final ElasticSearchClient esc = getClient();
+
+		String url = defaultIndex + "/" + type + "/_bulk";
+
+		RequestOptions requestOptions = new RequestOptions()
+				.setAbsoluteURI(url)
+				.putHeader("Content-Type", "application/x-ndjson")
+				.putHeader("Accept", "application/json; charset=UTF-8");
+
+
+
+
 		final HttpClientRequest req = esc.client.post(defaultIndex + "/" + type + "/_bulk", event -> {
 			if (event.statusCode() == 200) {
 				event.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
@@ -188,8 +216,6 @@ public class ElasticSearch {
 			esc.checkSuccess();
 		});
 		req.exceptionHandler(e -> checkDisableClientAfterError(esc, e));
-		req.putHeader("Content-Type", "application/x-ndjson");
-		req.putHeader("Accept", "application/json; charset=UTF-8");
 		req.setChunked(true);
 		return new BulkRequest(req);
 	}
