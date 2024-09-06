@@ -110,3 +110,7 @@ coverage/
 
 # Turborepo
 /frontend/.turbo
+
+.env
+target
+dependency-reduced-pom.xml
