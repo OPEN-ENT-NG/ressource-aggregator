@@ -1,6 +1,7 @@
 package fr.openent.mediacentre.helper;
 
 import fr.wseduc.webutils.Either;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
@@ -17,16 +18,17 @@ public class FutureHelper {
     private FutureHelper() {
     }
 
-    public static Handler<Either<String, JsonArray>> handlerJsonArray(Future<JsonArray> future) {
-        return event -> {
-            if (event.isRight()) {
-                future.complete(event.right().getValue());
+    public static <T> Handler<AsyncResult<T>> handlerAsyncJsonArray(Promise<T> promise) {
+        return jsonArrayAsyncResult -> {
+            if (jsonArrayAsyncResult.succeeded()) {
+                promise.complete(jsonArrayAsyncResult.result());
             } else {
-                LOGGER.error(event.left().getValue());
-                future.fail(event.left().getValue());
+                promise.fail(jsonArrayAsyncResult.cause());
             }
         };
     }
+
+
 
     public static Handler<Either<String, JsonArray>> handlerJsonArray(Promise<JsonArray> promise) {
         return event -> {
@@ -39,16 +41,6 @@ public class FutureHelper {
         };
     }
 
-    public static Handler<Either<String, JsonObject>> handlerJsonObject(Future<JsonObject> future) {
-        return event -> {
-            if (event.isRight()) {
-                future.complete(event.right().getValue());
-            } else {
-                LOGGER.error(event.left().getValue());
-                future.fail(event.left().getValue());
-            }
-        };
-    }
 
     public static Handler<Either<String, JsonObject>> handlerJsonObject(Promise<JsonObject> promise) {
         return handlerJsonObject(promise, null);
