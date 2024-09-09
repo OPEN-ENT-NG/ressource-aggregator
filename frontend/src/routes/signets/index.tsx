@@ -12,6 +12,7 @@ import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalContainer } from "~/components/modal-container/ModalContainer";
 import { ToasterContainer } from "~/components/toaster-container/ToasterContainer";
 import { ModalEnum } from "~/core/enum/modal.enum";
+import { useFavorite } from "~/hooks/useFavorite";
 import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { Signet } from "~/model/Signet.model";
@@ -25,7 +26,6 @@ import { useActions } from "~/services/queries";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import "~/styles/page/signet.scss";
 import "~/styles/page/search.scss";
-import { useFavorite } from "~/hooks/useFavorite";
 
 export const SignetPage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -63,6 +63,7 @@ export const SignetPage: React.FC = () => {
 
   useEffect(() => {
     refetchFavorite();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
