@@ -20,6 +20,8 @@ import org.entcore.common.share.ShareNormalizer;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,11 +87,14 @@ public class DefaultSignetService implements SignetService {
                 promise.fail(result.left().getValue());
                 return;
             }
-            JsonArray signets = new JsonArray(result.right().getValue()
-                    .stream()
-                    .map(signet -> addNormalizedShares((JsonObject) signet))
-                    .collect(Collectors.toList()));
-            promise.complete(signets);
+            getSignetSharedRights(result.right().getValue())
+                .onSuccess(signets -> promise.complete(
+                    new JsonArray(result.right().getValue()
+                        .stream()
+                        .map(signet -> addNormalizedShares((JsonObject) signet))
+                        .collect(Collectors.toList())))
+                )
+                .onFailure(promise::fail);
         }));
         return promise.future();
     }
@@ -317,14 +322,41 @@ public class DefaultSignetService implements SignetService {
     }
 
     @Override
-    public void getAllMySignetRights(List<String> groupsAndUserIds, Handler<Either<String, JsonArray>> handler) {
+    public Future<JsonArray> getAllMySignetRights(List<String> groupsAndUserIds) {
+        Promise<JsonArray> promise = Promise.promise();
         String query = "SELECT resource_id, action FROM " + Mediacentre.SIGNET_SHARES_TABLE +
                 " WHERE member_id IN " + Sql.listPrepared(groupsAndUserIds) + " AND action IN (?, ?);";
         JsonArray params = new JsonArray()
                 .addAll(new fr.wseduc.webutils.collections.JsonArray(groupsAndUserIds))
                 .add(Mediacentre.VIEW_RESOURCE_BEHAVIOUR)
                 .add(Mediacentre.MANAGER_RESOURCE_BEHAVIOUR);
-        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(handler));
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(event -> {
+            if(event.isLeft()) {
+                promise.fail(event.left().getValue());
+                return;
+            }
+            promise.complete(event.right().getValue());
+        }));
+        return promise.future();
+    }
+
+    @Override
+    public Future<JsonArray> getAllSignetRights() {
+        Promise<JsonArray> promise = Promise.promise();
+        String query = "SELECT ss.member_id, ss.resource_id, ss.action, m.user_id, m.group_id FROM " + Mediacentre.SIGNET_SHARES_TABLE +
+                " ss INNER JOIN " + Mediacentre.MEMBERS_TABLE + " m ON ss.member_id = m.id" +
+                " WHERE ss.action IN (?, ?)";
+        JsonArray params = new JsonArray()
+                .add(Mediacentre.VIEW_RESOURCE_BEHAVIOUR)
+                .add(Mediacentre.MANAGER_RESOURCE_BEHAVIOUR);
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(event -> {
+            if(event.isLeft()) {
+                promise.fail(event.left().getValue());
+                return;
+            }
+            promise.complete(event.right().getValue());
+        }));
+        return promise.future();
     }
 
     public void setPublishValueSignet(String signetId, boolean publishValue, Handler<Either<String, JsonObject>> handler) {
@@ -361,4 +393,68 @@ public class DefaultSignetService implements SignetService {
 
         return promise.future();
     }
+
+    private Future<JsonArray> getSignetSharedRights(JsonArray signets) {
+        Promise<JsonArray> promise = Promise.promise();
+        if (signets == null || signets.isEmpty()) {
+            promise.complete(new JsonArray());
+            return promise.future();
+        }
+        getAllSignetRights()
+            .onSuccess(rights -> {
+                if (rights == null || rights.isEmpty()) {
+                    promise.complete(signets);
+                    return;
+                }
+                List<JsonObject> allSignets = signets.stream()
+                    .map(JsonObject.class::cast)
+                    .map(signet -> signet.put("shared", new JsonArray()))
+                    .collect(Collectors.toList());
+                rights.stream()
+                    .map(JsonObject.class::cast)
+                    .forEach(right -> {
+                        String resourceId = String.valueOf(right.getValue("resource_id"));
+                        allSignets.stream()
+                            .filter(signet -> String.valueOf(signet.getValue("id")).equals(resourceId))
+                            .findFirst()
+                            .ifPresent(signet -> {
+                                JsonArray sharedArray = signet.getJsonArray("shared");
+                                if (right.getValue("user_id") == null) {
+                                    Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
+                                        .map(JsonObject.class::cast)
+                                        .filter(shared -> shared.containsKey("groupId") && shared.getString("groupId").equals(right.getString("group_id")))
+                                        .findFirst();
+
+                                    if (existingShared.isPresent()) {
+                                        existingShared.get().put(right.getString("action"), true);
+                                    } else {
+                                        JsonObject newRight = new JsonObject()
+                                                .put("groupId", right.getString("group_id"))
+                                                .put(right.getString("action"), true);
+                                        sharedArray.add(newRight);
+                                    }
+                                } else {
+                                    Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
+                                        .map(JsonObject.class::cast)
+                                        .filter(shared -> shared.containsKey("userId") && shared.getString("userId").equals(right.getString("user_id")))
+                                        .findFirst();
+
+                                    if (existingShared.isPresent()) {
+                                        existingShared.get().put(right.getString("action"), true);
+                                    } else {
+                                        JsonObject newRight = new JsonObject()
+                                                .put("userId", right.getString("user_id"))
+                                                .put(right.getString("action"), true);
+                                        sharedArray.add(newRight);
+                                    }
+                                }
+                            });
+                    });
+                promise.complete(allSignets.stream().collect(JsonArray::new, JsonArray::add, JsonArray::addAll));
+            })
+            .onFailure(promise::fail);
+        return promise.future();
+    }
+
+
 }
