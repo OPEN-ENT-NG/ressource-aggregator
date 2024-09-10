@@ -160,9 +160,10 @@ public class ElasticSearch {
 
 
 		RequestOptions requestOptions = new RequestOptions()
-				.setAbsoluteURI(path)
+				.setURI(path)
 				.putHeader("Content-Type", "application/json")
-				.putHeader("Accept", "application/json; charset=UTF-8");
+				.putHeader("Accept", "application/json; charset=UTF-8")
+				.setMethod(HttpMethod.POST);
 
 		if (this.username != null && this.password != null && !this.username.isEmpty() && !this.password.isEmpty()) {
 			String credentials = this.username + ":" + this.password;
@@ -170,7 +171,7 @@ public class ElasticSearch {
 		}
 
 		esc.client.request(requestOptions)
-				.flatMap(HttpClientRequest::send)
+				.flatMap(httpClientRequest -> httpClientRequest.send(payload.encode()))
 				.flatMap(HttpClientResponse::body)
 				.map(buffer -> {
 					String responseBody = buffer.toString(StandardCharsets.UTF_8);
@@ -194,31 +195,6 @@ public class ElasticSearch {
 		esc.client.request(requestOptions).flatMap(req -> req.end(payload.encode()));
 	}
 
-	public BulkRequest bulk(String type, Handler<AsyncResult<JsonObject>> handler) {
-		final ElasticSearchClient esc = getClient();
-
-		String url = defaultIndex + "/" + type + "/_bulk";
-
-		RequestOptions requestOptions = new RequestOptions()
-				.setAbsoluteURI(url)
-				.putHeader("Content-Type", "application/x-ndjson")
-				.putHeader("Accept", "application/json; charset=UTF-8");
-
-
-
-
-		final HttpClientRequest req = esc.client.post(defaultIndex + "/" + type + "/_bulk", event -> {
-			if (event.statusCode() == 200) {
-				event.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
-			} else {
-				handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(event.statusMessage())));
-			}
-			esc.checkSuccess();
-		});
-		req.exceptionHandler(e -> checkDisableClientAfterError(esc, e));
-		req.setChunked(true);
-		return new BulkRequest(req);
-	}
 
 	private void checkDisableClientAfterError(ElasticSearchClient esc, Throwable e) {
 		log.error("Error with ElasticSearchClient : " + esc.index, e);
