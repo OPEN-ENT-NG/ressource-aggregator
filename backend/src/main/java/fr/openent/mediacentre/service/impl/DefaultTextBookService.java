@@ -27,7 +27,7 @@ public class DefaultTextBookService implements TextBookService {
 
         MongoDb.getInstance().find(TEXTBOOK_COLLECTION, matcher, MongoDbResult.validResultsHandler(result -> {
             if (result.isLeft()) {
-                log.error("[Mediacentre@DefaultTextbookService::get] Can't retrieve textbooks : ", result.left().getValue());
+                log.error("[Mediacentre@DefaultTextbookService::get] Can't retrieve textbooks : " + result.left().getValue());
                 promise.fail(result.left().getValue());
                 return;
             }

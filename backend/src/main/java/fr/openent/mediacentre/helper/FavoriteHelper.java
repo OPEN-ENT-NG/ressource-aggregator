@@ -74,7 +74,7 @@ public class FavoriteHelper {
                                                 ResponseHandlerHelper answer) {
         favoriteService.get(null, user.getUserId(), event -> {
             if (event.isLeft()) {
-                log.error("[favorite@get] Failed to retrieve favorite", event.left());
+                log.error("[Mediacentre@FavoriteHelper:favoritesRetrieve] Failed to retrieve favorite" + event.left());
                 answer.answerFailure(new JsonObject()
                         .put("error", event.left().getValue())
                         .put("status", "ko")
@@ -100,7 +100,7 @@ public class FavoriteHelper {
                                 resources).encode())
                     )
                     .onFailure(error -> {
-                        log.error("[favorite@get] Failed to retrieve favorite", error);
+                        log.error("[Mediacentre@FavoriteHelper:favoritesRetrieve] Failed to retrieve favorite" + error);
                         answer.answerFailure(new JsonObject()
                             .put("error", error.getMessage())
                             .put("status", "ko")
