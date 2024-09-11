@@ -195,6 +195,33 @@ public class ElasticSearch {
 		esc.client.request(requestOptions).flatMap(req -> req.end(payload.encode()));
 	}
 
+	public BulkRequest bulk(String type, Handler<AsyncResult<JsonObject>> handler) {
+		final ElasticSearchClient esc = getClient();
+
+		String url = defaultIndex + "/" + type + "/_bulk";
+
+		RequestOptions requestOptions = new RequestOptions()
+				.setAbsoluteURI(url)
+				.putHeader("Content-Type", "application/x-ndjson")
+				.putHeader("Accept", "application/json; charset=UTF-8")
+				.setMethod(HttpMethod.POST);
+
+
+		final Future<HttpClientRequest> reqFuture = esc.client.request(requestOptions)
+				.onSuccess(request -> request.setChunked(true).send()
+                        .onSuccess(event -> {
+                            if (event.statusCode() == 200) {
+                                event.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
+                            } else {
+                                handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(event.statusMessage())));
+                            }
+                            esc.checkSuccess();
+                        })
+                        .onFailure(e -> checkDisableClientAfterError(esc, e)))
+				.onFailure(e -> checkDisableClientAfterError(esc, e));
+
+		return new BulkRequest(reqFuture.result());
+	}
 
 	private void checkDisableClientAfterError(ElasticSearchClient esc, Throwable e) {
 		log.error("Error with ElasticSearchClient : " + esc.index, e);
