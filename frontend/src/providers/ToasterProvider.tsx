@@ -28,6 +28,7 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     SearchResource[] | null
   >(null);
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
+  const [toasterRights, setToasterRights] = useState<{creator: boolean, contrib: boolean, manager: boolean, read: boolean} | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>(
     "mediacentre.signets.mine",
   );
@@ -78,6 +79,8 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     () => ({
       toasterResources,
       setToasterResources,
+      toasterRights,
+      setToasterRights,
       selectedTab,
       setSelectedTab,
       isSelectable,
@@ -90,6 +93,7 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
       toasterResources,
       isToasterOpen,
       selectedTab,
+      toasterRights,
       isSelectable,
       toggleResource,
     ],

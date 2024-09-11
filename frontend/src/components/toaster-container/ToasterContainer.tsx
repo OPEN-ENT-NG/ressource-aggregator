@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ActionBar, Button, checkUserRight } from "@edifice-ui/react";
 import "./ToasterContainer.scss";
@@ -35,7 +35,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   const { t } = useTranslation("mediacentre");
   const { notify } = useAlertProvider();
   const { openModal, openSpecificModal, setModalResource } = useModalProvider();
-  const { isToasterOpen, setIsToasterOpen, toasterResources, resetResources } =
+  const { isToasterOpen, setIsToasterOpen, toasterResources, resetResources, toasterRights, setToasterRights } =
     useToasterProvider();
   const [updateSignet] = useUpdateSignetMutation();
   const { setUserRights } = useUserRightsStore.getState();
@@ -143,13 +143,32 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     }
   };
 
+  const openSharedProperty = async () => {
+    try {
+      if (!toasterResources || toasterResources.length > 1) {
+        return null;
+      }
+      const userRights = await checkUserRight(toasterResources[0].rights);
+      if (userRights.manager) {
+        openProperty();
+      } else {
+        openPropertyView();
+      }
+    } catch (error) {
+      console.error("Error checking user rights:", error);
+    }
+  }
+
   const openShareModal = async () => {
     try {
       if (!toasterResources || toasterResources.length > 1) {
         return null;
       }
 
+      console.log(toasterResources[0].rights);
+
       const userRights = await checkUserRight(toasterResources[0].rights);
+      console.log(userRights);
       setUserRights(userRights);
 
       setShareOptions({
@@ -167,6 +186,17 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
 
   const isSelectedUnpublished = () =>
     !toasterResources?.find((resource: SearchResource) => resource?.published);
+
+  const isManager = useCallback(() => toasterRights?.manager, [toasterRights]);
+
+  useEffect(() => {
+    const fetchUserRights = async () => {
+      if (toasterResources && toasterResources.length === 1) {
+        setToasterRights(await checkUserRight(toasterResources[0].rights));
+      }
+    };
+    fetchUserRights();
+  }, [toasterResources]);
 
   if (!toasterResources || toasterResources.length === 0 || !isToasterOpen) {
     return (
@@ -230,10 +260,38 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
               type="button"
               color="primary"
               variant="filled"
-              onClick={openPropertyView}
+              onClick={openSharedProperty}
             >
               {t("mediacentre.toaster.properties")}
             </Button>
+            {isManager() && (
+              <>
+                <Button
+                  type="button"
+                  color="primary"
+                  variant="filled"
+                  onClick={openShareModal}
+                >
+                  {t("mediacentre.toaster.shared")}
+                </Button>
+                <Button
+                  type="button"
+                  color="primary"
+                  variant="filled"
+                  onClick={openPublish}
+                >
+                  {t("mediacentre.toaster.published")}
+                </Button>
+                <Button
+                  type="button"
+                  color="primary"
+                  variant="filled"
+                  onClick={openArchive}
+                >
+                  {t("mediacentre.toaster.archived")}
+                </Button>
+              </>
+            )}
           </>
         )}
         {selectedTab === "mediacentre.signets.published" && (
