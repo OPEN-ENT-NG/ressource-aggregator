@@ -172,16 +172,11 @@ public class ElasticSearch {
 
 		esc.client.request(requestOptions)
 				.flatMap(httpClientRequest -> httpClientRequest.send(payload.encode()))
-				.flatMap(HttpClientResponse::body)
-				.map(buffer -> {
-					String responseBody = buffer.toString(StandardCharsets.UTF_8);
-					return new JsonObject(responseBody);
-				})
-				.onSuccess(jsonObject -> {
-					if (jsonObject.getInteger("statusCode") == expectedStatus) {
-						handler.handle(Future.succeededFuture(jsonObject));
+				.onSuccess(request -> {
+					if (request.statusCode() == expectedStatus) {
+						request.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
 					} else {
-						handler.handle(Future.failedFuture(new ElasticSearchException("Unexpected status: " + jsonObject.getString("statusMessage", ""))));
+						handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(request.statusMessage())));
 					}
 					esc.checkSuccess();
 				})
@@ -192,7 +187,7 @@ public class ElasticSearch {
 
 
 
-		esc.client.request(requestOptions).flatMap(req -> req.end(payload.encode()));
+
 	}
 
 	public BulkRequest bulk(String type, Handler<AsyncResult<JsonObject>> handler) {
