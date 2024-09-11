@@ -3,6 +3,7 @@ package fr.openent.mediacentre.service.impl;
 import fr.openent.mediacentre.Mediacentre;
 import fr.openent.mediacentre.core.constants.Field;
 import fr.openent.mediacentre.helper.ElasticSearchHelper;
+import fr.openent.mediacentre.helper.FutureHelper;
 import fr.openent.mediacentre.helper.IModelHelper;
 import fr.openent.mediacentre.model.SignetResource;
 import fr.openent.mediacentre.service.SignetService;
@@ -330,13 +331,7 @@ public class DefaultSignetService implements SignetService {
                 .addAll(new fr.wseduc.webutils.collections.JsonArray(groupsAndUserIds))
                 .add(Mediacentre.VIEW_RESOURCE_BEHAVIOUR)
                 .add(Mediacentre.MANAGER_RESOURCE_BEHAVIOUR);
-        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(event -> {
-            if(event.isLeft()) {
-                promise.fail(event.left().getValue());
-                return;
-            }
-            promise.complete(event.right().getValue());
-        }));
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
         return promise.future();
     }
 
@@ -349,13 +344,7 @@ public class DefaultSignetService implements SignetService {
         JsonArray params = new JsonArray()
                 .add(Mediacentre.VIEW_RESOURCE_BEHAVIOUR)
                 .add(Mediacentre.MANAGER_RESOURCE_BEHAVIOUR);
-        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(event -> {
-            if(event.isLeft()) {
-                promise.fail(event.left().getValue());
-                return;
-            }
-            promise.complete(event.right().getValue());
-        }));
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
         return promise.future();
     }
 
@@ -408,43 +397,43 @@ public class DefaultSignetService implements SignetService {
                 }
                 List<JsonObject> allSignets = signets.stream()
                     .map(JsonObject.class::cast)
-                    .map(signet -> signet.put("shared", new JsonArray()))
+                    .map(signet -> signet.put(Field.SHARED, new JsonArray()))
                     .collect(Collectors.toList());
                 rights.stream()
                     .map(JsonObject.class::cast)
                     .forEach(right -> {
-                        String resourceId = String.valueOf(right.getValue("resource_id"));
+                        String resourceId = String.valueOf(right.getValue(Field.RESOURCE_ID));
                         allSignets.stream()
-                            .filter(signet -> String.valueOf(signet.getValue("id")).equals(resourceId))
+                            .filter(signet -> String.valueOf(signet.getValue(Field.ID)).equals(resourceId))
                             .findFirst()
                             .ifPresent(signet -> {
-                                JsonArray sharedArray = signet.getJsonArray("shared");
-                                if (right.getValue("user_id") == null) {
+                                JsonArray sharedArray = signet.getJsonArray(Field.SHARED);
+                                if (right.getValue(Field.USER_ID) == null) {
                                     Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
                                         .map(JsonObject.class::cast)
-                                        .filter(shared -> shared.containsKey("groupId") && shared.getString("groupId").equals(right.getString("group_id")))
+                                        .filter(shared -> shared.containsKey(Field.GROUP_ID) && shared.getString(Field.GROUPID).equals(right.getString(Field.GROUP_ID)))
                                         .findFirst();
 
                                     if (existingShared.isPresent()) {
-                                        existingShared.get().put(right.getString("action"), true);
+                                        existingShared.get().put(right.getString(Field.ACTION), true);
                                     } else {
                                         JsonObject newRight = new JsonObject()
-                                                .put("groupId", right.getString("group_id"))
-                                                .put(right.getString("action"), true);
+                                                .put(Field.GROUPID, right.getString(Field.GROUP_ID))
+                                                .put(right.getString(Field.ACTION), true);
                                         sharedArray.add(newRight);
                                     }
                                 } else {
                                     Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
                                         .map(JsonObject.class::cast)
-                                        .filter(shared -> shared.containsKey("userId") && shared.getString("userId").equals(right.getString("user_id")))
+                                        .filter(shared -> shared.containsKey(Field.USER_ID) && shared.getString(Field.USERID).equals(right.getString(Field.USER_ID)))
                                         .findFirst();
 
                                     if (existingShared.isPresent()) {
-                                        existingShared.get().put(right.getString("action"), true);
+                                        existingShared.get().put(right.getString(Field.ACTION), true);
                                     } else {
                                         JsonObject newRight = new JsonObject()
-                                                .put("userId", right.getString("user_id"))
-                                                .put(right.getString("action"), true);
+                                                .put(Field.USERID, right.getString(Field.USER_ID))
+                                                .put(right.getString(Field.ACTION), true);
                                         sharedArray.add(newRight);
                                     }
                                 }

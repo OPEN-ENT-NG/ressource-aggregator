@@ -96,8 +96,7 @@ public class SignetController extends ControllerHelper {
                     .onSuccess(signets -> Renders.renderJson(request, signets))
                     .onFailure(err -> {
                         log.error("[Mediacentre@SignetController::list] Failed to list signets : " + err.getMessage());
-                        JsonObject error = (new JsonObject()).put("error", err.getMessage());
-                        Renders.renderJson(request, error, 400);
+                        badRequest(request);
                     });
             } else {
                 log.error("User not found in session.");
