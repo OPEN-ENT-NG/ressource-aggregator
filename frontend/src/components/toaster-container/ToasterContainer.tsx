@@ -8,9 +8,11 @@ import { useTranslation } from "react-i18next";
 import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { SearchResource } from "~/model/SearchResource.model";
+import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
+import { useSignet } from "~/hooks/useSignet";
 import { useUpdateSignetMutation } from "~/services/api/signet.service";
 import { useUserRightsStore } from "~/stores/rights/store";
 import {
@@ -38,6 +40,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   const { isToasterOpen, setIsToasterOpen, toasterResources, resetResources, toasterRights, setToasterRights } =
     useToasterProvider();
   const [updateSignet] = useUpdateSignetMutation();
+  const { getPublicSignets } = useSignet();
   const { setUserRights } = useUserRightsStore.getState();
   const [shareOptions, setShareOptions] = useState<ShareOptions | null>(null);
 
@@ -185,7 +188,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   };
 
   const isSelectedUnpublished = () =>
-    !toasterResources?.find((resource: SearchResource) => resource?.published);
+    !toasterResources?.find((resource: SearchResource) => resource?.published || getPublicSignets()?.find((signet: Signet) => signet.id.toString() === resource?.id?.toString()));
 
   const isManager = useCallback(() => toasterRights?.manager, [toasterRights]);
 

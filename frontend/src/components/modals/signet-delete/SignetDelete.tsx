@@ -9,6 +9,8 @@ import { SearchResource } from "~/model/SearchResource.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
+import { useSignet } from "~/hooks/useSignet";
+import { Signet } from "~/model/Signet.model";
 import "../Modal.scss";
 import {
   useDeleteSignetMutation,
@@ -27,6 +29,7 @@ export const SignetDelete: React.FC<SignetDeleteProps> = ({ refetch }) => {
   const [updateShareResource] = useUpdateShareResourceMutation();
   const [deleteSignet] = useDeleteSignetMutation();
   const [deletePublicSignet] = useDeleteSignetPublicMutation();
+  const { getPublicSignets } = useSignet();
   const { notify } = useAlertProvider();
 
   const handleCloseModal = () => {
@@ -45,7 +48,7 @@ export const SignetDelete: React.FC<SignetDeleteProps> = ({ refetch }) => {
         async (resource: SearchResource) => {
           const idSignet = resource?.id?.toString();
           try {
-            if (resource.published) {
+            if (resource.published || getPublicSignets()?.find((signet: Signet) => signet.id.toString() === idSignet?.toString())) {
               const deleteResponse = await deletePublicSignet({ idSignet });
               if (deleteResponse?.error) {
                 throw new Error(t("mediacentre.error.delete"));
