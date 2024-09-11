@@ -301,8 +301,7 @@ public class SignetController extends ControllerHelper {
                     .onSuccess(signets -> Renders.renderJson(request, signets))
                     .onFailure(err -> {
                         log.error("[Mediacentre@SignetController::getAllMySignetRights] Failed to get all my signet rights : " + err.getMessage());
-                        JsonObject error = (new JsonObject()).put("error", err.getMessage());
-                        Renders.renderJson(request, error, 400);
+                        badRequest(request);
                     });
             } else {
                 log.error("User not found in session.");
