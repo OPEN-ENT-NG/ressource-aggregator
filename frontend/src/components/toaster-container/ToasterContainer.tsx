@@ -226,6 +226,12 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     );
   }
 
+  const sharedArray = [
+    { action: openShareModal, label: "mediacentre.toaster.shared" },
+    { action: openPublish, label: "mediacentre.toaster.published" },
+    { action: openArchive, label: "mediacentre.toaster.archived" },
+  ];
+
   return (
     <div className="med-toaster-container">
       <ActionBar>
@@ -279,34 +285,17 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
             >
               {t("mediacentre.toaster.properties")}
             </Button>
-            {isManager() && (
-              <>
+            {isManager() &&
+              sharedArray.map((item) => (
                 <Button
                   type="button"
                   color="primary"
                   variant="filled"
-                  onClick={openShareModal}
+                  onClick={item.action}
                 >
-                  {t("mediacentre.toaster.shared")}
+                  {t(item.label)}
                 </Button>
-                <Button
-                  type="button"
-                  color="primary"
-                  variant="filled"
-                  onClick={openPublish}
-                >
-                  {t("mediacentre.toaster.published")}
-                </Button>
-                <Button
-                  type="button"
-                  color="primary"
-                  variant="filled"
-                  onClick={openArchive}
-                >
-                  {t("mediacentre.toaster.archived")}
-                </Button>
-              </>
-            )}
+              ))}
           </>
         )}
         {selectedTab === "mediacentre.signets.published" && (

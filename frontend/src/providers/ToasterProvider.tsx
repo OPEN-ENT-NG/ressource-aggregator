@@ -8,7 +8,11 @@ import {
   useState,
 } from "react";
 
-import { ToasterProviderContextType, ToasterProviderProps } from "./types";
+import {
+  ToasterProviderContextType,
+  ToasterProviderProps,
+  toasterRightsState,
+} from "./types";
 import { SearchResource } from "~/model/SearchResource.model";
 
 const ToasterProviderContext = createContext<ToasterProviderContextType | null>(
@@ -28,12 +32,9 @@ export const ToasterProvider: FC<ToasterProviderProps> = ({ children }) => {
     SearchResource[] | null
   >(null);
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
-  const [toasterRights, setToasterRights] = useState<{
-    creator: boolean;
-    contrib: boolean;
-    manager: boolean;
-    read: boolean;
-  } | null>(null);
+  const [toasterRights, setToasterRights] = useState<toasterRightsState | null>(
+    null,
+  );
   const [selectedTab, setSelectedTab] = useState<string>(
     "mediacentre.signets.mine",
   );
