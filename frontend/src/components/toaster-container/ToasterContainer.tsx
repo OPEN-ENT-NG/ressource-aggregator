@@ -7,12 +7,12 @@ import { useTranslation } from "react-i18next";
 
 import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
 import { ModalEnum } from "~/core/enum/modal.enum";
+import { useSignet } from "~/hooks/useSignet";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
-import { useSignet } from "~/hooks/useSignet";
 import { useUpdateSignetMutation } from "~/services/api/signet.service";
 import { useUserRightsStore } from "~/stores/rights/store";
 import {
@@ -37,8 +37,14 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   const { t } = useTranslation("mediacentre");
   const { notify } = useAlertProvider();
   const { openModal, openSpecificModal, setModalResource } = useModalProvider();
-  const { isToasterOpen, setIsToasterOpen, toasterResources, resetResources, toasterRights, setToasterRights } =
-    useToasterProvider();
+  const {
+    isToasterOpen,
+    setIsToasterOpen,
+    toasterResources,
+    resetResources,
+    toasterRights,
+    setToasterRights,
+  } = useToasterProvider();
   const [updateSignet] = useUpdateSignetMutation();
   const { getPublicSignets } = useSignet();
   const { setUserRights } = useUserRightsStore.getState();
@@ -160,7 +166,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     } catch (error) {
       console.error("Error checking user rights:", error);
     }
-  }
+  };
 
   const openShareModal = async () => {
     try {
@@ -188,7 +194,13 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
   };
 
   const isSelectedUnpublished = () =>
-    !toasterResources?.find((resource: SearchResource) => resource?.published || getPublicSignets()?.find((signet: Signet) => signet.id.toString() === resource?.id?.toString()));
+    !toasterResources?.find(
+      (resource: SearchResource) =>
+        resource?.published ||
+        getPublicSignets()?.find(
+          (signet: Signet) => signet.id.toString() === resource?.id?.toString(),
+        ),
+    );
 
   const isManager = useCallback(() => toasterRights?.manager, [toasterRights]);
 

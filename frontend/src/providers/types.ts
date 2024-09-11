@@ -93,8 +93,20 @@ export interface ToasterProviderProps {
 export interface ToasterProviderContextType {
   toasterResources: SearchResource[] | null;
   setToasterResources: Dispatch<SetStateAction<SearchResource[] | null>>;
-  toasterRights: {creator: boolean, contrib: boolean, manager: boolean, read: boolean} | null;
-  setToasterRights: Dispatch<SetStateAction<{creator: boolean, contrib: boolean, manager: boolean, read: boolean} | null>>;
+  toasterRights: {
+    creator: boolean;
+    contrib: boolean;
+    manager: boolean;
+    read: boolean;
+  } | null;
+  setToasterRights: Dispatch<
+    SetStateAction<{
+      creator: boolean;
+      contrib: boolean;
+      manager: boolean;
+      read: boolean;
+    } | null>
+  >;
   selectedTab: string;
   setSelectedTab: Dispatch<SetStateAction<string>>;
   isSelectable: (resource: SearchResource) => boolean;
