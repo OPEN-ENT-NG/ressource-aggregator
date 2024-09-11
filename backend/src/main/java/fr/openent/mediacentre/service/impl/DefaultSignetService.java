@@ -411,7 +411,7 @@ public class DefaultSignetService implements SignetService {
                                 if (right.getValue(Field.USER_ID) == null) {
                                     Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
                                         .map(JsonObject.class::cast)
-                                        .filter(shared -> shared.containsKey(Field.GROUP_ID) && shared.getString(Field.GROUPID).equals(right.getString(Field.GROUP_ID)))
+                                        .filter(shared -> shared.containsKey(Field.GROUPID) && shared.getString(Field.GROUPID).equals(right.getString(Field.GROUP_ID)))
                                         .findFirst();
 
                                     if (existingShared.isPresent()) {
@@ -425,7 +425,7 @@ public class DefaultSignetService implements SignetService {
                                 } else {
                                     Optional<JsonObject> existingShared = sharedArray.stream().filter(JsonObject.class::isInstance)
                                         .map(JsonObject.class::cast)
-                                        .filter(shared -> shared.containsKey(Field.USER_ID) && shared.getString(Field.USERID).equals(right.getString(Field.USER_ID)))
+                                        .filter(shared -> shared.containsKey(Field.USERID) && shared.getString(Field.USERID).equals(right.getString(Field.USER_ID)))
                                         .findFirst();
 
                                     if (existingShared.isPresent()) {
