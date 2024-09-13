@@ -247,6 +247,8 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
+    // Get all structures that are not parents
+    // and add the label "is_parent" to the resources whose structure owner has no parent
     @Override
     public Future<JsonArray> getStructureIsParent(JsonArray resources, UserInfos userInfos) {
         Promise<JsonArray> promise = Promise.promise();

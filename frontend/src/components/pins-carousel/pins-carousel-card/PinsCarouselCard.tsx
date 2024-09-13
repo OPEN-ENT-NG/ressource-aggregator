@@ -12,6 +12,7 @@ import PushPinIcon from "@mui/icons-material/PushPin";
 import { useTranslation } from "react-i18next";
 
 import { ModalEnum } from "~/core/enum/modal.enum";
+import { fields } from "~/core/const/fields";
 import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
@@ -73,7 +74,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
   }, [link]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window?.config) {
+    if (typeof window !== fields.UNDEFINED && window?.config) {
       setHighlights(window?.config?.highlightsPins || false);
     }
   }, []);
