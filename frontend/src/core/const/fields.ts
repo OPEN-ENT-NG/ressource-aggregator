@@ -1,3 +1,3 @@
 export const fields = {
-  UNDEFINED = "undefined"
-}
+  UNDEFINED = "undefined",
+};
