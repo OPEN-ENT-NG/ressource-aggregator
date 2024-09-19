@@ -223,11 +223,11 @@ public class DefaultPinsService implements PinsService {
         structures.add(structureId);
         List<Future> futures = new ArrayList<>();
         for (String structure : structures) {
-            futures.add(getAllUsersIdsInStructure(structure));
+            futures.add(getAllUsersIdsInStructure(structure)); // get all users in a structures
         }
         CompositeFuture.all(futures)
             .onSuccess(composite -> {
-                // Agréger tous les utilisateurs de chaque future dans une seule liste
+                // get all users ids of all structures
                 List<String> allUsers = composite.list().stream()
                         .flatMap(ids -> ((JsonArray) ids).stream())
                         .map(Object::toString)
@@ -416,6 +416,7 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
+    // Check if the structure is a parent structure (structure who have no parent)
     @Override
     public Future<Boolean> structureIsParent(String structureId) {
         Promise<Boolean> promise = Promise.promise();
@@ -460,6 +461,7 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
+    // get all users who received the resource
     private Future<JsonArray> retrieveUsersHasShared(String idResource) {
         Promise<JsonArray> promise = Promise.promise();
         String query = "SELECT DISTINCT member_id" +
