@@ -24,8 +24,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const { nameSelectedStructure, setNameSelectedStructure } =
     useSelectedStructureProvider();
 
-  console.log("user", user);
-
   return (
     <div className="med-header">
       <div className="med-header-container med-menu">
