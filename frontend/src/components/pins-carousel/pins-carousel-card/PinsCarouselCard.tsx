@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  AlertTypes,
-  Card,
-  isActionAvailable,
-  Tooltip,
-} from "@edifice-ui/react";
+import { Card, isActionAvailable, Tooltip } from "@edifice-ui/react";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PushPinIcon from "@mui/icons-material/PushPin";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
 
 import { fields } from "~/core/const/fields";
@@ -18,6 +15,11 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import "./PinsCarouselCard.scss";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
+import {
+  useAddFavoriteMutation,
+  useGetFavoriteQuery,
+  useRemoveFavoriteMutation,
+} from "~/services/api/favorite.service";
 import { useActions } from "~/services/queries";
 
 interface PinsCarouselCardProps {
@@ -30,9 +32,11 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
   link,
 }) => {
   const [newLink, setNewLink] = useState<string>("");
-  const { setAlertText, setAlertType } = useAlertProvider();
+  const { notify } = useAlertProvider();
   const { setModalResource, openSpecificModal } = useModalProvider();
-
+  const [addFavorite] = useAddFavoriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
+  const { refetch: refetchFavorite } = useGetFavoriteQuery(null);
   // used to check if the user has the right to pin a resource
   const { data: actions } = useActions();
   const { idSelectedStructure } = useSelectedStructureProvider();
@@ -41,11 +45,6 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
     idSelectedStructure === pin.structure_owner;
   const { t } = useTranslation("mediacentre");
   const [highlights, setHighlights] = useState<boolean | undefined>(false);
-
-  const notify = (message: string, type: AlertTypes) => {
-    setAlertText(message);
-    setAlertType(type);
-  };
 
   const copy = () => {
     if (navigator?.clipboard) {
@@ -78,6 +77,54 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
       setHighlights(window?.config?.highlightsPins || false);
     }
   }, []);
+
+  const fav = async () => {
+    try {
+      if (
+        pin.source === "fr.openent.mediacentre.source.Signet" ||
+        pin.source === "fr.openent.mediacentre.source.GlobalResource"
+      ) {
+        const newId = parseInt(pin.id as string);
+        const newResource = {
+          ...pin,
+          id: newId,
+        };
+        await addFavorite({ id: newId, resource: newResource });
+      } else {
+        await addFavorite({ id: pin._id, resource: pin });
+      }
+      notify(t("mediacentre.notification.addFavorite"), "success");
+      pin.favorite = true;
+      refetchFavorite();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const unfav = async () => {
+    try {
+      if (
+        pin.source === "fr.openent.mediacentre.source.Signet" ||
+        pin.source === "fr.openent.mediacentre.source.GlobalResource"
+      ) {
+        const newId = pin.id ? parseInt(pin.id.toString()) : pin.id;
+        await removeFavorite({
+          id: newId,
+          source: pin?.source,
+        });
+      } else {
+        await removeFavorite({
+          id: pin.favoriteId ?? pin._id,
+          source: pin?.source,
+        });
+      }
+      notify(t("mediacentre.notification.removeFavorite"), "success");
+      pin.favorite = false;
+      refetchFavorite();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <Card isClickable={false} isSelectable={false} className="med-pin-card">
@@ -131,6 +178,15 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
           <Tooltip message={t("mediacentre.card.copy")} placement="top">
             <ContentCopyIcon className="med-link" onClick={() => copy()} />
           </Tooltip>
+          {pin.favorite ? (
+            <Tooltip message={t("mediacentre.card.unfavorite")} placement="top">
+              <StarIcon className="med-star" onClick={() => unfav()} />
+            </Tooltip>
+          ) : (
+            <Tooltip message={t("mediacentre.card.favorite")} placement="top">
+              <StarBorderIcon className="med-star" onClick={() => fav()} />
+            </Tooltip>
+          )}
         </div>
       </Card.Footer>
     </Card>
