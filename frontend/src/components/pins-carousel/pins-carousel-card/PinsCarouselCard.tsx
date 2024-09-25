@@ -9,6 +9,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useTranslation } from "react-i18next";
 
 import { fields } from "~/core/const/fields";
+import { GLOBAL, SIGNET } from "~/core/const/sources.const";
 import { ModalEnum } from "~/core/enum/modal.enum";
 import { Pin } from "~/model/Pin.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
@@ -78,12 +79,9 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
     }
   }, []);
 
-  const fav = async () => {
+  const addFavoriteResource = async () => {
     try {
-      if (
-        pin.source === "fr.openent.mediacentre.source.Signet" ||
-        pin.source === "fr.openent.mediacentre.source.GlobalResource"
-      ) {
+      if (pin.source === SIGNET || pin.source === GLOBAL) {
         const newId = parseInt(pin.id as string);
         const newResource = {
           ...pin,
@@ -101,12 +99,9 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
     }
   };
 
-  const unfav = async () => {
+  const removeFavoriteResource = async () => {
     try {
-      if (
-        pin.source === "fr.openent.mediacentre.source.Signet" ||
-        pin.source === "fr.openent.mediacentre.source.GlobalResource"
-      ) {
+      if (pin.source === SIGNET || pin.source === GLOBAL) {
         const newId = pin.id ? parseInt(pin.id.toString()) : pin.id;
         await removeFavorite({
           id: newId,
@@ -180,11 +175,17 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
           </Tooltip>
           {pin.favorite ? (
             <Tooltip message={t("mediacentre.card.unfavorite")} placement="top">
-              <StarIcon className="med-star" onClick={() => unfav()} />
+              <StarIcon
+                className="med-star"
+                onClick={() => removeFavoriteResource()}
+              />
             </Tooltip>
           ) : (
             <Tooltip message={t("mediacentre.card.favorite")} placement="top">
-              <StarBorderIcon className="med-star" onClick={() => fav()} />
+              <StarBorderIcon
+                className="med-star"
+                onClick={() => addFavoriteResource()}
+              />
             </Tooltip>
           )}
         </div>
