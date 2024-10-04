@@ -85,10 +85,11 @@ export const HomeList: React.FC<HomeListProps> = ({
               | GlobalResource
               | Favorite
               | Signet,
+            index,
           ) => (
             <Resource
               id={resource?.id ?? ""}
-              key={resource.id}
+              key={index}
               image={
                 resource?.image ??
                 "/mediacentre/public/img/no-image-resource.png"
