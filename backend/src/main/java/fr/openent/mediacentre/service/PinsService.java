@@ -3,6 +3,7 @@ package fr.openent.mediacentre.service;
 import fr.openent.mediacentre.model.PinResource;
 import fr.openent.mediacentre.source.Source;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.user.UserInfos;

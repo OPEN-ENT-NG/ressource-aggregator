@@ -50,19 +50,15 @@ public class FutureHelper {
         };
     }
 
-    public static Handler<Either<String, JsonObject>> handlerJsonObject(Future<JsonObject> future) {
+    public static Handler<Either<String, JsonObject>> handlerJsonObject(Promise<JsonObject> promise) {
         return event -> {
             if (event.isRight()) {
-                future.complete(event.right().getValue());
+                promise.complete(event.right().getValue());
             } else {
                 LOGGER.error(event.left().getValue());
-                future.fail(event.left().getValue());
+                promise.fail(event.left().getValue());
             }
         };
-    }
-
-    public static Handler<Either<String, JsonObject>> handlerJsonObject(Promise<JsonObject> promise) {
-        return handlerJsonObject(promise, null);
     }
 
     public static Handler<Either<String, JsonObject>> handlerJsonObject(Promise<JsonObject> promise, String errorMessage) {
