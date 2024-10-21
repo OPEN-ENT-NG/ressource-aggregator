@@ -1,4 +1,4 @@
-#!/bin/bash
+git #!/bin/bash
 
 # Params
 NO_DOCKER=""

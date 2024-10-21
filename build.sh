@@ -44,12 +44,17 @@ esac
 done
 
 clean () {
-  cd frontend && ./build.sh clean && cd ..
-  cd backend && ./build.sh clean && cd ..
+  cd frontend
+  ./build.sh clean
+  cd ../backend
+  ./build.sh clean
+  cd ..
 }
 
 install() {
   cd frontend && ./build.sh installDeps build
+  cd ..
+  cd backend && ./build.sh clean build
   cd ..
   copyFrontFiles
   clean
