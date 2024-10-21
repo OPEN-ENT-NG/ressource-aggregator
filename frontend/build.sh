@@ -50,7 +50,6 @@ clean () {
   rm -rf dist 
   rm -rf build 
   rm -rf .pnpm-store
-  rm -f package.json 
   rm -f pnpm-lock.yaml
 }
 

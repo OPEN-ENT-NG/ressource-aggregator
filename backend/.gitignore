@@ -1,4 +1,4 @@
 /build
 /bin
 src/main/resources/public
-src/main/resources/view
+src/main/resources/view/index.html

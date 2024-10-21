@@ -1,56 +1,95 @@
 #!/bin/bash
 
-# Clean files
-echo -e '\n------------------'
-echo 'Clean before build'
-echo '------------------'
-cd backend
-rm -rf ./.gradle
-rm -rf ./build
-rm -rf ./gradle
-rm -rf ./src/main/resources/public
-rm -rf ./src/main/resources/view
-echo 'Repo clean for build !'
-cd ..
+cleanBackend() {
+  echo -e '\n------------------'
+  echo 'Clean before build'
+  echo '------------------'
+  cd backend || exit 1
+  rm -rf ./.gradle
+  rm -rf ./build
+  rm -rf ./gradle
+  rm -rf ./src/main/resources/public
+#  rm -rf ./src/main/resources/view
+  echo 'Frontend cleaned !'
+  cd .. || exit 1
+}
 
-# Frontend
-echo -e '\n--------------'
-echo 'Build Frontend'
-echo '--------------'
-cd frontend
-#./build.sh --no-docker clean init build
-./build.sh installDeps build
-cd ..
+buildFrontend() {
+  echo -e '\n--------------'
+  echo 'Build Frontend'
+  echo '--------------'
+  cd frontend || exit 1
+  ./build.sh installDeps build
+  cd .. || exit 1
+}
 
-# Create directory structure and copy frontend dist
-echo -e '\n--------------------'
-echo 'Copy front files built'
-echo '----------------------'
-cd backend
-cp -R ../frontend/dist/* ./src/main/resources
+copyFrontFile() {
+  echo -e '\n--------------------'
+  echo 'Copy front files built'
+  echo '----------------------'
+  cd backend || exit 1
+  rm -rf ./src/main/resources/public
+  cp -R ../frontend/dist/* ./src/main/resources
+  rm -rf ./src/main/resources/img
+  echo 'Frontend files copied !'
+  cd .. || exit 1
+}
 
-# Create view directory and copy HTML files into Backend
-mkdir -p ./src/main/resources/view
-mkdir -p ./src/main/resources/public/template
-mkdir -p ./src/main/resources/public/img
-mkdir -p ./src/main/resources/public/js
-mv ./src/main/resources/*.html ./src/main/resources/view
-cp -R ./src/main/resources/view-src/notify/ ./src/main/resources/view/
+buildBackend() {
+  echo -e '\n-------------'
+  echo 'Build Backend'
+  echo '-------------'
+  cd backend || exit 1
 
-# Copy all public files from frontend into Backend
-cp -R ../frontend/public/* ./src/main/resources/public
-echo 'Files all copied !'
+  # Move and copy files as needed
+  mv ./src/main/resources/*.html ./src/main/resources/view
 
-# Build .
-echo -e '\n-------------'
-echo 'Build Backend'
-echo '-------------'
-#./build.sh --no-docker clean build
-./build.sh clean build
+  ./build.sh clean build
+  cd .. || exit 1
+}
 
-# Clean up - remove compiled files in front folders
-echo -e '\n-------------'
-echo 'Clean front folders'
-echo '-------------'
-rm -rf ../frontend/dist
-echo 'Folders cleaned !'
+cleanFrontendArtefacts() {
+  echo -e '\n-------------------'
+  echo 'Clean front folders'
+  echo '-------------------'
+  rm -rf ./frontend/dist
+  echo 'Frontend artefact cleaned !'
+}
+
+install() {
+  cleanBackend
+  buildFrontend
+  copyFrontFile
+  buildBackend
+  cleanFrontendArtefacts
+  echo -e '\nInstall finished !\n\n'
+}
+
+for param in "$@"
+do
+  case $param in
+    copyFrontFile)
+      copyFrontFile
+      ;;
+    install)
+      install
+      ;;
+    cleanBackend)
+      cleanBackend
+      ;;
+    buildFrontend)
+      buildFrontend
+      ;;
+    buildBackend)
+      buildBackend
+      ;;
+    cleanFrontendArtefacts)
+      cleanFrontendArtefacts
+      ;;
+    *)
+      echo "Invalid argument : $param"
+  esac
+  if [ ! $? -eq 0 ]; then
+    exit 1
+  fi
+done
