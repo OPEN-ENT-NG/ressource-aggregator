@@ -92,7 +92,7 @@ public class TextBookHelper {
             JsonObject resources = event.right().getValue();
             JsonArray textbooks = resources.getJsonArray(Field.TEXTBOOKS);
             JsonArray externalResources = resources.getJsonArray(Field.EXTERNAL_RESOURCES);
-            if (!externalResources.isEmpty()) {
+            if (externalResources != null && !externalResources.isEmpty()) {
                 textBookService.insertExternalResources(user.getUserId(), externalResources)
                     .onFailure(err -> log.error("[Mediacentre@TextbookHelper:retrieveUserTextbooks] Failed to insert external resources" + err.getMessage()));
             }
