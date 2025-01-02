@@ -19,6 +19,15 @@ const routes = [
           };
         },
       },
+      {
+        path: "*",
+        async lazy() {
+          const { App } = await import("./app");
+          return {
+            Component: App,
+          };
+        },
+      },
     ],
   },
   {
