@@ -4,19 +4,19 @@ import { Button, Modal } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
 
 import { ModalEnum } from "~/core/enum/modal.enum";
-import { useSignet } from "~/hooks/useSignet";
 import { PutSharePayload } from "~/model/payloads/PutSharePayload";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
+import { useSignet } from "~/providers/SignetProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
-import "../Modal.scss";
 import {
   useDeleteSignetMutation,
   useDeleteSignetPublicMutation,
   useUpdateShareResourceMutation,
 } from "~/services/api/signet.service";
+import "../Modal.scss";
 
 export const SignetDelete: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -25,7 +25,7 @@ export const SignetDelete: React.FC = () => {
   const [updateShareResource] = useUpdateShareResourceMutation();
   const [deleteSignet] = useDeleteSignetMutation();
   const [deletePublicSignet] = useDeleteSignetPublicMutation();
-  const { getPublicSignets } = useSignet();
+  const { publicSignets } = useSignet();
   const { notify } = useAlertProvider();
 
   const handleCloseModal = () => {
@@ -46,7 +46,7 @@ export const SignetDelete: React.FC = () => {
           try {
             if (
               resource.published ||
-              getPublicSignets()?.find(
+              publicSignets?.find(
                 (signet: Signet) =>
                   signet.id.toString() === idSignet?.toString(),
               )

@@ -4,17 +4,16 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
 import FolderSharedIcon from "@mui/icons-material/FolderSharedOutlined";
 import PublicIcon from "@mui/icons-material/PublicOutlined";
-import "./AdminSignet.scss";
 import { useTranslation } from "react-i18next";
+import "./AdminSignet.scss";
 
-import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { Signet } from "~/model/Signet.model";
+import { useSignet } from "~/providers/SignetProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 
 interface AdminSignetProps {
-  signets: Signet[] | null;
   setSignetsData: React.Dispatch<React.SetStateAction<Signet[] | null>>;
   setAllResourcesDisplayed: React.Dispatch<
     React.SetStateAction<Resource[] | null>
@@ -23,22 +22,20 @@ interface AdminSignetProps {
 }
 
 export const AdminSignet: React.FC<AdminSignetProps> = ({
-  signets,
   setSignetsData,
   setAllResourcesDisplayed,
   chooseEmptyState = () => {},
 }) => {
   const { t } = useTranslation("mediacentre");
   const { resetResources, selectedTab, setSelectedTab } = useToasterProvider();
+  // const { mine, shared, published, archived } = useSignet();
   const { mine, shared, published, archived } = useSignet();
 
   const selectMine = () => {
     chooseEmptyState("mediacentre.empty.state.mine", "empty-state-mine.png");
     resetPage();
     setSelectedTab("mediacentre.signets.mine");
-    if (signets) {
-      setSignetsData(sortByAlphabet(mine(signets)) as Signet[]);
-    }
+    !!mine && setSignetsData(sortByAlphabet(mine) as Signet[]);
   };
 
   const selectShared = () => {
@@ -48,9 +45,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     );
     resetPage();
     setSelectedTab("mediacentre.signets.shared");
-    if (signets) {
-      setSignetsData(sortByAlphabet(shared(signets)) as Signet[]);
-    }
+    shared && setSignetsData(sortByAlphabet(shared) as Signet[]);
   };
 
   const selectPublished = () => {
@@ -60,9 +55,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     );
     resetPage();
     setSelectedTab("mediacentre.signets.published");
-    if (signets) {
-      setSignetsData(sortByAlphabet(published(signets)) as Signet[]);
-    }
+    published && setSignetsData(sortByAlphabet(published) as Signet[]);
   };
 
   const selectArchived = () => {
@@ -72,9 +65,7 @@ export const AdminSignet: React.FC<AdminSignetProps> = ({
     );
     resetPage();
     setSelectedTab("mediacentre.signets.archived");
-    if (signets) {
-      setSignetsData(sortByAlphabet(archived(signets)) as Signet[]);
-    }
+    archived && setSignetsData(sortByAlphabet(archived) as Signet[]);
   };
 
   const resetPage = () => {

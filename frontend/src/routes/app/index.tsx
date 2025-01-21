@@ -4,7 +4,6 @@ import { ID } from "@edifice.io/client";
 import { Alert, useUser } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
 
-import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
 import { EmptyState } from "~/components/empty-state/EmptyState";
 import { HomeList } from "~/components/home-lists/HomeList";
 import { MainLayout } from "~/components/main-layout/MainLayout";
@@ -17,7 +16,6 @@ import { ModalEnum } from "~/core/enum/modal.enum";
 import { useExternalResource } from "~/hooks/useExternalResource";
 import { useFavorite } from "~/hooks/useFavorite";
 import { useGlobal } from "~/hooks/useGlobal";
-import { useSignet } from "~/hooks/useSignet";
 import { useTextbook } from "~/hooks/useTextbook";
 import { ExternalResource } from "~/model/ExternalResource.model";
 import { Favorite } from "~/model/Favorite.model";
@@ -28,6 +26,8 @@ import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
 import { usePinProvider } from "~/providers/PinProvider";
 import { useSelectedStructureProvider } from "~/providers/SelectedStructureProvider";
+import { useSignet } from "~/providers/SignetProvider";
+import { PinsCarousel } from "../../components/pins-carousel/PinsCarousel";
 
 export interface AppProps {
   _id: string;

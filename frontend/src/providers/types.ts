@@ -87,3 +87,19 @@ export interface toasterRightsState {
   manager: boolean;
   read: boolean;
 }
+
+export interface SignetProviderProps {
+  children: ReactNode;
+}
+
+export interface SignetProviderContextType {
+  mine: Signet[] | null;
+  shared: Signet[] | null;
+  published: Signet[] | null;
+  allSignets: Signet[] | null;
+  archived: Signet[] | null;
+  publicSignets: Signet[] | null;
+  myPublishedSignets: Signet[] | null;
+  homeSignets: Signet[] | null;
+  setHomeSignets: Dispatch<SetStateAction<Signet[] | null>>;
+}

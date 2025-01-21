@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { ActionBar, Button, checkUserRight } from "@edifice.io/react";
-import "./ToasterContainer.scss";
 import { ShareOptions } from "node_modules/@edifice.io/react/dist/modules/modals/ShareModal/ShareModal";
 import { useTranslation } from "react-i18next";
+import "./ToasterContainer.scss";
 
-import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
 import { ModalEnum } from "~/core/enum/modal.enum";
-import { useSignet } from "~/hooks/useSignet";
 import { SearchResource } from "~/model/SearchResource.model";
 import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
+import { useSignet } from "~/providers/SignetProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 import { useUpdateSignetMutation } from "~/services/api/signet.service";
 import { useUserRightsStore } from "~/stores/rights/store";
@@ -20,6 +19,7 @@ import {
   convertKeyWords,
   convertLevels,
 } from "~/utils/property.utils";
+import { ShareModalMediacentre } from "../modals/share-modal/ShareModalMediacentre";
 
 export interface ToasterContainerProps {
   selectedTab: string;
@@ -44,7 +44,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     setToasterRights,
   } = useToasterProvider();
   const [updateSignet] = useUpdateSignetMutation();
-  const { getPublicSignets } = useSignet();
+  const { publicSignets } = useSignet();
   const { setUserRights } = useUserRightsStore.getState();
   const [shareOptions, setShareOptions] = useState<ShareOptions | null>(null);
 
@@ -198,7 +198,7 @@ export const ToasterContainer: React.FC<ToasterContainerProps> = ({
     !toasterResources?.find(
       (resource: SearchResource) =>
         resource?.published ||
-        getPublicSignets()?.find(
+        publicSignets?.find(
           (signet: Signet) => signet.id.toString() === resource?.id?.toString(),
         ),
     );

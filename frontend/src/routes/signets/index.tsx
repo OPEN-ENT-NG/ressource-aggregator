@@ -13,11 +13,11 @@ import { MainLayout } from "~/components/main-layout/MainLayout";
 import { ModalContainer } from "~/components/modal-container/ModalContainer";
 import { ToasterContainer } from "~/components/toaster-container/ToasterContainer";
 import { ModalEnum } from "~/core/enum/modal.enum";
-import { useSignet } from "~/hooks/useSignet";
 import { Resource } from "~/model/Resource.model";
 import { Signet } from "~/model/Signet.model";
 import { useAlertProvider } from "~/providers/AlertProvider";
 import { useModalProvider } from "~/providers/ModalsProvider";
+import { useSignet } from "~/providers/SignetProvider";
 import { useToasterProvider } from "~/providers/ToasterProvider";
 import { useGetDisciplinesQuery } from "~/services/api/disciplines.service";
 import { useGetLevelsQuery } from "~/services/api/levels.service";
@@ -63,16 +63,16 @@ export const SignetPage: React.FC = () => {
       if (hasSignetRight) {
         switch (selectedTab) {
           case "mediacentre.signets.mine":
-            setSignetsData(mine(allSignets));
+            setSignetsData(mine);
             break;
           case "mediacentre.signets.shared":
-            setSignetsData(shared(allSignets));
+            setSignetsData(shared);
             break;
           case "mediacentre.signets.published":
-            setSignetsData(published(allSignets));
+            setSignetsData(published);
             break;
           case "mediacentre.signets.archived":
-            setSignetsData(archived(allSignets));
+            setSignetsData(archived);
             break;
           default:
             setSignetsData(allSignets);
@@ -130,7 +130,6 @@ export const SignetPage: React.FC = () => {
           {hasSignetRight && (
             <div className="med-signets-admin-container">
               <AdminSignet
-                signets={allSignets}
                 setSignetsData={setSignetsData}
                 setAllResourcesDisplayed={setAllResourcesDisplayed}
                 chooseEmptyState={chooseEmptyState}

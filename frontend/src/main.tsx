@@ -1,6 +1,5 @@
 import React from "react";
 
-import "~/i18n";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
 import {
   QueryCache,
@@ -11,11 +10,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
+import "~/i18n";
 
 import { AlertProvider } from "./providers/AlertProvider";
 import { ModalProvider } from "./providers/ModalsProvider";
 import { PinProvider } from "./providers/PinProvider";
 import { SelectedStructureProvider } from "./providers/SelectedStructureProvider";
+import { SignetProvider } from "./providers/SignetProvider";
 import { ToasterProvider } from "./providers/ToasterProvider";
 import { router } from "./routes";
 import { setupStore } from "./store";
@@ -58,11 +59,13 @@ root.render(
           <SelectedStructureProvider>
             <AlertProvider>
               <PinProvider>
-                <ToasterProvider>
-                  <ModalProvider>
-                    <RouterProvider router={router} />
-                  </ModalProvider>
-                </ToasterProvider>
+                <SignetProvider>
+                  <ToasterProvider>
+                    <ModalProvider>
+                      <RouterProvider router={router} />
+                    </ModalProvider>
+                  </ToasterProvider>
+                </SignetProvider>
               </PinProvider>
             </AlertProvider>
           </SelectedStructureProvider>
