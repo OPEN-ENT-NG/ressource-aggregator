@@ -233,17 +233,17 @@ public class DefaultPinsService implements PinsService {
 
         JsonObject composeInfos = new JsonObject();
 
-        getAllGroupsIdsInStructureWithMediacentreAccess(structures)
-            .compose(allGroupsIdsWithMediacentreAccess -> {
-                composeInfos.put("allGroupsIdsWithMediacentreAccess", new JsonArray(allGroupsIdsWithMediacentreAccess));
+        getAllUsersIdsInStructureWithMediacentreAccess(structures)
+            .compose(allUsersIdsWithMediacentreAccess -> {
+                composeInfos.put(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS, new JsonArray(allUsersIdsWithMediacentreAccess));
                 return structureIsParent(structureId);
             })
             .compose(isParent -> {
-                composeInfos.put("isParent", isParent);
-                List<String> allGroupsIdsWithMediacentreAccess = composeInfos.getJsonArray("allGroupsIdsWithMediacentreAccess").getList();
+                composeInfos.put(Field.IS_PARENT, isParent);
+                List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS).getList();
                 switch (resource.getString(Field.SOURCE)) {
                     case SourceConstant.MOODLE:
-                        return Future.succeededFuture(allGroupsIdsWithMediacentreAccess);
+                        return Future.succeededFuture(allUsersIdsWithMediacentreAccess);
                     case SourceConstant.GAR:
                         return textbookService.getUsersIdsFromMongoResource(resource);
                     default:
@@ -255,16 +255,21 @@ public class DefaultPinsService implements PinsService {
                                 .filter(signet -> String.valueOf(signet.getValue(Field.ID)).equals(String.valueOf(resource.getString(Field.ID))))
                                 .findFirst();
                             if (optionalSignet.isPresent()) {
-                                return Future.succeededFuture(allGroupsIdsWithMediacentreAccess);
+                                return Future.succeededFuture(allUsersIdsWithMediacentreAccess);
                             } else {
-                                return retrieveGroupsAndUsersIdsHasShared(String.valueOf(resource.getValue(Field.ID)));
+                                return retrieveGroupsAndUsersIdsHasShared(String.valueOf(resource.getValue(Field.ID)))
+                                    .compose(this::getUsersIdsFromGroupsAndUsersIds);
                             }
                         });
                 }
             })
             .onSuccess(usersIdsToNotify -> {
-                boolean isParent = composeInfos.getBoolean("isParent");
-                notifyService.notifyNewPinnedResource(request, new JsonArray(usersIdsToNotify), isParent);
+                List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray("allUsersIdsWithMediacentreAccess").getList();
+                List<String> usersIdsToNotifyWithMediacentreAccess = usersIdsToNotify.stream()
+                    .filter(allUsersIdsWithMediacentreAccess::contains)
+                    .collect(Collectors.toList());
+                boolean isParent = composeInfos.getBoolean(Field.IS_PARENT, true);
+                notifyService.notifyNewPinnedResource(request, new JsonArray(usersIdsToNotifyWithMediacentreAccess), isParent);
                 promise.complete();
             })
             .onFailure(error -> {
@@ -375,12 +380,12 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
-    private Future<List<String>> getAllGroupsIdsInStructureWithMediacentreAccess(String structure) {
+    private Future<List<String>> getAllUsersIdsInStructureWithMediacentreAccess(String structure) {
         Promise<List<String>> promise = Promise.promise();
         String query =
-            "MATCH (g:Group)-[:DEPENDS]->(:Structure {id: {structure}}), " +
+            "MATCH (u:User)-[:IN]->(g:Group)-[:DEPENDS]->(:Structure {id: {structure}}), " +
             "(g)-[:AUTHORIZED]->(:Role)-[:AUTHORIZE]->(:WorkflowAction {name: {workflowActionName}}) " +
-            "RETURN DISTINCT g.id AS groupId";
+            "RETURN DISTINCT u.id AS userId";
 
         JsonObject params = new JsonObject()
                 .put(Field.STRUCTURE, structure)
@@ -388,17 +393,17 @@ public class DefaultPinsService implements PinsService {
 
         neo.execute(query, params, Neo4jResult.validResultHandler(event -> {
             if (event.isLeft()) {
-                log.error("[Mediacentre@DefaultPinsService::getAllGroupsIdsInStructureWithMediacentreAccess] Failed to get groups in structure : " + event.left().getValue());
+                log.error("[Mediacentre@DefaultPinsService::getAllUsersIdsInStructureWithMediacentreAccess] Failed to get users in structure : " + event.left().getValue());
                 promise.fail(event.left().getValue());
                 return;
             }
 
             List<String> groupsIds = event.right().getValue().stream()
                     .map(JsonObject.class::cast)
-                    .map(json -> json.getString(Field.GROUPID))
+                    .map(json -> json.getString(Field.USERID))
                     .collect(Collectors.toList());
 
-            log.debug("[Mediacentre@DefaultPinsService::getAllGroupsIdsInStructureWithMediacentreAccess] Groups in structure "
+            log.debug("[Mediacentre@DefaultPinsService::getAllUsersIdsInStructureWithMediacentreAccess] Users in structure "
                     + structure + " with access: " + groupsIds);
 
             promise.complete(groupsIds);
@@ -407,11 +412,11 @@ public class DefaultPinsService implements PinsService {
         return promise.future();
     }
 
-    private Future<List<String>> getAllGroupsIdsInStructureWithMediacentreAccess(List<String> structures){
+    private Future<List<String>> getAllUsersIdsInStructureWithMediacentreAccess(List<String> structures){
         Promise<List<String>> promise = Promise.promise();
         List<Future> futures = new ArrayList<>();
         for (String structure : structures) {
-            futures.add(getAllGroupsIdsInStructureWithMediacentreAccess(structure));
+            futures.add(getAllUsersIdsInStructureWithMediacentreAccess(structure));
         }
         CompositeFuture.all(futures)
             .onSuccess(composite -> {
@@ -422,7 +427,7 @@ public class DefaultPinsService implements PinsService {
                 promise.complete(allGroupsIdsWithMediacentreAccess);
             })
             .onFailure(error -> {
-                log.error("[Mediacentre@DefaultPinsService::getAllGroupsIdsInStructureWithMediacentreAccess] Failed to get groups in structures : " + error.getMessage());
+                log.error("[Mediacentre@DefaultPinsService::getAllUsersIdsInStructureWithMediacentreAccess] Failed to get users in structures : " + error.getMessage());
                 promise.fail(error.getMessage());
             });
         return promise.future();
@@ -449,6 +454,33 @@ public class DefaultPinsService implements PinsService {
 
             promise.complete(usersIds);
         }));
+        return promise.future();
+    }
+
+    // get all users ids from list of groups and users ids
+    private Future<List<String>> getUsersIdsFromGroupsAndUsersIds(List<String> groupsAndUsersIds) {
+        Promise<List<String>> promise = Promise.promise();
+        String query = "MATCH (u:User) WHERE u.id IN {groupsAndUsersIds} "+
+                "OPTIONAL MATCH (u)-[:IN]->(g:Group) WHERE g.id IN {groupsAndUsersIds} "+
+                "RETURN DISTINCT u.id AS userId";
+
+        JsonObject params = new JsonObject().put(Field.GROUPS_AND_USERS_IDS, new JsonArray(groupsAndUsersIds));
+
+        neo.execute(query, params, Neo4jResult.validResultHandler(event -> {
+            if (event.isLeft()) {
+                log.error("[Mediacentre@DefaultPinsService::getUsersIdsFromGroupsAndUsersIds] Failed to get users ids from groups and users ids : " + event.left().getValue());
+                promise.fail(event.left().getValue());
+                return;
+            }
+
+            List<String> usersIds = event.right().getValue().stream()
+                .map(JsonObject.class::cast)
+                .map(json -> json.getString(Field.USERID))
+                .collect(Collectors.toList());
+
+            promise.complete(usersIds);
+        }));
+
         return promise.future();
     }
 }
