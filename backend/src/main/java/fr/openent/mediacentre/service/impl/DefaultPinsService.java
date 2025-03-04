@@ -239,7 +239,7 @@ public class DefaultPinsService implements PinsService {
                 return structureIsParent(structureId);
             })
             .compose(isParent -> {
-                composeInfos.put(Field.IS_PARENT, isParent);
+                composeInfos.put(Field.ISPARENT, isParent);
                 List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS).getList();
                 switch (resource.getString(Field.SOURCE)) {
                     case SourceConstant.MOODLE:
@@ -268,7 +268,7 @@ public class DefaultPinsService implements PinsService {
                 List<String> usersIdsToNotifyWithMediacentreAccess = usersIdsToNotify.stream()
                     .filter(allUsersIdsWithMediacentreAccess::contains)
                     .collect(Collectors.toList());
-                boolean isParent = composeInfos.getBoolean(Field.IS_PARENT, true);
+                boolean isParent = composeInfos.getBoolean(Field.ISPARENT, true);
                 notifyService.notifyNewPinnedResource(request, new JsonArray(usersIdsToNotifyWithMediacentreAccess), isParent);
                 promise.complete();
             })

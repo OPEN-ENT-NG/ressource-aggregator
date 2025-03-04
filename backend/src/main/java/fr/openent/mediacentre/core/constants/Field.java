@@ -21,7 +21,7 @@ public class Field {
     public static final String _ID = "_id";
     public static final String ID = "id";
     public static final String ID_RESSOURCE = "idRessource";
-    public static final String IS_PARENT = "isParent";
+    public static final String ISPARENT = "isParent";
     public static final String NOM_RESSOURCE = "nomRessource";
     public static final String URL_VIGNETTE = "urlVignette";
     public static final String URL_ACCES_RESSOURCE = "urlAccesRessource";
