@@ -17,6 +17,12 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.mongodb.MongoDbResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static fr.openent.mediacentre.core.constants.Field.USERID;
+import static fr.openent.mediacentre.core.constants.Field.USER_ID;
+
 public class DefaultTextBookService implements TextBookService {
     private final String TEXTBOOK_COLLECTION = "mediacentre.textbooks";
     private final String EXTERNAL_RESOURCES_COLLECTION = "mediacentre.external_resources";
@@ -40,23 +46,48 @@ public class DefaultTextBookService implements TextBookService {
     }
 
     @Override
-    public Future<JsonArray> getUsersHaveTextbook(String textbookId) {
-        Promise<JsonArray> promise = Promise.promise();
+    public Future<List<String>> getUsersIdsFromMongoResource(JsonObject resource) {
+        boolean isTextbook = resource.getValue(Field.IS_TEXTBOOK) != null && resource.getBoolean(Field.IS_TEXTBOOK);
+        String resourceID = resource.getString(Field.ID, "");
+        if(isTextbook) {
+            return getUsersIdsHaveTextbook(resourceID);
+        } else {
+            return getUsersIdsHaveExternalResource(resourceID);
+        }
+    }
+
+    private Future<List<String>> getUsersIdsFromMongoResource(String textbookId, String collection, String functionName) {
+        Promise<List<String>> promise = Promise.promise();
+
         JsonObject matcher = new JsonObject()
                 .put(Field.ID, textbookId);
 
-        MongoDb.getInstance().find(TEXTBOOK_COLLECTION, matcher, MongoDbResult.validResultsHandler(FutureHelper.handlerJsonArray(promise, "[Mediacentre@DefaultTextbookService::getUsersHaveTextbook] Can't retrieve users : ")));
+        MongoDb.getInstance().find(collection, matcher, MongoDbResult.validResultsHandler(result -> {
+            if (result != null) {
+                List<String> userIds = new ArrayList<>();
+
+                for (Object doc : result.right().getValue()) {
+                    JsonObject textbook = (JsonObject) doc;
+                    if (textbook.containsKey(USERID)) {
+                        userIds.add(textbook.getString(USERID));
+                    }
+                }
+
+                promise.complete(userIds);
+            } else {
+                promise.fail("[Mediacentre@DefaultTextbookService::"+functionName+"] Can't retrieve users : ");
+            }
+        }));
+
         return promise.future();
     }
 
-    @Override
-    public Future<JsonArray> getUsersHaveExternalResource(String externalResourceId) {
-        Promise<JsonArray> promise = Promise.promise();
-        JsonObject matcher = new JsonObject()
-                .put(Field.ID, externalResourceId);
+    private Future<List<String>> getUsersIdsHaveTextbook(String textbookId) {
+        return getUsersIdsFromMongoResource(textbookId, TEXTBOOK_COLLECTION, "getUsersIdsHaveTextbook");
+    }
 
-        MongoDb.getInstance().find(EXTERNAL_RESOURCES_COLLECTION, matcher, MongoDbResult.validResultsHandler(FutureHelper.handlerJsonArray(promise, "[Mediacentre@DefaultTextbookService::getUsersHaveTextbook] Can't retrieve users : ")));
-        return promise.future();
+    private Future<List<String>> getUsersIdsHaveExternalResource(String externalResourceId) {
+        return getUsersIdsFromMongoResource(externalResourceId, EXTERNAL_RESOURCES_COLLECTION, "getUsersIdsHaveExternalResource");
     }
 
     @Override
