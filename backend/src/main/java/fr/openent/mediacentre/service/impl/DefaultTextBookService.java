@@ -19,6 +19,7 @@ import org.entcore.common.mongodb.MongoDbResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fr.openent.mediacentre.core.constants.Field.USERID;
 import static fr.openent.mediacentre.core.constants.Field.USER_ID;
@@ -47,7 +48,7 @@ public class DefaultTextBookService implements TextBookService {
 
     @Override
     public Future<List<String>> getUsersIdsFromMongoResource(JsonObject resource) {
-        boolean isTextbook = resource.getValue(Field.IS_TEXTBOOK) != null && resource.getBoolean(Field.IS_TEXTBOOK);
+        boolean isTextbook = resource.getBoolean(Field.IS_TEXTBOOK, false);
         String resourceID = resource.getString(Field.ID, "");
         if(isTextbook) {
             return getUsersIdsHaveTextbook(resourceID);
@@ -64,14 +65,12 @@ public class DefaultTextBookService implements TextBookService {
 
         MongoDb.getInstance().find(collection, matcher, MongoDbResult.validResultsHandler(result -> {
             if (result != null) {
-                List<String> userIds = new ArrayList<>();
 
-                for (Object doc : result.right().getValue()) {
-                    JsonObject textbook = (JsonObject) doc;
-                    if (textbook.containsKey(USERID)) {
-                        userIds.add(textbook.getString(USERID));
-                    }
-                }
+                List<String> userIds = result.right().getValue().stream()
+                        .map(JsonObject.class::cast)
+                        .filter(textbook -> textbook.containsKey(USERID))
+                        .map(textbook -> textbook.getString(USERID))
+                        .distinct().collect(Collectors.toList());
 
                 promise.complete(userIds);
             } else {

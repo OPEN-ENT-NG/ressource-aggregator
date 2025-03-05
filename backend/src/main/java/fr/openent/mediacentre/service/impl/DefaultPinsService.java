@@ -264,7 +264,7 @@ public class DefaultPinsService implements PinsService {
                 }
             })
             .onSuccess(usersIdsToNotify -> {
-                List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray("allUsersIdsWithMediacentreAccess").getList();
+                List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS).getList();
                 List<String> usersIdsToNotifyWithMediacentreAccess = usersIdsToNotify.stream()
                     .filter(allUsersIdsWithMediacentreAccess::contains)
                     .collect(Collectors.toList());
