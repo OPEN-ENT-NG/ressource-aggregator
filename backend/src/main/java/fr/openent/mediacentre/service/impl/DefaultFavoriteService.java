@@ -76,26 +76,35 @@ public class DefaultFavoriteService implements FavoriteService {
     public Future<JsonObject> update(String id, JsonObject updateBody) {
         Promise<JsonObject> promise = Promise.promise();
 
-        this.getByMongoId(id)
-                .onSuccess(result -> {
-                    if (result.isEmpty()) {
-                        String errorMessage = "[Mediacentre@DefaultFavoriteService::update] No favorite found with _id: " + id;
-                        log.error(errorMessage);
-                        promise.fail(errorMessage);
-                        return;
-                    }
+        JsonObject query = new JsonObject().put(ID, Integer.parseInt(id));
+        JsonObject update = new JsonObject().put("$set", updateBody);
 
+        this.getById(id)
+            .onSuccess(result -> {
+                if (result.isEmpty()) {
+                    String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Favorite with id " + id + " not found in mongo database";
+                    log.error(errorMessage);
+                    promise.fail(errorMessage);
+                } else {
                     String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Failed to update favorite in mongo database : ";
-                    JsonObject query = new JsonObject().put(_ID, id);
-                    JsonObject update = new JsonObject().put("$set", updateBody);
-
                     MongoDb.getInstance().update(TOKEN_COLLECTION, query, update, MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise, errorMessage)));
-                })
-                .onFailure(err -> {
-                    String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Failed to check if favorite exists in mongo database : ";
-                    log.error(errorMessage + err.getMessage());
-                    promise.fail(err.getMessage());
-                });
+                }
+            })
+            .onFailure(err -> {
+                String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Failed to check if favorite with id " + id + " existing in mongo database : ";
+                log.error(errorMessage + err.getMessage());
+                promise.fail(err.getMessage());
+            });
+
+        return promise.future();
+    }
+
+    private Future<JsonObject> getById(String id) {
+        Promise<JsonObject> promise = Promise.promise();
+
+        JsonObject matcher = new JsonObject().put(ID, Integer.parseInt(id));
+        String errorMessage = "[Mediacentre@DefaultFavoriteService::getById] Failed to get favorite with id " + id + " in mongo database : ";
+        MongoDb.getInstance().findOne(TOKEN_COLLECTION, matcher, MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise, errorMessage)));
 
         return promise.future();
     }

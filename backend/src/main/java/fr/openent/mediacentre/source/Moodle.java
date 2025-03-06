@@ -8,6 +8,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -44,6 +45,12 @@ public class Moodle implements Source {
         String userProfile = user.getType();
         if(userProfile.equals(Profile.PERSONNEL.getName()) || userProfile.equals(Profile.TEACHER.getName()))
                 ElasticSearchHelper.plainTextSearch(Moodle.class, query, user.getUserId(), null, false, ElasticSearchHelper.searchHandler(Moodle.class, actionProvider, handler));
+        else {
+            JsonObject response = new JsonObject()
+                    .put("source", Moodle.class.getName())
+                    .put("resources", new JsonArray());
+            handler.handle(new Either.Right<>(response));
+        }
     }
 
     @Override

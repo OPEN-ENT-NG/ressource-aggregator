@@ -169,7 +169,8 @@ public class DefaultSignetService implements SignetService {
     }
 
     @Override
-    public void update(String signetId, JsonObject signet, Handler<Either<String, JsonObject>> handler) {
+    public Future<JsonObject> update(String signetId, JsonObject signet) {
+        Promise<JsonObject> promise = Promise.promise();
         JsonArray levelArray = new JsonArray();
         if(signet.containsKey("levels")) {
             for (int i = 0; i < signet.getJsonArray("levels").size(); i++) {
@@ -219,7 +220,10 @@ public class DefaultSignetService implements SignetService {
                 .addAll(plainTextArray)
                 .add(signetId);
 
-        Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(handler));
+        String errorMessage = "[Mediacentre@DefaultSignetService::update] Failed to update signet : ";
+        Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(FutureHelper.handlerJsonObject(promise, errorMessage)));
+
+        return promise.future();
     }
 
     public void updateCollab(String signetId, JsonObject signet, Handler<Either<String, JsonObject>> handler) {

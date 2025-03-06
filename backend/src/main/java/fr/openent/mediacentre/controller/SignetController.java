@@ -153,13 +153,13 @@ public class SignetController extends ControllerHelper {
     public void update(HttpServerRequest request) {
         String signetId = request.getParam("id");
         RequestUtils.bodyToJson(request, signet -> {
-            signetService.update(signetId, signet, defaultResponseHandler(request));
-            favoriteService.update(signetId, signet)
-                    .onSuccess(updatedFavorite -> renderJson(request, updatedFavorite))
-                    .onFailure(err -> {
-                        log.error("[Mediacentre@SignetController::update] Failed to update favorite : " + err.getMessage());
-                        badRequest(request);
-                    });
+            signetService.update(signetId, signet)
+                .compose(updatedSignet -> favoriteService.update(signetId, signet))
+                .onSuccess(updatedFavorite -> renderJson(request, signet))
+                .onFailure(err -> {
+                    log.error("[Mediacentre@SignetController::update] Failed to update favorite : " + err.getMessage());
+                    badRequest(request);
+                });
         });
     }
 
