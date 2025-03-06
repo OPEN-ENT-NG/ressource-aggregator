@@ -72,6 +72,34 @@ public class DefaultFavoriteService implements FavoriteService {
         return promise.future();
     }
 
+    @Override
+    public Future<JsonObject> update(String id, JsonObject updateBody) {
+        Promise<JsonObject> promise = Promise.promise();
+
+        this.getByMongoId(id)
+                .onSuccess(result -> {
+                    if (result.isEmpty()) {
+                        String errorMessage = "[Mediacentre@DefaultFavoriteService::update] No favorite found with _id: " + id;
+                        log.error(errorMessage);
+                        promise.fail(errorMessage);
+                        return;
+                    }
+
+                    String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Failed to update favorite in mongo database : ";
+                    JsonObject query = new JsonObject().put(_ID, id);
+                    JsonObject update = new JsonObject().put("$set", updateBody);
+
+                    MongoDb.getInstance().update(TOKEN_COLLECTION, query, update, MongoDbResult.validResultHandler(FutureHelper.handlerJsonObject(promise, errorMessage)));
+                })
+                .onFailure(err -> {
+                    String errorMessage = "[Mediacentre@DefaultFavoriteService::update] Failed to check if favorite exists in mongo database : ";
+                    log.error(errorMessage + err.getMessage());
+                    promise.fail(err.getMessage());
+                });
+
+        return promise.future();
+    }
+
     private Future<JsonObject> getByMongoId(String mongoId) {
         Promise<JsonObject> promise = Promise.promise();
 
