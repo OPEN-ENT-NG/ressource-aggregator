@@ -16,6 +16,9 @@ import org.entcore.common.user.UserInfos;
 
 import java.util.function.UnaryOperator;
 
+import static fr.openent.mediacentre.core.constants.Field.RESOURCES;
+import static fr.openent.mediacentre.core.constants.Field.SOURCE;
+
 public class Moodle implements Source {
 
     private final Logger log = LoggerFactory.getLogger(Moodle.class);
@@ -47,8 +50,8 @@ public class Moodle implements Source {
                 ElasticSearchHelper.plainTextSearch(Moodle.class, query, user.getUserId(), null, false, ElasticSearchHelper.searchHandler(Moodle.class, actionProvider, handler));
         else {
             JsonObject response = new JsonObject()
-                    .put("source", Moodle.class.getName())
-                    .put("resources", new JsonArray());
+                    .put(SOURCE, Moodle.class.getName())
+                    .put(RESOURCES, new JsonArray());
             handler.handle(new Either.Right<>(response));
         }
     }

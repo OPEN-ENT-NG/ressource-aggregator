@@ -24,8 +24,7 @@ import org.entcore.common.sql.SqlResult;
 
 import java.util.Optional;
 
-import static fr.openent.mediacentre.core.constants.Field.ID;
-import static fr.openent.mediacentre.core.constants.Field._ID;
+import static fr.openent.mediacentre.core.constants.Field.*;
 
 public class DefaultFavoriteService implements FavoriteService {
 
@@ -77,9 +76,9 @@ public class DefaultFavoriteService implements FavoriteService {
         Promise<JsonObject> promise = Promise.promise();
 
         JsonArray levelArray = new JsonArray();
-        if(updateBody.containsKey("levels")) {
-            for (int i = 0; i < updateBody.getJsonArray("levels").size(); i++) {
-                levelArray.add((updateBody.getJsonArray("levels").getJsonObject(i).getString("label")));
+        if(updateBody.containsKey(LEVELS)) {
+            for (int i = 0; i < updateBody.getJsonArray(LEVELS).size(); i++) {
+                levelArray.add((updateBody.getJsonArray(LEVELS).getJsonObject(i).getString(LABEL)));
             }
         }
         if(levelArray.isEmpty()) {
@@ -87,9 +86,9 @@ public class DefaultFavoriteService implements FavoriteService {
         }
 
         JsonArray disciplineArray = new JsonArray();
-        if(updateBody.containsKey("disciplines")) {
-            for (int i = 0; i < updateBody.getJsonArray("disciplines").size(); i++) {
-                disciplineArray.add((updateBody.getJsonArray("disciplines").getJsonObject(i).getString("label")));
+        if(updateBody.containsKey(DISCIPLINES)) {
+            for (int i = 0; i < updateBody.getJsonArray(DISCIPLINES).size(); i++) {
+                disciplineArray.add((updateBody.getJsonArray(DISCIPLINES).getJsonObject(i).getString(LABEL)));
             }
         }
         if(disciplineArray.isEmpty()) {
@@ -97,18 +96,18 @@ public class DefaultFavoriteService implements FavoriteService {
         }
 
         JsonArray plainTextArray = new JsonArray();
-        if(updateBody.containsKey("plain_text")) {
-            for (int i = 0; i < updateBody.getJsonArray("plain_text").size(); i++) {
-                plainTextArray.add((updateBody.getJsonArray("plain_text").getJsonObject(i).getString("label")));
+        if(updateBody.containsKey(PLAIN_TEXT)) {
+            for (int i = 0; i < updateBody.getJsonArray(PLAIN_TEXT).size(); i++) {
+                plainTextArray.add((updateBody.getJsonArray(PLAIN_TEXT).getJsonObject(i).getString(LABEL)));
             }
         }
         if(plainTextArray.isEmpty()) {
             plainTextArray.add("");
         }
 
-        updateBody.put("levels", levelArray);
-        updateBody.put("disciplines", disciplineArray);
-        updateBody.put("plain_text", plainTextArray);
+        updateBody.put(LEVELS, levelArray);
+        updateBody.put(DISCIPLINES, disciplineArray);
+        updateBody.put(PLAIN_TEXT, plainTextArray);
 
         JsonObject query = new JsonObject().put(ID, Integer.parseInt(id));
         JsonObject update = new JsonObject().put("$set", updateBody);
