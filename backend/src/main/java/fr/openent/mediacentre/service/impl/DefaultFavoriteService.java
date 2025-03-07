@@ -76,6 +76,40 @@ public class DefaultFavoriteService implements FavoriteService {
     public Future<JsonObject> update(String id, JsonObject updateBody) {
         Promise<JsonObject> promise = Promise.promise();
 
+        JsonArray levelArray = new JsonArray();
+        if(updateBody.containsKey("levels")) {
+            for (int i = 0; i < updateBody.getJsonArray("levels").size(); i++) {
+                levelArray.add((updateBody.getJsonArray("levels").getJsonObject(i).getString("label")));
+            }
+        }
+        if(levelArray.isEmpty()) {
+            levelArray.add("");
+        }
+
+        JsonArray disciplineArray = new JsonArray();
+        if(updateBody.containsKey("disciplines")) {
+            for (int i = 0; i < updateBody.getJsonArray("disciplines").size(); i++) {
+                disciplineArray.add((updateBody.getJsonArray("disciplines").getJsonObject(i).getString("label")));
+            }
+        }
+        if(disciplineArray.isEmpty()) {
+            disciplineArray.add("");
+        }
+
+        JsonArray plainTextArray = new JsonArray();
+        if(updateBody.containsKey("plain_text")) {
+            for (int i = 0; i < updateBody.getJsonArray("plain_text").size(); i++) {
+                plainTextArray.add((updateBody.getJsonArray("plain_text").getJsonObject(i).getString("label")));
+            }
+        }
+        if(plainTextArray.isEmpty()) {
+            plainTextArray.add("");
+        }
+
+        updateBody.put("levels", levelArray);
+        updateBody.put("disciplines", disciplineArray);
+        updateBody.put("plain_text", plainTextArray);
+
         JsonObject query = new JsonObject().put(ID, Integer.parseInt(id));
         JsonObject update = new JsonObject().put("$set", updateBody);
 
