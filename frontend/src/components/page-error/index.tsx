@@ -8,7 +8,7 @@ import { PageErrorProps } from "./types";
 
 export const PageError: FC<PageErrorProps> = ({ isNotFoundError = false }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation("médiacentre");
+  const { t } = useTranslation("mediacentre");
   const error = useRouteError();
 
   if (error) {
@@ -22,10 +22,12 @@ export const PageError: FC<PageErrorProps> = ({ isNotFoundError = false }) => {
   return (
     <Layout>
       <Stack
-        height="100vh"
+        height="80vh"
+        minHeight="fit-content"
         justifyContent="center"
         alignItems="center"
         spacing="2rem"
+        margin="3rem"
       >
         <Box width="25rem">
           <WarningSVG />
@@ -35,7 +37,7 @@ export const PageError: FC<PageErrorProps> = ({ isNotFoundError = false }) => {
         </Typography>
         <Typography variant="body2" fontSize="1.6rem">
           {isNotFoundError
-            ? t("mediacentre.error.page.notFound")
+            ? t("mediacentre.error.page.not.found")
             : t("mediacentre.error.page.an.error.occurred")}
         </Typography>
         <Button
