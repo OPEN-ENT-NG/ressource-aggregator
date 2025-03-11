@@ -2,13 +2,18 @@ import { Box, Button, Stack, Typography } from "@cgi-learning-hub/ui";
 import { Layout } from "@edifice.io/react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
 import { WarningSVG } from "../svg/warning";
 import { PageErrorProps } from "./types";
 
 export const PageError: FC<PageErrorProps> = ({ isNotFoundError = false }) => {
   const navigate = useNavigate();
   const { t } = useTranslation("médiacentre");
+  const error = useRouteError();
+
+  if (error) {
+    console.error("an error has occured: " + error);
+  }
 
   const handleGoToHome = () => {
     navigate("/");
