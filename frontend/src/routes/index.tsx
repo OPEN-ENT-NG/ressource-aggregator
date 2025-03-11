@@ -8,7 +8,7 @@ const routes = [
   {
     path: "/",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -19,16 +19,12 @@ const routes = [
           };
         },
       },
-      {
-        path: "*",
-        element: <PageError isNotFoundError />,
-      },
     ],
   },
   {
     path: "/search",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -44,7 +40,7 @@ const routes = [
   {
     path: "/favorites",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -60,7 +56,7 @@ const routes = [
   {
     path: "/textbook",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -76,7 +72,7 @@ const routes = [
   {
     path: "/resources",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -92,7 +88,7 @@ const routes = [
   {
     path: "/signets",
     element: <Root />,
-    errorElement: <Root />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -104,6 +100,10 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    path: "*",
+    element: <PageError isNotFoundError />,
   },
 ];
 
