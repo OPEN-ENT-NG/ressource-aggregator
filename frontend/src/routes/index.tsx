@@ -21,7 +21,7 @@ const routes = [
       },
       {
         path: "*",
-        element: <PageError />,
+        element: <PageError isNotFoundError />,
       },
     ],
   },

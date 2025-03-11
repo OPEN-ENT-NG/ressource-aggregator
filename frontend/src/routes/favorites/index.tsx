@@ -17,7 +17,6 @@ import { useModalProvider } from "~/providers/ModalsProvider";
 import "~/styles/page/search.scss";
 import { sortByAlphabet } from "~/utils/sortResources.util";
 import { FilterLayout } from "../../components/filter-layout/FilterLayout";
-import { Test } from "./test";
 
 export const FavoritePage: React.FC = () => {
   const { t } = useTranslation("mediacentre");
@@ -75,7 +74,6 @@ export const FavoritePage: React.FC = () => {
               </h1>
             </div>
           </div>
-          <Test />
           <div className="med-search-page-content-body">
             {favoriteResourcesData && !favoriteResourcesData.length ? (
               <EmptyState
