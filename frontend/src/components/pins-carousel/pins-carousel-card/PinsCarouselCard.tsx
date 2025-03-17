@@ -82,7 +82,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined" && window?.config) {
-      setTextHighlight(window?.config?.textHighlightsPins || "");
+      setTextHighlight(window?.config?.textHighlightsPins ?? "");
     }
   }, []);
 
