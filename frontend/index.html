@@ -14,18 +14,20 @@
       	{{/sources}}
       ];
       mediacentreUpdateFrequency = {{mediacentreUpdateFrequency}};
-         highlightsPins = {{highlightsPins}};
-         window.config = {
-           wsPort: "{{wsPort}}",
-           mode: "{{mode}}",
-           sources: [
-             {{#sources}}
-               "{{.}}",
-             {{/sources}}
-           ],
-           mediacentreUpdateFrequency: {{mediacentreUpdateFrequency}},
-           highlightsPins: {{highlightsPins}}
-         };
+      highlightsPins = {{highlightsPins}};
+      textHighlightsPins = {{textHighlightsPins}};
+      window.config = {
+        wsPort: "{{wsPort}}",
+        mode: "{{mode}}",
+        sources: [
+          {{#sources}}
+            "{{.}}",
+          {{/sources}}
+        ],
+        mediacentreUpdateFrequency: {{mediacentreUpdateFrequency}},
+        highlightsPins: {{highlightsPins}},
+        textHighlightsPins: {{textHighlightsPins}}
+      };
     </script>
   </head>
   <body>
