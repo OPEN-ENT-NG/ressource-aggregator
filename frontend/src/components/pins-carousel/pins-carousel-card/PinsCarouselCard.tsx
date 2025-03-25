@@ -174,7 +174,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
       </a>
       <Card.Footer>
         <div className="med-left-footer">
-          {(highlights ?? false) && pin.is_parent && (
+          {!!highlights  && !!pin.is_parent && (
             <>
               <AutoAwesomeIcon />
               <span className="med-text-footer">{textHighlight}</span>
