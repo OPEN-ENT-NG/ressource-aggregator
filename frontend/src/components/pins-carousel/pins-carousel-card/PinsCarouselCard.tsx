@@ -127,11 +127,8 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
 
   const isMoodle = () => pin.source === "fr.openent.mediacentre.source.Moodle";
 
-
-  useEffect(() => {
-    console.log("highlights", highlights);
-    console.log("textHighlight", textHighlight);
-  }, [highlights, textHighlight]);
+  console.log("isPinHightlight", isPinHightlight);
+  console.log("textPinHightlight", textPinHightlight);
 
   return (
     <Card isClickable={false} isSelectable={false} className="med-pin-card">
