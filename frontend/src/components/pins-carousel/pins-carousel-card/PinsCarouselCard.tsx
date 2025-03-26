@@ -35,7 +35,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
 }) => {
   const [newLink, setNewLink] = useState<string>("");
   const { notify } = useAlertProvider();
-  const { isPinHightlight, textPinHightlight} = useGlobal();
+  const { isPinHightlight, textPinHightlight } = useGlobal();
   const { setModalResource, openSpecificModal } = useModalProvider();
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
@@ -127,9 +127,6 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
 
   const isMoodle = () => pin.source === "fr.openent.mediacentre.source.Moodle";
 
-  console.log("isPinHightlight", isPinHightlight);
-  console.log("textPinHightlight", textPinHightlight);
-
   return (
     <Card isClickable={false} isSelectable={false} className="med-pin-card">
       <a
@@ -164,7 +161,7 @@ export const PinsCarouselCard: React.FC<PinsCarouselCardProps> = ({
       </a>
       <Card.Footer>
         <div className="med-left-footer">
-          {isPinHightlight  && !!pin.is_parent && (
+          {isPinHightlight && !!pin.is_parent && (
             <>
               <AutoAwesomeIcon />
               <span className="med-text-footer">{textPinHightlight}</span>
