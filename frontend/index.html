@@ -14,8 +14,6 @@
       	{{/sources}}
       ];
       mediacentreUpdateFrequency = {{mediacentreUpdateFrequency}};
-      highlightsPins = {{highlightsPins}};
-      textHighlightsPins = {{textHighlightsPins}};
       window.config = {
         wsPort: "{{wsPort}}",
         mode: "{{mode}}",
@@ -25,13 +23,15 @@
           {{/sources}}
         ],
         mediacentreUpdateFrequency: {{mediacentreUpdateFrequency}},
-        highlightsPins: {{highlightsPins}},
-        textHighlightsPins: "{{textHighlightsPins}}"
       };
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div 
+      id="root"
+      data-is-pin-hightlight={{highlightsPins}}
+      data-text-pin-hightlight="{{textHighlightsPins}}"
+    ></div>
     <div id="portal"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
