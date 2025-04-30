@@ -18,12 +18,16 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.user.UserInfos;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static fr.wseduc.webutils.Utils.handlerToAsyncHandler;
+import static fr.wseduc.webutils.Utils.isEmpty;
 
 public class GAR implements Source {
     private final FavoriteService favoriteService = new DefaultFavoriteService();
@@ -394,7 +398,7 @@ public class GAR implements Source {
             .put("disciplines", getNames("domaineEnseignement", resource))
             .put("levels", getNames("niveauEducatif", resource))
             .put("document_types", getNames("typologieDocument", resource))
-            .put("link", resource.getString("urlAccesRessource"))
+            .put("link", proxifyLink(resource.getString("urlAccesRessource"), resource.getJsonObject("typePresentation")))
             .put("source", GAR.class.getName())
             .put("plain_text", createPlainText(resource))
             .put("id", resource.getString("idRessource"))
@@ -412,6 +416,18 @@ public class GAR implements Source {
         return formattedResource;
     }
 
+    private String proxifyLink(String link, JsonObject typePresentation) {
+        if (typePresentation == null || isEmpty(typePresentation.getString("code"))) {
+            return link;
+        }
+        try {
+            return Field.RESOURCE_PROXY_PREFIX + URLEncoder.encode(link, StandardCharsets.UTF_8.name()) +
+                    Field.RESOURCE_PROXY_SERVICE + typePresentation.getString("code");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error when encode link.", e);
+            return link;
+        }
+    }
 
     private String createPlainText(JsonObject resource) {
         StringBuilder plain = new StringBuilder();
