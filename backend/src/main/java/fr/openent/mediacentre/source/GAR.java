@@ -387,6 +387,11 @@ public class GAR implements Source {
 
     @Override
     public JsonObject format(JsonObject resource) {
+        return format("", resource);
+    }
+
+    @Override
+    public JsonObject format(String domain, JsonObject resource) {
         String pattern = queryPattern(config.getJsonArray("textbook_typology", new JsonArray()));
         Pattern regexp = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
 
@@ -398,7 +403,7 @@ public class GAR implements Source {
             .put("disciplines", getNames("domaineEnseignement", resource))
             .put("levels", getNames("niveauEducatif", resource))
             .put("document_types", getNames("typologieDocument", resource))
-            .put("link", proxifyLink(resource.getString("urlAccesRessource"), resource.getJsonObject("typePresentation")))
+            .put("link", proxifyLink(domain, resource.getString("urlAccesRessource"), resource.getJsonObject("typePresentation")))
             .put("source", GAR.class.getName())
             .put("plain_text", createPlainText(resource))
             .put("id", resource.getString("idRessource"))
@@ -416,12 +421,12 @@ public class GAR implements Source {
         return formattedResource;
     }
 
-    private String proxifyLink(String link, JsonObject typePresentation) {
+    private String proxifyLink(String domain, String link, JsonObject typePresentation) {
         if (typePresentation == null || isEmpty(typePresentation.getString("code"))) {
             return link;
         }
         try {
-            return Field.RESOURCE_PROXY_PREFIX + URLEncoder.encode(link, StandardCharsets.UTF_8.name()) +
+            return domain + Field.RESOURCE_PROXY_PREFIX + URLEncoder.encode(link, StandardCharsets.UTF_8.name()) +
                     Field.RESOURCE_PROXY_SERVICE + typePresentation.getString("code");
         } catch (UnsupportedEncodingException e) {
             log.error("Error when encode link.", e);
@@ -475,6 +480,7 @@ public class GAR implements Source {
     public void initTextBooks(UserInfos user, List<String> idStructures, Handler<Either<String, JsonObject>> handler) {
         List<Future<JsonArray>> futures = new ArrayList<>();
         List<String> structures = idStructures == null || idStructures.isEmpty() ? user.getStructures() : idStructures;
+        final String domain = (String) user.getOtherProperties().get("domain");
         for (String structure : structures) {
             Promise<JsonArray> promise = Promise.promise();
             futures.add(promise.future());
@@ -499,7 +505,7 @@ public class GAR implements Source {
                 JsonObject type = resource.getJsonObject("typePresentation", new JsonObject());
                 if (type.containsKey("code") && regexp.matcher(type.getString("code")).find() && !list.contains(resource.getString("idRessource"))) {
                     list.add(resource.getString("idRessource"));
-                    textBooks.add(format(resource));
+                    textBooks.add(format(domain, resource));
                 }
             }
             handler.handle(new Either.Right<>(new JsonObject().put(Field.TEXTBOOKS, textBooks)));
