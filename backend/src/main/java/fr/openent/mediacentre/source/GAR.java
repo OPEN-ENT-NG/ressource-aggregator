@@ -53,11 +53,12 @@ public class GAR implements Source {
             if (event.failed()) {
                 handler.handle(new Either.Left<>(event.cause().getMessage()));
             }
-            else {                
+            else {
+                final String domain = (String) user.getOtherProperties().get("domain");
                 JsonArray formattedResources = getRessourcesPromise.future().result().stream()
                         .filter(JsonObject.class::isInstance)
                         .map(JsonObject.class::cast)
-                        .map(this::format)
+                        .map(resource -> format(domain, resource))
                         .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
 
                 handler.handle(new Either.Right<>(formattedResources));
