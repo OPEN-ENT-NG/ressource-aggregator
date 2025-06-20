@@ -427,7 +427,7 @@ public class GAR implements Source {
             return link;
         }
         try {
-            return domain + Field.RESOURCE_PROXY_PREFIX + URLEncoder.encode(link, StandardCharsets.UTF_8.name()) +
+            return (domain != null ? domain : "") + Field.RESOURCE_PROXY_PREFIX + URLEncoder.encode(link, StandardCharsets.UTF_8.name()) +
                     Field.RESOURCE_PROXY_SERVICE + typePresentation.getString("code");
         } catch (UnsupportedEncodingException e) {
             log.error("Error when encode link.", e);
