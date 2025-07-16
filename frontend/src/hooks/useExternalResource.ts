@@ -18,7 +18,10 @@ export const useExternalResource = (idSelectedStructure: string) => {
     sources: ["fr.openent.mediacentre.source.GAR"],
   };
 
-  const { data, error, isLoading } = useSearchQuery({ jsondata: query, idStructure: idSelectedStructure });
+  const { data, error, isLoading } = useSearchQuery({
+    jsondata: query,
+    idStructure: idSelectedStructure,
+  });
 
   const [externalResources, setExternalResources] = useState<
     ExternalResource[] | null
