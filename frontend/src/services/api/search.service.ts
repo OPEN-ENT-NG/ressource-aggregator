@@ -8,7 +8,7 @@ export const searchApi = emptySplitApi.injectEndpoints({
           JSON.stringify(jsondata),
         )}`,
       }),
-      providesTags: ["FavoritesChanged"],
+      providesTags: ["FavoritesChanged", "Search"],
     }),
   }),
 });
