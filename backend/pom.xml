@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.entcore</groupId>
       <artifactId>common</artifactId>
-      <version>${entCoreVersion}</version>
+      <version>${entCoreLibsVersion}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -112,12 +112,6 @@
       <artifactId>powermock-module-testng</artifactId>
       <version>${powerMockVersion}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.entcore</groupId>
-      <artifactId>common</artifactId>
-      <version>${entCoreLibsVersion}</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
