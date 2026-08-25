@@ -1,6 +1,6 @@
 {
   "name": "Mediacentre",
-  "version": "5.3.6",
+  "version": "5.3.6-dev.0",
   "description": "Mediacentre",
   "homepage": "https://github.com/OPEN-ENT-NG/ressource-aggregator#readme",
   "bugs": {
@@ -48,9 +48,9 @@
     "@cgi-learning-hub/icons": "1.13.0",
     "@cgi-learning-hub/theme": "1.13.0",
     "@cgi-learning-hub/ui": "1.13.0",
-    "@edifice.io/react": "2.6.3",
-    "@edifice.io/bootstrap": "2.6.3",
-    "@edifice.io/client": "2.6.3",
+    "@edifice.io/react": "develop",
+    "@edifice.io/bootstrap": "develop",
+    "@edifice.io/client": "develop",
     "@react-spring/web": "9.7.3",
     "@tanstack/react-query": "5.62.7",
     "@mui/material": "5.15.0",
