@@ -110,6 +110,11 @@ public class ElasticSearch {
 
 	public void init(URI[] uris, Vertx vertx, int poolSize, boolean keepAlive, JsonObject elasticsearchConfig) {
 		defaultIndex = elasticsearchConfig.getString("index");
+		// HTTP request-target requires a leading "/" (RFC 9112); some proxies (e.g. HAProxy)
+		// reject the request outright otherwise instead of forwarding it to Elasticsearch.
+		if (defaultIndex != null && !defaultIndex.startsWith("/")) {
+			defaultIndex = "/" + defaultIndex;
+		}
 		username = elasticsearchConfig.getString("username", null);
 		password = elasticsearchConfig.getString("password", null);
 		Boolean elasticSearchSSL = elasticsearchConfig.getBoolean("elasticsearch-ssl", false);
@@ -136,7 +141,10 @@ public class ElasticSearch {
 	}
 
 	public void search(String type, JsonObject query, Handler<AsyncResult<JsonObject>> handler) {
-		this.postInternal(this.defaultIndex + "/" + type + "/_search", 200, query, handler);
+		// No "/{type}" segment: modern Elasticsearch has no per-type search route, and
+		// "{index}/{type}/_search" gets misrouted to the single-document API, treating
+		// "_search" as a literal document id instead of running a search.
+		this.postInternal(this.defaultIndex + "/_search", 200, query, handler);
 	}
 
 	public void post(String type, JsonObject object, Handler<AsyncResult<JsonObject>> handler) {
@@ -176,7 +184,11 @@ public class ElasticSearch {
 					if (request.statusCode() == expectedStatus) {
 						request.bodyHandler(respBody -> handler.handle(new DefaultAsyncResult<>(new JsonObject(respBody))));
 					} else {
-						handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(request.statusMessage())));
+						request.bodyHandler(respBody -> {
+							String message = "status=" + request.statusCode() + " " + request.statusMessage() + " body=" + respBody.toString();
+							log.error("[Mediacentre@ElasticSearch::postInternal] Unexpected response for " + path + " : " + message);
+							handler.handle(new DefaultAsyncResult<>(new ElasticSearchException(message)));
+						});
 					}
 					esc.checkSuccess();
 				})
@@ -193,7 +205,8 @@ public class ElasticSearch {
 	public BulkRequest bulk(String type, Handler<AsyncResult<JsonObject>> handler) {
 		final ElasticSearchClient esc = getClient();
 
-		String url = defaultIndex + "/" + type + "/_bulk";
+		// No "/{type}" segment: see search() above for why a type segment breaks routing.
+		String url = defaultIndex + "/_bulk";
 
 		RequestOptions requestOptions = new RequestOptions()
 				.setAbsoluteURI(url)

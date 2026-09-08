@@ -133,7 +133,7 @@ public class ElasticSearchHelper {
         JsonArray must = new JsonArray();
         if(myPublishedSignets) {
             JsonObject term = new JsonObject()
-                    .put("authors", userId);
+                    .put("authors.keyword", userId);
             must.add(new JsonObject().put("term", term));
         }
         must.add(sourceFilter(source));
@@ -170,7 +170,7 @@ public class ElasticSearchHelper {
 
     public static void deletePublicSignets(String signetId, Handler<AsyncResult<JsonArray>> handler) {
         JsonObject term = new JsonObject()
-                .put("id", signetId);
+                .put("id.keyword", signetId);
         JsonObject query = new JsonObject().put("term", term);
         JsonObject object = new JsonObject().put("query", query);
 
@@ -198,7 +198,7 @@ public class ElasticSearchHelper {
         JsonArray must = new JsonArray();
         must.add(sourceFilter(Signet.class));
         JsonObject term = new JsonObject()
-                .put("authors", userId);
+                .put("authors.keyword", userId);
         must.add(new JsonObject().put("term", term));
         JsonObject bool = new JsonObject()
                 .put("must", must);
@@ -267,7 +267,7 @@ public class ElasticSearchHelper {
 
     private static JsonObject sourceFilter(Class<?> source) {
         JsonObject term = new JsonObject()
-                .put("source", source.getName());
+                .put("source.keyword", source.getName());
 
         return new JsonObject()
                 .put("term", term);
@@ -327,7 +327,7 @@ public class ElasticSearchHelper {
 
     private static JsonObject structureFilter(List<String> structures) {
         JsonObject terms = new JsonObject()
-                .put("structure", new JsonArray(structures));
+                .put("structure.keyword", new JsonArray(structures));
 
         return new JsonObject().put("terms", terms);
     }

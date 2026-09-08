@@ -155,12 +155,44 @@ public class SignetController extends ControllerHelper {
         String signetId = request.getParam(Field.ID);
         RequestUtils.bodyToJson(request, signet -> {
             signetService.update(signetId, signet)
-                .compose(updatedSignet -> favoriteService.update(signetId, signet))
-                .onSuccess(updatedFavorite -> renderJson(request, signet))
+                .onSuccess(updatedSignet -> {
+                    renderJson(request, signet);
+                    syncFavoriteMongoCache(signetId, signet);
+                    if (signet.getBoolean("archived", false)) {
+                        unpublishArchivedSignet(signetId);
+                    }
+                })
                 .onFailure(err -> {
-                    log.error("[Mediacentre@SignetController::update] Failed to update favorite : " + err.getMessage());
+                    log.error("[Mediacentre@SignetController::update] Failed to update signet : " + err.getMessage());
                     badRequest(request);
                 });
+        });
+    }
+
+    // The Mongo favorites cache (read by GET /favorites) mirrors signet edits, but only exists for a
+    // signet once someone has favorited it. Best-effort: it's a display cache, not the source of truth
+    // (that's the SQL update above), so a missing/failed sync must not fail the signet edit itself.
+    private void syncFavoriteMongoCache(String signetId, JsonObject signet) {
+        favoriteService.update(signetId, signet)
+            .onFailure(err -> log.error("[Mediacentre@SignetController::syncFavoriteMongoCache] Failed to sync favorite cache for signet "
+                    + signetId + " : " + err.getMessage()));
+    }
+
+    // An archived signet must no longer be publicly visible/searchable, regardless of
+    // whether it was published before being archived. Best-effort: SQL archiving already
+    // succeeded, so a failure here is logged rather than surfaced to the user.
+    private void unpublishArchivedSignet(String signetId) {
+        signetService.deleteMyPublishedSignet(signetId, deleteEvt -> {
+            if (deleteEvt.isLeft()) {
+                log.error("[Mediacentre@SignetController::unpublishArchivedSignet] Failed to remove archived signet "
+                        + signetId + " from Elasticsearch : " + deleteEvt.left().getValue());
+            }
+        });
+        signetService.setPublishValueSignet(signetId, false, publishEvt -> {
+            if (publishEvt.isLeft()) {
+                log.error("[Mediacentre@SignetController::unpublishArchivedSignet] Failed to reset published flag for archived signet "
+                        + signetId + " : " + publishEvt.left().getValue());
+            }
         });
     }
 
