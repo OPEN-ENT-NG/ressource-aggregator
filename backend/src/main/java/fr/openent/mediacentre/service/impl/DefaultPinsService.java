@@ -264,7 +264,9 @@ public class DefaultPinsService implements PinsService {
                 }
             })
             .onSuccess(usersIdsToNotify -> {
-                List<String> allUsersIdsWithMediacentreAccess = composeInfos.getJsonArray(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS).getList();
+                // Set lookup, not List: with large structures (e.g. a whole region), this list can hold
+                // tens of thousands of ids, and List#contains is O(n) per call, making the filter below O(n*m).
+                Set<String> allUsersIdsWithMediacentreAccess = new HashSet<>(composeInfos.getJsonArray(Field.ALL_USERS_IDS_WITH_MEDIACENTRE_ACCESS).getList());
                 List<String> usersIdsToNotifyWithMediacentreAccess = usersIdsToNotify.stream()
                     .filter(allUsersIdsWithMediacentreAccess::contains)
                     .collect(Collectors.toList());
