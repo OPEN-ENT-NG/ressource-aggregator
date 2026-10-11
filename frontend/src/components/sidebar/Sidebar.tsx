@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 import "./Sidebar.scss";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import ExploreIcon from "@mui/icons-material/Explore";
 import HomeIcon from "@mui/icons-material/Home";
 import LaptopIcon from "@mui/icons-material/Laptop";
 import SchoolIcon from "@mui/icons-material/School";
@@ -68,6 +69,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           icon={<LaptopIcon />}
           name={`${t("mediacentre.sidebar.resources")}`}
           selected={location.pathname === "/resources"}
+        />
+        <SidebarIcon
+          action={() => navigate("/orientation")}
+          icon={<ExploreIcon />}
+          name={`${t("fr.openent.mediacentre.orientation")}`}
+          selected={location.pathname === "/orientation"}
         />
         <SidebarIcon
           action={() => {

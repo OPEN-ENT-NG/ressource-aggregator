@@ -86,6 +86,22 @@ const routes = [
     ],
   },
   {
+    path: "/orientation",
+    element: <Root />,
+    errorElement: <PageError />,
+    children: [
+      {
+        index: true,
+        async lazy() {
+          const { OrientationPage } = await import("./orientation");
+          return {
+            Component: OrientationPage,
+          };
+        },
+      },
+    ],
+  },
+  {
     path: "/signets",
     element: <Root />,
     errorElement: <PageError />,
